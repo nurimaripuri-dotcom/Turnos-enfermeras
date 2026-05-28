@@ -615,6 +615,10 @@ function applyEdit(t,u){
 
 function renderResumen(){
   if(userRow===0){document.getElementById("resumenContent").innerHTML='<p style="color:var(--mu);padding:20px">No se encontró tu fila.</p>';return;}
+  // Debug: count overrides for this person
+  const myKeys=Object.keys(window.dateOverrides||{}).filter(k=>k.startsWith((userRow-1)+"_"));
+  const vacKeys=myKeys.filter(k=>{const v=window.dateOverrides[k];return v&&(Array.isArray(v)?v[0]:v&&v[0])==="V";});
+  console.log("Overrides for pi="+(userRow-1)+":", myKeys.length, "vacation days:", vacKeys.length);
   const me=PEOPLE_ENF[userRow-1];
   const pi=userRow-1;
 
