@@ -99,9 +99,20 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
   <div class="name-card">
     <h2>🏥 Enfermeras <em>3ºC</em></h2>
     <p style="font-size:.78rem;color:var(--mu);margin-bottom:18px">¿Cuál es tu nombre?</p>
-    <input type="text" id="nameInput" placeholder="Escribe tu nombre..." autofocus>
-    <div id="nameError" style="display:none;color:var(--I);font-size:.72rem;margin-top:8px;text-align:left"></div>
-    <button class="mbtn mbtn-save" onclick="saveName()" style="width:100%;margin-top:12px">Entrar</button>
+    <!-- STEP 1: Name -->
+    <div id="stepName">
+      <input type="text" id="nameInput" placeholder="Escribe tu nombre..." autofocus>
+      <div id="nameError" style="display:none;color:var(--I);font-size:.72rem;margin-top:8px;text-align:left"></div>
+      <button class="mbtn mbtn-save" onclick="saveName()" style="width:100%;margin-top:12px">Siguiente →</button>
+    </div>
+    <!-- STEP 2: PIN -->
+    <div id="stepPin" style="display:none">
+      <p style="font-size:.78rem;color:var(--mu);margin-bottom:10px" id="pinLabel">Introduce tu PIN (por defecto 0000):</p>
+      <input type="password" id="pinInput" placeholder="····" maxlength="4" style="text-align:center;font-size:1.5rem;letter-spacing:8px">
+      <div id="pinError" style="display:none;color:var(--I);font-size:.72rem;margin-top:8px;text-align:left"></div>
+      <button class="mbtn mbtn-save" onclick="checkPin()" style="width:100%;margin-top:12px">Entrar</button>
+      <button class="mbtn mbtn-ghost" onclick="document.getElementById('stepPin').style.display='none';document.getElementById('stepName').style.display='block'" style="width:100%;margin-top:8px">← Volver</button>
+    </div>
   </div>
 </div>
 
@@ -130,7 +141,8 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 </div>
 
 <div id="view-mi" style="flex:1;overflow:auto;padding:14px 16px">
-  <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px">
+    <button onclick="changePin()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--mu);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔑 PIN</button>
     <button id="miEditBtn" onclick="toggleMiEdit()" style="padding:6px 14px;border-radius:8px;border:1px solid #dee2e6;background:#fff3cd;color:#856404;cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔒 Editar mi turno</button>
   </div>
   <div id="miTurnoContent"></div>
@@ -252,11 +264,18 @@ function saveName(){
   userName=n; userRow=idx+1;
   localStorage.setItem("enf_user",n);
   localStorage.setItem("enf_row",String(userRow));
-  document.getElementById("nameScreen").style.display="none";
-  initApp();
-  setTimeout(()=>{renderMiTurno();showTab("mi");},500);
+  // Go to PIN step
+  document.getElementById("stepName").style.display="none";
+  document.getElementById("stepPin").style.display="block";
+  document.getElementById("pinInput").value="";
+  document.getElementById("pinError").style.display="none";
+  document.getElementById("pinInput").focus();
 }
 document.getElementById("nameInput").addEventListener("keydown",e=>{if(e.key==="Enter")saveName();});
+document.addEventListener("DOMContentLoaded",()=>{
+  const pi=document.getElementById("pinInput");
+  if(pi) pi.addEventListener("keydown",e=>{if(e.key==="Enter")checkPin();});
+});
 
 function initApp(){
   try{
@@ -300,9 +319,21 @@ function initApp(){
 }
 
 if(userName){
-  document.getElementById("nameScreen").style.display="none";
-  initApp();
-  setTimeout(()=>{render();renderMiTurno();showTab("mi");setTimeout(goToToday,400);},100);
+  const verified=localStorage.getItem("enf_verified_"+userRow);
+  if(verified){
+    // Device already verified, skip PIN
+    document.getElementById("nameScreen").style.display="none";
+    initApp();
+    setTimeout(()=>{render();renderMiTurno();showTab("mi");setTimeout(goToToday,400);},100);
+  } else {
+    // Device not verified, show name screen with PIN
+    document.getElementById("nameScreen").style.display="flex";
+    // Pre-fill name
+    document.getElementById("nameInput").value=userName;
+    // Go straight to PIN step
+    document.getElementById("stepName").style.display="none";
+    document.getElementById("stepPin").style.display="block";
+  }
 }
 
 function mondayOf(d){const dt=new Date(d);const day=dt.getDay();dt.setDate(dt.getDate()+(day===0?-6:1-day));return dt;}
@@ -582,61 +613,153 @@ function renderResumen(){
   if(userRow===0){document.getElementById("resumenContent").innerHTML='<p style="color:var(--mu);padding:20px">No se encontró tu fila.</p>';return;}
   const me=PEOPLE_ENF[userRow-1];
   const pi=userRow-1;
-  const year=currentYear||new Date().getFullYear();
-  const counts={M:0,T:0,D:0,N:0,V:0,LD:0};
-  let d=new Date(year,0,1);
-  while(d.getFullYear()===year){
-    const dow=(d.getDay()+6)%7;
-    const mon=mondayOf(d);
-    const ri=rowFor(me.startRow,mon);
-    const ds=year+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
-    const ov=window.dateOverrides[pi+"_"+ds];
-    const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
-    const t=cell&&Array.isArray(cell)?cell[0]:(cell?cell[0]:null);
-    if(t&&counts[t]!==undefined)counts[t]++;
-    d.setDate(d.getDate()+1);
-  }
-  const year2=year+1;
-  const counts2={M:0,T:0,D:0,N:0,V:0,LD:0};
-  let d2=new Date(year2,0,1);
-  while(d2.getFullYear()===year2){
-    const dow=(d2.getDay()+6)%7;
-    const mon=mondayOf(d2);
-    const ri=rowFor(me.startRow,mon);
-    const ds=year2+String(d2.getMonth()+1).padStart(2,"0")+String(d2.getDate()).padStart(2,"0");
-    const ov=window.dateOverrides[pi+"_"+ds];
-    const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
-    const t=cell?cell[0]:null;
-    if(t&&counts2[t]!==undefined)counts2[t]++;
-    d2.setDate(d2.getDate()+1);
+
+  // CCOO 2026: 1529-3N (N=noches)
+  function ccoo(n){
+    if(n===0) return 1533;
+    return 1529-3*n;
   }
 
-  function row(yr, c){
-    let html=`<tr style="border-bottom:1px solid var(--bd)"><td style="padding:8px;font-weight:600">${yr}</td>`;
-    html+=`<td style="text-align:center;padding:8px">${c.D}</td>`;
-    html+=`<td style="text-align:center;padding:8px">${c.M}</td>`;
-    html+=`<td style="text-align:center;padding:8px">${c.N}</td>`;
-    html+=`<td style="text-align:center;padding:8px">${c.V!==undefined?c.V:"-"}</td>`;
-    html+=`<td style="text-align:center;padding:8px">${c.LD!==undefined?c.LD:"-"}</td>`;
-    html+='</tr>';
+  function calcYear(yr){
+    const counts={D:0,M:0,N:0,V:0,LD:0};
+    const vacDeduct={D:0,M:0,N:0};
+    let d=new Date(yr,0,1);
+    while(d.getFullYear()===yr){
+      const dow=(d.getDay()+6)%7;
+      const mon=mondayOf(d);
+      const ri=rowFor(me.startRow,mon);
+      const ds=yr+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+      const ov=window.dateOverrides[pi+"_"+ds];
+      const baseCell=ROTA_ENF[ri][dow];
+      const baseT=baseCell&&Array.isArray(baseCell)?baseCell[0]:(baseCell?baseCell[0]:null);
+      if(ov!==undefined){
+        const t=ov&&Array.isArray(ov)?ov[0]:(ov?ov[0]:null);
+        if(t==="V"){
+          if(baseT==="D") vacDeduct.D++;
+          else if(baseT==="M") vacDeduct.M++;
+          else if(baseT==="N") vacDeduct.N++;
+          counts.V++;
+        } else if(t==="LD"){
+          // LD counts as worked
+          if(baseT==="D") counts.D++;
+          else if(baseT==="M") counts.M++;
+          else if(baseT==="N") counts.N++;
+          counts.LD++;
+        } else {
+          if(t==="D") counts.D++;
+          else if(t==="M") counts.M++;
+          else if(t==="N") counts.N++;
+        }
+      } else {
+        if(baseT==="D") counts.D++;
+        else if(baseT==="M") counts.M++;
+        else if(baseT==="N") counts.N++;
+      }
+      d.setDate(d.getDate()+1);
+    }
+    counts.D=Math.max(0,counts.D-vacDeduct.D);
+    counts.M=Math.max(0,counts.M-vacDeduct.M);
+    counts.N=Math.max(0,counts.N-vacDeduct.N);
+    return counts;
+  }
+
+  function buildTable(yr){
+    const c=calcYear(yr);
+    // D=mañana+tarde (14h), M=7h mañana, N=10h noche
+    const horas=c.D*14+c.M*7+c.N*10;
+    const jornada=ccoo(c.N);
+    const exceso=horas-jornada;
+    const lds=(exceso/7).toFixed(1);
+    const col=exceso>=0?"#2e7d32":"#c62828";
+    let html=`<h3 style="font-family:Syne,sans-serif;font-size:.9rem;margin:16px 0 8px">${yr}</h3>`;
+    html+='<table style="width:100%;border-collapse:collapse;font-size:.78rem">';
+    html+='<thead><tr style="background:var(--s2);border-bottom:2px solid var(--bd)">';
+    html+='<th style="text-align:left;padding:6px">Año</th>';
+    html+='<th style="text-align:center;padding:6px;color:var(--I)">D</th>';
+    html+='<th style="text-align:center;padding:6px;color:var(--V)">M</th>';
+    html+='<th style="text-align:center;padding:6px;color:var(--A)">N</th>';
+    html+='<th style="text-align:center;padding:6px;color:#856404">🏖</th>';
+    html+='<th style="text-align:center;padding:6px;color:#0c5460">LD</th>';
+    html+='<th style="text-align:center;padding:6px;color:#555">Horas</th>';
+    html+='<th style="text-align:center;padding:6px;color:#c62828">Exceso</th>';
+    html+=`<th style="text-align:center;padding:6px;font-weight:700;color:${col}">LDs</th>`;
+    html+='</tr></thead><tbody>';
+    html+=`<tr style="border-bottom:1px solid var(--bd)">`;
+    html+=`<td style="padding:6px;font-weight:600">${yr}</td>`;
+    html+=`<td style="text-align:center;padding:6px">${c.D}</td>`;
+    html+=`<td style="text-align:center;padding:6px">${c.M}</td>`;
+    html+=`<td style="text-align:center;padding:6px">${c.N}</td>`;
+    html+=`<td style="text-align:center;padding:6px">${c.V}</td>`;
+    html+=`<td style="text-align:center;padding:6px">${c.LD}</td>`;
+    html+=`<td style="text-align:center;padding:6px">${horas}h</td>`;
+    html+=`<td style="text-align:center;padding:6px;color:${col}">${exceso>=0?"+":""}${exceso}h</td>`;
+    html+=`<td style="text-align:center;padding:6px;font-weight:700;color:${col}">${exceso>=0?"+":""}${lds}</td>`;
+    html+='</tr></tbody></table>';
+    html+=`<p style="font-size:.7rem;color:var(--mu);margin-top:4px">Jornada CCOO 2026 (${c.N} noches): ${jornada}h · Horas: ${horas}h</p>`;
     return html;
   }
 
+  const year=currentYear||new Date().getFullYear();
   let html=`<h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:4px">📊 Resumen de <span style="color:var(--I)">${me.name}</span></h2>`;
-  html+='<table style="width:100%;border-collapse:collapse;font-size:.82rem;margin-top:14px">';
-  html+='<thead><tr style="background:var(--s2);border-bottom:2px solid var(--bd)">';
-  html+='<th style="text-align:left;padding:8px;font-weight:600">Año</th>';
-  html+='<th style="text-align:center;padding:8px;color:var(--I)">D</th>';
-  html+='<th style="text-align:center;padding:8px;color:var(--V)">M</th>';
-  html+='<th style="text-align:center;padding:8px;color:var(--A)">N</th>';
-  html+='<th style="text-align:center;padding:8px;color:#856404">🏖</th>';
-  html+='<th style="text-align:center;padding:8px;color:#0c5460">LD</th>';
-  html+='</tr></thead><tbody>';
-  html+=row(year, counts);
-  html+=row(year2, counts2);
-  html+='</tbody></table>';
+  html+=buildTable(year);
+  html+=buildTable(year+1);
+  html+=`<div style="margin-top:16px;padding:12px;background:#fff3cd;border:1px solid #ffc107;border-radius:8px;font-size:.72rem;color:#856404;line-height:1.5">
+    ⚠️ <b>Cálculo orientativo.</b> Este resumen puede contener errores. Por favor, consulta con tu supervisor/a antes de tomar decisiones basadas en estos datos.
+  </div>`;
   document.getElementById("resumenContent").innerHTML=html;
 }
+function checkPin(){
+  const pin=document.getElementById("pinInput").value.trim();
+  if(pin.length!==4||!/^[0-9]{4}$/.test(pin)){
+    document.getElementById("pinError").textContent="❌ El PIN debe ser 4 números";
+    document.getElementById("pinError").style.display="block";
+    return;
+  }
+  if(db){
+    db.ref("enf_pins/"+userRow).once("value").then(snap=>{
+      const stored=snap.val()||"0000";
+      if(pin===stored){
+        enterApp();
+      } else {
+        document.getElementById("pinError").textContent="❌ PIN incorrecto";
+        document.getElementById("pinError").style.display="block";
+        document.getElementById("pinInput").value="";
+      }
+    }).catch(()=>enterApp());
+  } else {
+    const stored=localStorage.getItem("enf_pin_"+userRow)||"0000";
+    if(pin===stored){enterApp();}
+    else {
+      document.getElementById("pinError").textContent="❌ PIN incorrecto";
+      document.getElementById("pinError").style.display="block";
+      document.getElementById("pinInput").value="";
+    }
+  }
+}
+
+function enterApp(){
+  localStorage.setItem("enf_verified_"+userRow,"1");
+  document.getElementById("nameScreen").style.display="none";
+  initApp();
+  setTimeout(()=>{renderMiTurno();showTab("mi");},500);
+}
+
+function changePin(){
+  const oldPin=prompt("PIN actual:");
+  if(!oldPin) return;
+  if(db){
+    db.ref("enf_pins/"+userRow).once("value").then(snap=>{
+      const stored=snap.val()||"0000";
+      if(oldPin!==stored){alert("PIN incorrecto");return;}
+      const newPin=prompt("Nuevo PIN (4 números):");
+      if(!newPin||!/^[0-9]{4}$/.test(newPin)){alert("El PIN debe ser 4 números");return;}
+      const confirm2=prompt("Repite el nuevo PIN:");
+      if(newPin!==confirm2){alert("Los PINes no coinciden");return;}
+      db.ref("enf_pins/"+userRow).set(newPin).then(()=>alert("✅ PIN cambiado correctamente"));
+    });
+  }
+}
+
 function closeModal(){document.getElementById("overlay").classList.remove("open");editCtx=null;}
 function outsideClose(e){if(e.target.id==="overlay")closeModal();}
 window.onload=()=>{if(userName){render();renderMiTurno();showTab("mi");setTimeout(goToToday,300);}};
