@@ -299,7 +299,11 @@ function initApp(){
         else if(typeof v==="object"&&!Array.isArray(v)){window.dateOverrides[k]=Object.values(v);}
         else{window.dateOverrides[k]=v;}
       });
+      window.overridesLoaded=true;
       render();
+      // Re-render resumen if it's visible
+      const resTab=document.getElementById("view-resumen");
+      if(resTab&&resTab.style.display!=="none") renderResumen();
     });
     db.ref("enf_icons").on("value",snap=>{
       changeIcons=snap.val()||{};
