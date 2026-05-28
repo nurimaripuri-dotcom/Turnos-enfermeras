@@ -640,34 +640,37 @@ function renderResumen(){
       const ov=window.dateOverrides[pi+"_"+ds];
       const baseCell=ROTA_ENF[ri][dow];
       const baseT=baseCell&&Array.isArray(baseCell)?baseCell[0]:(baseCell?baseCell[0]:null);
+      // Always count base rotation first
+      if(baseT==="D") counts.D++;
+      else if(baseT==="M") counts.M++;
+      else if(baseT==="N") counts.N++;
+      // Then check override
       if(ov!==undefined){
         const t=ov&&Array.isArray(ov)?ov[0]:(ov?ov[0]:null);
         if(t==="V"){
-          if(baseT==="D") vacDeduct.D++;
-          else if(baseT==="M") vacDeduct.M++;
-          else if(baseT==="N") vacDeduct.N++;
+          // Remove base shift and count as vacation
+          if(baseT==="D") counts.D--;
+          else if(baseT==="M") counts.M--;
+          else if(baseT==="N") counts.N--;
           counts.V++;
         } else if(t==="LD"){
-          // LD counts as worked
-          if(baseT==="D") counts.D++;
-          else if(baseT==="M") counts.M++;
-          else if(baseT==="N") counts.N++;
           counts.LD++;
-        } else {
+          // LD replaces base but counts as worked - keep base count
+        } else if(t&&t!=="L"&&t!=="/"){
+          // Changed shift - remove base, add new
+          if(baseT==="D") counts.D--;
+          else if(baseT==="M") counts.M--;
+          else if(baseT==="N") counts.N--;
           if(t==="D") counts.D++;
           else if(t==="M") counts.M++;
           else if(t==="N") counts.N++;
         }
-      } else {
-        if(baseT==="D") counts.D++;
-        else if(baseT==="M") counts.M++;
-        else if(baseT==="N") counts.N++;
       }
       d.setDate(d.getDate()+1);
     }
-    counts.D=Math.max(0,counts.D-vacDeduct.D);
-    counts.M=Math.max(0,counts.M-vacDeduct.M);
-    counts.N=Math.max(0,counts.N-vacDeduct.N);
+    counts.D=Math.max(0,counts.D);
+    counts.M=Math.max(0,counts.M);
+    counts.N=Math.max(0,counts.N);
     return counts;
   }
 
