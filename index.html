@@ -94,6 +94,10 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 #nameScreen{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center}
 .name-card{background:var(--s1);border-radius:16px;padding:28px;width:90%;max-width:340px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.1)}
 .name-card h2{font-family:"Syne",sans-serif;font-size:1.1rem;margin-bottom:8px}
+.prop-card{background:var(--s1);border:1.5px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:10px}
+.prop-card.pending{border-color:#ffc107;background:#fffde7}
+.prop-card.accepted{border-color:#4caf50;background:#f1f8e9}
+.prop-card.rejected{border-color:#ef5350;background:#fde8e8}
 .log-popup{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 18px;border-radius:10px;font-size:.75rem;z-index:500;max-width:320px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -142,6 +146,9 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
   <button class="tab-btn active" id="tab-mi" onclick="showTab('mi')">👤 Mi turno</button>
   <button class="tab-btn" id="tab-todos" onclick="showTab('todos')">📅 Todos</button>
   <button class="tab-btn" id="tab-resumen" onclick="showTab('resumen')">📊 Resumen</button>
+  <button class="tab-btn" id="tab-props" onclick="showTab('props')" style="position:relative">
+    🔄 Cambios<span id="propBadge" style="display:none;position:absolute;top:4px;right:8px;background:#e53935;color:#fff;border-radius:50%;width:14px;height:14px;font-size:.55rem;align-items:center;justify-content:center;font-weight:700">0</span>
+  </button>
 </div>
 
 <div id="view-mi" style="flex:1;overflow:auto;padding:14px 16px">
@@ -337,6 +344,7 @@ if(userName){
     // Device already verified, skip PIN
     document.getElementById("nameScreen").style.display="none";
     initApp();
+    setTimeout(()=>initProposals(),1000);
     setTimeout(()=>{render();renderMiTurno();showTab("mi");setTimeout(goToToday,400);},100);
   } else {
     // Device not verified, show name screen with PIN
@@ -445,8 +453,22 @@ function showTab(tab){
   document.getElementById("tab-mi").classList.toggle("active",tab==="mi");
   document.getElementById("tab-todos").classList.toggle("active",tab==="todos");
   document.getElementById("view-resumen").style.display=tab==="resumen"?"block":"none";
-  document.getElementById("tab-resumen").classList.toggle("active",tab==="resumen");
+  const vp=document.getElementById("view-props");
+  if(vp)vp.style.display=tab==="props"?"block":"none";
+  ["mi","todos","resumen","props"].forEach(t=>{
+    const el=document.getElementById("tab-"+t);
+    if(el){el.style.color=tab===t?"var(--I)":"var(--mu)";el.style.borderBottom=tab===t?"3px solid var(--I)":"3px solid transparent";el.style.fontWeight=tab===t?"600":"normal";}
+  });
   if(tab==="resumen")renderResumen();
+  if(tab==="props")renderProposals();
+  if(tab==="mi"){
+    const annKey="enf_ann_v1";
+    const shown=parseInt(localStorage.getItem(annKey)||"0");
+    if(shown<5){
+      localStorage.setItem(annKey,String(shown+1));
+      setTimeout(()=>{const o=document.getElementById("overlayNewFeature");if(o)o.classList.add("open");},400);
+    }
+  }
   if(tab==="todos"){
     setTimeout(()=>{
       const wrap=document.getElementById("wrap");
@@ -546,13 +568,18 @@ function renderMiTurno(){
   html+=`</tbody></table>`;
   document.getElementById("miTurnoContent").innerHTML=html;
   document.getElementById("miTurnoContent").onclick=function(e){
-    if(!miEditMode)return;
     const td=e.target.closest("td[data-ri]");
     if(!td)return;
-    const dk=(userRow-1)+"_"+miYear+String(miMonth+1).padStart(2,"0")+td.dataset.day.padStart(2,"0");
-    openEdit(parseInt(td.dataset.ri),parseInt(td.dataset.di),dk);
-  };
-}
+    const day=parseInt(td.dataset.day);
+    const ri=parseInt(td.dataset.ri);
+    const di=parseInt(td.dataset.di);
+    const dk=(userRow-1)+"_"+miYear+String(miMonth+1).padStart(2,"0")+String(day).padStart(2,"0");
+    const ov=window.dateOverrides[dk];
+    const base=ROTA_ENF[ri][di];
+    const cell=ov!==undefined?ov:base;
+    const t=cell?cell[0]:null;
+    openDayAction(day,ri,di,dk,t);
+  };}
 
 function showMiLog(e,day){
   e.stopPropagation();
@@ -567,8 +594,8 @@ function showMiLog(e,day){
 
 const TURNS_LIST=[["D","☀️ D"],["M","🌅 M"],["N","🌙 N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
 
-function openEdit(ri,di,dk){
-  if(!miEditMode)return;
+function openEdit(ri,di,dk,force){
+  if(!miEditMode&&!force)return;
   editCtx={ri,di,dateKey:dk||""};
   const ovKey=dk||(userRow-1)+"_";
   const cell=window.dateOverrides[ovKey]||ROTA_ENF[ri][di];
@@ -761,6 +788,7 @@ function enterApp(){
   localStorage.setItem("enf_verified_"+userRow,"1");
   document.getElementById("nameScreen").style.display="none";
   initApp();
+  setTimeout(()=>initProposals(),1000);
   setTimeout(()=>{renderMiTurno();showTab("mi");},500);
 }
 
@@ -780,6 +808,207 @@ function changePin(){
   }
 }
 
+
+// ===== PROPOSALS =====
+let proposals={}, currentPropKey=null, propFromDay=null, dayActionCtx=null;
+
+function initProposals(){
+  if(!db){setTimeout(initProposals,1000);return;}
+  db.ref("enf_proposals").on("value",snap=>{
+    proposals=snap.val()||{};
+    updatePropBadge();
+    const v=document.getElementById("view-props");
+    if(v&&v.style.display!=="none") renderProposals();
+  });
+}
+
+function updatePropBadge(){
+  const n=Object.values(proposals).filter(p=>Number(p.to)===Number(userRow)&&p.status==="pending").length;
+  const b=document.getElementById("propBadge");
+  if(b){b.textContent=n;b.style.display=n>0?"flex":"none";}
+}
+
+function openDayAction(day,ri,di,dk,turno){
+  dayActionCtx={day,ri,di,dk,turno};
+  const date=new Date(miYear,miMonth,day);
+  const DL=["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"];
+  const dow=(date.getDay()+6)%7;
+  document.getElementById("dayActionTitle").textContent=DL[dow]+" "+day+"/"+(miMonth+1)+"/"+miYear;
+  document.getElementById("dayActionTurn").textContent=turno||"Libre";
+  document.getElementById("overlayDayAction").classList.add("open");
+}
+function closeDayAction(){
+  document.getElementById("overlayDayAction").classList.remove("open");
+  dayActionCtx=null;
+}
+function dayActionEdit(){
+  if(!dayActionCtx)return;
+  const ctx={...dayActionCtx};
+  closeDayAction();
+  setTimeout(()=>openEdit(ctx.ri,ctx.di,ctx.dk,true),300);
+}
+function dayActionPropose(){
+  if(!dayActionCtx)return;
+  const ctx={...dayActionCtx};
+  closeDayAction();
+  setTimeout(()=>openPropModal(ctx.dk,ctx.turno),300);
+}
+
+function openPropModal(dateKey,turno){
+  propFromDay={dateKey,turno};
+  const date=(dateKey.split("_")[1])||"";
+  const dy=date.slice(6,8),mo=date.slice(4,6),yr=date.slice(0,4);
+  const pd=document.getElementById("propMyDay");
+  if(pd)pd.textContent="Tu turno del "+dy+"/"+mo+"/"+yr+": "+(turno||"");
+  const sel=document.getElementById("propPerson");
+  if(sel){
+    sel.innerHTML='<option value="">Selecciona...</option>';
+    PEOPLE_ENF.forEach((p,i)=>{if(i+1!==userRow)sel.innerHTML+='<option value="'+(i+1)+'">'+p.name+'</option>';});
+  }
+  const ptd=document.getElementById("propTheirDay");
+  if(ptd)ptd.innerHTML='<option value="">Primero selecciona la persona</option>';
+  const pc=document.getElementById("propComment");
+  if(pc)pc.value="";
+  document.getElementById("overlayProp").classList.add("open");
+}
+function closePropModal(){
+  document.getElementById("overlayProp").classList.remove("open");
+  propFromDay=null;
+}
+
+function loadPersonDays(){
+  const pi=parseInt(document.getElementById("propPerson").value);
+  if(!pi)return;
+  const sel=document.getElementById("propTheirDay");
+  sel.innerHTML='<option value="">Cargando...</option>';
+  const person=PEOPLE_ENF[pi-1];
+  const today=new Date();
+  const opts=[];
+  let d=new Date(today);
+  d.setDate(d.getDate()+1);
+  while(d.getFullYear()===today.getFullYear()){
+    const dow=(d.getDay()+6)%7;
+    const mon=mondayOf(d);
+    const ri=rowFor(person.startRow,mon);
+    const ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
+    const ov=window.dateOverrides[(pi-1)+"_"+ds];
+    const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
+    const t=cell?cell[0]:null;
+    if(t)opts.push({dk:(pi-1)+"_"+ds,t,label:String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" ("+t+")"});
+    d.setDate(d.getDate()+1);
+  }
+  sel.innerHTML='<option value="">Selecciona día...</option>';
+  opts.forEach(o=>sel.innerHTML+='<option value="'+o.dk+'" data-turn="'+o.t+'">'+o.label+'</option>');
+}
+
+function sendProposal(){
+  const toPi=parseInt(document.getElementById("propPerson").value);
+  const theirDaySel=document.getElementById("propTheirDay");
+  const theirDay=theirDaySel.value;
+  const toTurn=theirDaySel.options[theirDaySel.selectedIndex]?theirDaySel.options[theirDaySel.selectedIndex].dataset.turn||"?":"?";
+  const comment=(document.getElementById("propComment").value||"").trim();
+  if(!toPi||!theirDay){alert("Selecciona a compañeira e o día");return;}
+  if(!propFromDay)return;
+  if(!db){alert("Sen conexión");return;}
+  const prop={from:userRow,fromName:userName,fromDay:propFromDay.dateKey,fromTurn:propFromDay.turno,
+    to:toPi,toName:PEOPLE_ENF[toPi-1].name,toDay:theirDay,toTurn:toTurn,status:"pending",
+    commentFrom:comment,commentTo:"",createdAt:new Date().toLocaleString("es-ES")};
+  db.ref("enf_proposals").push(prop).then(()=>{
+    closePropModal();
+    alert("✅ Proposta enviada a "+PEOPLE_ENF[toPi-1].name);
+  }).catch(()=>alert("Error ao enviar"));
+}
+
+function openRespondModal(key){
+  currentPropKey=key;
+  const p=proposals[key];
+  if(!p)return;
+  const fmt=ds=>ds?ds.slice(6,8)+"/"+ds.slice(4,6)+"/"+ds.slice(0,4):"?";
+  const fromDs=(p.fromDay||"").split("_")[1];
+  const toDs=(p.toDay||"").split("_")[1];
+  let html='<div class="prop-card pending" style="margin-bottom:12px">';
+  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> propóñeche:</p>';
+  html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">';
+  html+='🔄 Dáche o seu <b>'+(p.fromTurn||"?")+'</b> do <b>'+fmt(fromDs)+'</b><br>';
+  html+='A cambio quere o teu turno do <b>'+fmt(toDs)+'</b></p>';
+  if(p.commentFrom)html+='<p style="font-size:.75rem;font-style:italic;color:#555">💬 "'+p.commentFrom+'"</p>';
+  html+='</div>';
+  document.getElementById("respondContent").innerHTML=html;
+  document.getElementById("respondComment").value="";
+  document.getElementById("overlayRespond").classList.add("open");
+}
+function closeRespondModal(){
+  document.getElementById("overlayRespond").classList.remove("open");
+  currentPropKey=null;
+}
+
+function respondProposal(decision){
+  if(!currentPropKey)return;
+  const p=proposals[currentPropKey];
+  const comment=(document.getElementById("respondComment").value||"").trim();
+  if(decision==="accepted"){
+    const fromPi=Number(p.from)-1;
+    const toPi=Number(p.to)-1;
+    const fromDate=(p.fromDay||"").split("_")[1];
+    const toDate=(p.toDay||"").split("_")[1];
+    const fromTurn=p.fromTurn||"L";
+    const toTurn=p.toTurn||"L";
+    const updates={};
+    updates["enf_changes/"+fromPi+"_"+fromDate]="L";
+    updates["enf_changes/"+fromPi+"_"+toDate]=toTurn;
+    updates["enf_changes/"+toPi+"_"+toDate]="L";
+    updates["enf_changes/"+toPi+"_"+fromDate]=fromTurn;
+    db.ref().update(updates);
+  }
+  db.ref("enf_proposals/"+currentPropKey).update({status:decision,commentTo:comment,respondedAt:new Date().toLocaleString("es-ES")}).then(()=>{
+    closeRespondModal();
+    if(decision==="accepted"){alert("✅ Cambio aceptado e aplicado");render();}
+    else alert("❌ Proposta rexeitada");
+  });
+}
+
+function cancelProposal(key){
+  if(!confirm("¿Cancelar esta proposta?"))return;
+  db.ref("enf_proposals/"+key).update({status:"cancelled"});
+}
+
+function renderProposals(){
+  const div=document.getElementById("propsContent");
+  if(!div)return;
+  if(!db&&Object.keys(proposals).length===0){
+    div.innerHTML='<p style="color:#c62828;font-size:.82rem">⚠️ Sen conexión. Recarga a páxina.</p>';return;
+  }
+  const keys=Object.keys(proposals).filter(k=>{
+    const p=proposals[k];
+    return Number(p.from)===Number(userRow)||Number(p.to)===Number(userRow);
+  });
+  if(keys.length===0){div.innerHTML='<p style="color:var(--mu);font-size:.82rem">Non tes propostas de cambio.</p>';return;}
+  const fmt=ds=>ds?ds.slice(6,8)+"/"+ds.slice(4,6):"?";
+  let html="";
+  keys.sort((a,b)=>{const ord={pending:0,accepted:1,rejected:2,cancelled:3};return (ord[proposals[a].status]||3)-(ord[proposals[b].status]||3);}).forEach(key=>{
+    const p=proposals[key];
+    const isFrom=Number(p.from)===Number(userRow);
+    const slabel=p.status==="pending"?"⏳ Pendente":p.status==="accepted"?"✅ Aceptado":p.status==="rejected"?"❌ Rexeitado":"🚫 Cancelado";
+    const ccls=p.status==="accepted"?"accepted":p.status==="pending"?"pending":"rejected";
+    const fromDs=(p.fromDay||"").split("_")[1];
+    const toDs=(p.toDay||"").split("_")[1];
+    html+='<div class="prop-card '+ccls+'" style="margin-bottom:12px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:.75rem;font-weight:700">'+slabel+'</span><span style="font-size:.7rem;color:var(--mu)">'+(p.createdAt||"")+'</span></div>';
+    html+='<p style="font-size:.82rem">'+(isFrom?"📤 Proposta a <b>"+p.toName+"</b>":"📥 Proposta de <b>"+p.fromName+"</b>")+'</p>';
+    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">🔄 <b>'+p.fromName+'</b> da o seu <b>'+(p.fromTurn||"?")+'</b> do '+fmt(fromDs)+'<br>🔄 <b>'+p.toName+'</b> da o seu turno do '+fmt(toDs)+'</p>';
+    if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555">💬 '+p.fromName+': "'+p.commentFrom+'"</p>';
+    if(p.commentTo)html+='<p style="font-size:.75rem;color:#555">💬 '+p.toName+': "'+p.commentTo+'"</p>';
+    if(p.status==="pending"&&!isFrom)html+='<button onclick="openRespondModal(\'' + key + '\')">Ver e responder</button>';
+    if(p.status==="pending"&&isFrom)html+='<button onclick="cancelProposal(\'' + key + '\')">Cancelar proposta</button>';
+    html+='</div>';
+  });
+  div.innerHTML=html;
+}
+
+function closeNewFeature(){
+  document.getElementById("overlayNewFeature").classList.remove("open");
+}
+
 function closeModal(){document.getElementById("overlay").classList.remove("open");editCtx=null;}
 function outsideClose(e){if(e.target.id==="overlay")closeModal();}
 window.onload=()=>{if(userName){render();renderMiTurno();showTab("mi");setTimeout(goToToday,300);}};
@@ -789,5 +1018,98 @@ if("serviceWorker" in navigator){
   navigator.serviceWorker.register("sw.js").catch(()=>{});
 }
 </script>
+<!-- PROPOSALS VIEW -->
+<div id="view-props" style="flex:1;overflow:auto;padding:14px 16px;display:none">
+  <h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propostas de cambio</h2>
+  <div id="propsContent"></div>
+</div>
+
+<!-- DAY ACTION MODAL -->
+<div class="overlay" id="overlayDayAction" onclick="if(event.target.id==='overlayDayAction')closeDayAction()">
+  <div class="modal">
+    <h2 id="dayActionTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px"></h2>
+    <div id="dayActionTurn" style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center"></div>
+    <button onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
+    <button onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
+    <button onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
+  </div>
+</div>
+
+<!-- PROPOSAL MODAL -->
+<div class="overlay" id="overlayProp" onclick="if(event.target.id==='overlayProp')closePropModal()">
+  <div class="modal">
+    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
+    <p id="propMyDay" style="font-size:.78rem;color:var(--mu);margin-bottom:12px"></p>
+    <div class="slabel">Compañeira/o:</div>
+    <select id="propPerson" onchange="loadPersonDays()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
+      <option value="">Selecciona...</option>
+    </select>
+    <div class="slabel" style="margin-top:10px">Día que queres dela/el:</div>
+    <select id="propTheirDay" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
+      <option value="">Primeiro selecciona a persoa</option>
+    </select>
+    <div class="slabel" style="margin-top:10px">Comentario:</div>
+    <input type="text" id="propComment" placeholder="Explica o motivo...">
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="mbtn mbtn-ghost" onclick="closePropModal()" style="flex:1">← Volver</button>
+      <button class="mbtn mbtn-save" onclick="sendProposal()" style="flex:1">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESPOND MODAL -->
+<div class="overlay" id="overlayRespond" onclick="if(event.target.id==='overlayRespond')closeRespondModal()">
+  <div class="modal">
+    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder proposta</h2>
+    <div id="respondContent"></div>
+    <div class="slabel">O teu comentario (opcional):</div>
+    <input type="text" id="respondComment" placeholder="A túa resposta...">
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="mbtn mbtn-ghost" onclick="closeRespondModal()" style="flex:1">← Volver</button>
+      <button class="mbtn mbtn-del" onclick="respondProposal('rejected')" style="flex:1">Rexeitar</button>
+      <button class="mbtn mbtn-save" onclick="respondProposal('accepted')" style="flex:1">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW FEATURE POPUP -->
+<div class="overlay" id="overlayNewFeature" onclick="if(event.target.id==='overlayNewFeature')closeNewFeature()">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2 style="font-family:Syne,sans-serif;font-size:.95rem;color:#2e7d32">🆕 Nova función</h2>
+      <span onclick="closeNewFeature()" style="cursor:pointer;font-size:1.2rem;color:var(--mu);padding:4px 8px">✕</span>
+    </div>
+    <p style="font-size:.82rem;font-weight:700;margin-bottom:8px">Propostas de cambio de quenda</p>
+    <p style="font-size:.78rem;color:var(--mu);line-height:1.6;margin-bottom:10px">Agora podes propoñerlle un cambio a calquera compañeira/o directamente dende a app:</p>
+    <ol style="font-size:.78rem;color:var(--tx);margin:0 0 12px 18px;line-height:1.9">
+      <li>Vai á pestaña <b>👤 Mi turno</b></li>
+      <li>Toca calquera día traballado</li>
+      <li>Escolle <b>🔄 Propoñer cambio con compañeira/o</b></li>
+      <li>Selecciona a persoa e o día que queres</li>
+      <li>Engade un comentario e envía</li>
+    </ol>
+    <p style="font-size:.78rem;color:var(--mu);line-height:1.6">A outra persoa verá un aviso na pestaña <b>🔄 Cambios</b> e poderá aceptar ou rexeitar.</p>
+    <button onclick="closeNewFeature()" style="width:100%;margin-top:16px;padding:12px;border-radius:8px;background:var(--I);color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;font-size:.88rem">Entendido ✓</button>
+  </div>
+</div>
+
+<!-- BACK BUTTON SUPPORT -->
+<script>
+window.addEventListener("popstate",function(){
+  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlay"];
+  for(const id of modals){
+    const el=document.getElementById(id);
+    if(el&&el.classList.contains("open")){
+      el.classList.remove("open");
+      history.pushState(null,"","");
+      return;
+    }
+  }
+});
+history.pushState(null,"","");
+const _origAdd=DOMTokenList.prototype.add;
+DOMTokenList.prototype.add=function(...a){_origAdd.apply(this,a);if(a.includes("open"))history.pushState(null,"","");};
+</script>
+
 </body>
 </html>
