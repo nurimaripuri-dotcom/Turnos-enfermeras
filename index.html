@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <link rel="manifest" href="manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="TCAES 3ºC">
-<meta name="theme-color" content="#c0392b">
+<meta name="apple-mobile-web-app-title" content="Enfermeras 3ºC">
+<meta name="theme-color" content="#1565c0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>TCAES 3ºC</title>
+<title>Enfermeras 3ºC</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -62,7 +62,6 @@ td.today-col{background:var(--today-bg)!important}
 #view-mi{flex:1;overflow:auto;padding:14px 16px}
 .mi-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
 .mi-month-nav button{font-size:1.4rem;padding:6px 18px;border-radius:10px;border:1px solid var(--bd);background:var(--s2);cursor:pointer;flex-shrink:0}
-.lc.T,.mi-chip.T,.chip.T{background:#ff9800;color:#fff;border-color:#e65100}
 .mi-chip{padding:5px 14px;border-radius:7px;font-size:.85rem;font-weight:700;border:1.5px solid transparent}
 .mi-chip.I{background:var(--Ib);color:var(--I);border-color:var(--Ix)}
 .mi-chip.V{background:var(--Vb);color:var(--V);border-color:var(--Vx)}
@@ -95,15 +94,10 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 #nameScreen{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center}
 .name-card{background:var(--s1);border-radius:16px;padding:28px;width:90%;max-width:340px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.1)}
 .name-card h2{font-family:"Syne",sans-serif;font-size:1.1rem;margin-bottom:8px}
-.proposal-badge{position:absolute;top:-5px;right:-5px;background:#e53935;color:#fff;border-radius:50%;width:16px;height:16px;font-size:.6rem;display:flex;align-items:center;justify-content:center;font-weight:700}
 .prop-card{background:var(--s1);border:1.5px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:10px}
 .prop-card.pending{border-color:#ffc107;background:#fffde7}
 .prop-card.accepted{border-color:#4caf50;background:#f1f8e9}
 .prop-card.rejected{border-color:#ef5350;background:#fde8e8}
-.prop-btn{padding:8px 14px;border-radius:7px;border:none;cursor:pointer;font-size:.8rem;font-weight:600;font-family:"DM Mono",monospace}
-.prop-btn.accept{background:#4caf50;color:#fff}
-.prop-btn.reject{background:#ef5350;color:#fff}
-.prop-btn.cancel{background:var(--s2);color:var(--tx);border:1px solid var(--bd)}
 .log-popup{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 18px;border-radius:10px;font-size:.75rem;z-index:500;max-width:320px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,.3)}
 </style>
 </head>
@@ -111,7 +105,7 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 
 <div id="nameScreen">
   <div class="name-card">
-    <h2>🏥 TCAES <em>3ºC</em></h2>
+    <h2>🏥 Enfermeras <em>3ºC</em></h2>
     <p style="font-size:.78rem;color:var(--mu);margin-bottom:18px">¿Cuál es tu nombre?</p>
     <!-- STEP 1: Name -->
     <div id="stepName">
@@ -131,7 +125,7 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 </div>
 
 <header>
-  <h1>🏥 TCAES <em>3ºC</em></h1>
+  <h1>🏥 Enfermeras <em>3ºC</em></h1>
   <div style="display:flex;gap:6px;align-items:center">
     <button class="hbtn" onclick="changeYear(-1)">‹</button>
     <span id="yearLabel" style="font-family:Syne,sans-serif;font-weight:700;min-width:46px;text-align:center"></span>
@@ -142,18 +136,16 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 <div class="legend">
   <span style="color:var(--mu)">Unidad →</span>
   <div class="lc I">🔴 Ictus</div>
-  <div class="lc V">🟢 351-353</div>
-  <div class="lc N2">⚫ 354/337-339</div>
-  <div class="lc A">🔵 340-345</div>
+  <div class="lc A">🔵 338/345</div>
+  <div class="lc V">🟢 351-354/337</div>
+  <div class="lc N2">⚫ L/X: 354+337/339</div>
   <div class="lc neu">L · /</div>
-  <div class="lc T">T</div>
-  <div class="lc" style="background:#fff3cd;color:#856404;border-color:#ffc107">🏖 Vac</div>
-  <div class="lc" style="background:#d1ecf1;color:#0c5460;border-color:#bee5eb">📋 LD</div>
   <span style="font-size:.65rem;color:var(--mu)">← desliza →</span>
 </div>
 <div class="tabs">
   <button class="tab-btn active" id="tab-mi" onclick="showTab('mi')">👤 Mi turno</button>
   <button class="tab-btn" id="tab-todos" onclick="showTab('todos')">📅 Todos</button>
+  <button class="tab-btn" id="tab-resumen" onclick="showTab('resumen')">📊 Resumen</button>
   <button class="tab-btn" id="tab-props" onclick="showTab('props')" style="position:relative">
     🔄 Cambios<span id="propBadge" style="display:none;position:absolute;top:4px;right:8px;background:#e53935;color:#fff;border-radius:50%;width:14px;height:14px;font-size:.55rem;align-items:center;justify-content:center;font-weight:700">0</span>
   </button>
@@ -162,14 +154,12 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 <div id="view-mi" style="flex:1;overflow:auto;padding:14px 16px">
   <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px">
     <button onclick="changePin()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--mu);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔑 PIN</button>
-    
+    <button id="miEditBtn" onclick="toggleMiEdit()" style="padding:6px 14px;border-radius:8px;border:1px solid #dee2e6;background:#fff3cd;color:#856404;cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔒 Editar mi turno</button>
   </div>
   <div id="miTurnoContent"></div>
 </div>
 
 <div id="view-todos" style="flex:1;overflow:auto;display:none">
-
-
   <div class="wrap" id="wrap">
     <table id="tbl" style="border-collapse:collapse;width:max-content">
       <thead id="thead"></thead>
@@ -193,10 +183,6 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
       <div class="slabel" id="unitLabel1">Unidad:</div>
       <div class="unit-grid" id="unitGrid1"></div>
     </div>
-    <div id="unitSection2" style="display:none;margin-top:8px">
-      <div class="slabel" id="unitLabel2">Segunda unidad:</div>
-      <div class="unit-grid" id="unitGrid2"></div>
-    </div>
     <div class="slabel">Tu nombre:</div>
     <input type="text" id="inputWho" placeholder="Tu nombre...">
     <div class="slabel">Cambio con:</div>
@@ -218,41 +204,57 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-const ROTA = [
-  [["T","V"],["T","I"],["N","I"],["/",null],["L",null],["L",null],["M","I"]],
-  [["M","N2"],["M","N2"],["T","A"],["N","N2"],["/",null],["L",null],["L",null]],
-  [["L",null],["M","A"],["M","A"],["T","A"],["N","N2"],["/",null],["L",null]],
-  [["L",null],["L",null],["T","I"],["N","I"],["/",null],["L",null],["L",null]],
-  [["M","I"],["M","I"],["M","I"],["T","I"],["N","I"],["/",null],["L",null]],
-  [["L",null],["M","V"],["M","V"],["T","V"],["T","V"],["N","N2"],["/",null]],
-  [["L",null],["L",null],["M","N2"],["M","V"],["T","I"],["T","I"],["N","N2"]],
-  [["/",null],["L",null],["L",null],["M","N2"],["M","N2"],["T","V"],["T","V"]],
-  [["N","I"],["/",null],["L",null],["M","I"],["M","I"],["M","I"],["T","I"]],
-  [["T","I"],["N","I"],["/",null],["L",null],["L",null],["M","N2"],["M","N2"]],
-  [["M","A"],["T","A"],["N","N2"],["/",null],["L",null],["L",null],["L",null]],
-  [["M","V"],["T","V"],["T","V"],["L",null],["M","A"],["M","A"],["M","A"]],
-  [["L",null],["L",null],["L",null],["M","A"],["T","A"],["T","A"],["T","A"]],
-  [["N","N2"],["/",null],["L",null],["L",null],["M","V"],["M","V"],["M","V"]],
-  [["T","A"],["N","N2"],["/",null],["L",null],["L",null],["L",null],["L",null]],
+const ROTA_ENF = [
+  [["L",null],["L",null],["D","I"],["N","I"],["/",null],["L",null],["L",null]],
+  [["L",null],["D","I"],["N","I"],["/",null],["L",null],["L",null],["D","I"]],
+  [["N","I"],["/",null],["L",null],["L",null],["L",null],["D","I"],["N","I"]],
+  [["/",null],["L",null],["L",null],["D","I"],["N","I"],["/",null],["L",null]],
+  [["L",null],["L",null],["D","V"],["N","V"],["/",null],["L",null],["L",null]],
+  [["M","N2"],["L",null],["D","N2"],["L",null],["L",null],["L",null],["L",null]],
+  [["L",null],["D","V"],["N","V"],["/",null],["L",null],["L",null],["D","V"]],
+  [["N","V"],["/",null],["L",null],["L",null],["D","V"],["N","V"],["/",null]],
+  [["L",null],["L",null],["L",null],["D","V"],["N","V"],["/",null],["L",null]],
+  [["L",null],["D","A"],["N","A"],["/",null],["L",null],["L",null],["L",null]],
+  [["D","I"],["N","I"],["/",null],["L",null],["L",null],["D","V"],["N","V"]],
+  [["/",null],["L",null],["L",null],["L",null],["D","I"],["N","I"],["/",null]],
+  [["L",null],["L",null],["D","A"],["N","A"],["/",null],["L",null],["L",null]],
+  [["D","V"],["N","V"],["/",null],["L",null],["L",null],["L",null],["D","A"]],
+  [["N","A"],["/",null],["L",null],["L",null],["D","A"],["N","A"],["/",null]],
+  [["L",null],["L",null],["L",null],["L",null],["L",null],["L",null],["L",null]],
+  [["D","A"],["N","A"],["/",null],["L",null],["L",null],["D","A"],["N","A"]],
+  [["/",null],["L",null],["L",null],["D","A"],["N","A"],["/",null],["L",null]],
 ];
-const PEOPLE = [
-  {name:"Montse",startRow:1},{name:"Manuela",startRow:2},{name:"Ana",startRow:3},
-  {name:"Alberto",startRow:4},{name:"Cristina",startRow:5},{name:"Pilina",startRow:6},
-  {name:"Lara",startRow:7},{name:"Loly",startRow:8},{name:"Pepa",startRow:9},
-  {name:"Ana Irib.",startRow:10},{name:"Vanesa F.",startRow:11},{name:"Manuel",startRow:12},
-  {name:"Isabel",startRow:13},{name:"Adrián",startRow:14},{name:"Susana",startRow:15},
+const PEOPLE_ENF = [
+  {name:"Alba",startRow:1},
+  {name:"Laura V.",startRow:2},
+  {name:"Maite",startRow:3},
+  {name:"Marta",startRow:4},
+  {name:"Estefanía",startRow:5},
+  {name:"Begoña",startRow:6},
+  {name:"Emma",startRow:7},
+  {name:"Sara",startRow:8},
+  {name:"Cris",startRow:9},
+  {name:"Rocío",startRow:10},
+  {name:"Luisa",startRow:11},
+  {name:"Aurora",startRow:12},
+  {name:"Jose",startRow:13},
+  {name:"Mercedes",startRow:14},
+  {name:"Ángeles",startRow:15},
+  {name:"Susana",startRow:16},
+  {name:"Olga",startRow:17},
+  {name:"Patricia R.",startRow:18},
 ];
 
 const MONTHS_ES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DAYS_ES=["L","M","X","J","V","S","D"];
-const REF_MONDAY=new Date(2026,3,6); // 6 abril 2026 // Feb 23 2026
-const UNITS=[["I","🔴 Ictus"],["V","🟢 351-353"],["N2","⚫ 354/337-339"],["A","🔵 340-345"]];
+const REF_MONDAY_ENF=new Date(2026,1,23); // Feb 23 2026
+const UNITS=[["I","🔴 Ictus"],["A","🔵 338/345"],["V","🟢 351-354/337"],["N2","⚫ 354/337-339"]];
 const TURNS=[["D","☀️ D"],["M","🌅 M"],["N","🌙 N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
 
 let currentYear=new Date().getFullYear();
 let editMode=false,miEditMode=false;
-let userName=localStorage.getItem("tcaes_user")||"";
-let userRow=parseInt(localStorage.getItem("tcaes_row")||"0");
+let userName=localStorage.getItem("enf_user")||"";
+let userRow=parseInt(localStorage.getItem("enf_row")||"0");
 let editCtx=null,editTurn=null,editUnit=null;
 let changeLogData={},changeIcons={};
 window.dateOverrides={};
@@ -269,9 +271,9 @@ try{
     messagingSenderId:"362053048865",
     appId:"1:362053048865:web:e77a2ba4d053c4f7b6a160"
   };
-  if(!firebase.apps.length) firebase.initializeApp(_fc,"tcaes_app");
-  else if(!firebase.apps.find(a=>a.name==="tcaes_app")) firebase.initializeApp(_fc,"tcaes_app");
-  db=firebase.database(firebase.app("tcaes_app"));
+  if(!firebase.apps.length) firebase.initializeApp(_fc,"enfermeras");
+  else if(!firebase.apps.find(a=>a.name==="enfermeras")) firebase.initializeApp(_fc,"enfermeras");
+  db=firebase.database(firebase.app("enfermeras"));
 }catch(e){console.log("Firebase early init:",e);}
 let miMonth=new Date().getMonth(),miYear=new Date().getFullYear();
 
@@ -279,16 +281,16 @@ function saveName(){
   const n=document.getElementById("nameInput").value.trim();
   if(!n)return;
   const nl=n.toLowerCase();
-  const idx=PEOPLE.findIndex(p=>p.name.toLowerCase()===nl);
+  const idx=PEOPLE_ENF.findIndex(p=>p.name.toLowerCase()===nl);
   if(idx<0){
-    const names=PEOPLE.map(p=>p.name).join(", ");
+    const names=PEOPLE_ENF.map(p=>p.name).join(", ");
     document.getElementById("nameError").textContent="❌ Nombre no encontrado. Válidos: "+names;
     document.getElementById("nameError").style.display="block";
     return;
   }
   userName=n; userRow=idx+1;
-  localStorage.setItem("tcaes_user",n);
-  localStorage.setItem("tcaes_row",String(userRow));
+  localStorage.setItem("enf_user",n);
+  localStorage.setItem("enf_row",String(userRow));
   // Go to PIN step
   document.getElementById("stepName").style.display="none";
   document.getElementById("stepPin").style.display="block";
@@ -305,7 +307,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 function initApp(){
   try{
     // Firebase already initialized early
-    db.ref("rota_changes").on("value",snap=>{
+    db.ref("enf_changes").on("value",snap=>{
       const raw=snap.val()||{};
       window.dateOverrides={};
       Object.entries(raw).forEach(([k,v])=>{
@@ -319,11 +321,11 @@ function initApp(){
       const resTab=document.getElementById("view-resumen");
       if(resTab&&resTab.style.display!=="none") renderResumen();
     });
-    db.ref("change_icons").on("value",snap=>{
+    db.ref("enf_icons").on("value",snap=>{
       changeIcons=snap.val()||{};
       render();
     });
-    db.ref("change_log").on("value",snap=>{
+    db.ref("enf_log").on("value",snap=>{
       changeLogData={};
       const logs=snap.val();
       if(logs)Object.values(logs).forEach(e=>{
@@ -337,7 +339,7 @@ function initApp(){
 }
 
 if(userName){
-  const verified=localStorage.getItem("tcaes_verified_"+userRow);
+  const verified=localStorage.getItem("enf_verified_"+userRow);
   if(verified){
     // Device already verified, skip PIN
     document.getElementById("nameScreen").style.display="none";
@@ -356,11 +358,11 @@ if(userName){
 }
 
 function mondayOf(d){const dt=new Date(d);const day=dt.getDay();dt.setDate(dt.getDate()+(day===0?-6:1-day));return dt;}
-function weekOff(mon){return Math.round((mon-REF_MONDAY)/(7*86400000));}
-function rowFor(sr,mon){const o=weekOff(mon);return((sr-1+o)%15+15)%15;}
+function weekOff(mon){return Math.round((mon-REF_MONDAY_ENF)/(7*86400000));}
+function rowFor(sr,mon){const o=weekOff(mon);return((sr-1+o)%18+18)%18;}
 
 function chipCls(t,u){
-  if(!t||t==="L"||t==="/"||t==="V"||t==="LD"||t==="MT"||t==="TN")return"neu";
+  if(!t||t==="L"||t==="/"||t==="V"||t==="LD")return"neu";
   return u||"neu";
 }
 
@@ -395,7 +397,7 @@ function render(){
   document.getElementById("thead").innerHTML=h1+h2;
 
   let body='';
-  PEOPLE.forEach((p,pi)=>{
+  PEOPLE_ENF.forEach((p,pi)=>{
     const isMyRow=(userRow===pi+1);
     const bg=pi%2===0?"#fff":"#f8f9fa";
     body+=`<tr><td class="name-col" style="background:${bg};${isMyRow?"font-weight:700;color:var(--I)":""}">${p.name}</td>`;
@@ -404,11 +406,9 @@ function render(){
       const ri=rowFor(p.startRow,mon);
       const dateStr=dc.yr+String(dc.mn+1).padStart(2,"0")+String(dc.d).padStart(2,"0");
       const ovKey=pi+"_"+dateStr;
-      const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA[ri][dc.dow];
-      const t=cell?cell[0]:null,u=cell?cell[1]:null,u2=cell&&cell[2]?cell[2]:null;
+      const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA_ENF[ri][dc.dow];
+      const t=cell?cell[0]:null,u=cell?cell[1]:null;
       const cls=chipCls(t,u);
-      const cls2=u2?chipCls(t,u2):null;
-      const isCombined=(t==="MT"||t==="TN")&&u2;
       const lbl=t==="V"?"🏖":t==="LD"?"📋":(t||"·");
       const cellBg=dc.isToday?"#81c784":dc.isSun?"#f3e5f5":bg;
       const iconData=changeIcons[pi]&&changeIcons[pi][dateStr];
@@ -450,25 +450,26 @@ function goToToday(){
 function showTab(tab){
   document.getElementById("view-mi").style.display=tab==="mi"?"block":"none";
   document.getElementById("view-todos").style.display=tab==="todos"?"block":"none";
+  document.getElementById("tab-mi").classList.toggle("active",tab==="mi");
+  document.getElementById("tab-todos").classList.toggle("active",tab==="todos");
+  document.getElementById("view-resumen").style.display=tab==="resumen"?"block":"none";
   const vp=document.getElementById("view-props");
   if(vp)vp.style.display=tab==="props"?"block":"none";
-  ["mi","todos","props"].forEach(t=>{
+  ["mi","todos","resumen","props"].forEach(t=>{
     const el=document.getElementById("tab-"+t);
     if(el){el.style.color=tab===t?"var(--I)":"var(--mu)";el.style.borderBottom=tab===t?"3px solid var(--I)":"3px solid transparent";el.style.fontWeight=tab===t?"600":"normal";}
   });
+  if(tab==="resumen")renderResumen();
   if(tab==="props")renderProposals();
   if(tab==="mi"){
-    const annKey="tcaes_ann_todos_v1";
+    const annKey="enf_ann_v1";
     const shown=parseInt(localStorage.getItem(annKey)||"0");
     if(shown<5){
       localStorage.setItem(annKey,String(shown+1));
       setTimeout(()=>{const o=document.getElementById("overlayNewFeature");if(o)o.classList.add("open");},400);
     }
   }
-  document.getElementById("tab-mi").classList.toggle("active",tab==="mi");
-  document.getElementById("tab-todos").classList.toggle("active",tab==="todos");
   if(tab==="todos"){
-
     setTimeout(()=>{
       const wrap=document.getElementById("wrap");
       const th=document.querySelector("th.today-hdr");
@@ -491,11 +492,11 @@ function toggleMiEdit(){
 
 function renderMiTurno(){
   if(userRow===0){document.getElementById("miTurnoContent").innerHTML='<p style="color:var(--mu);padding:20px">No se encontró tu fila.</p>';return;}
-  const me=PEOPLE[userRow-1];
+  const me=PEOPLE_ENF[userRow-1];
   const today=new Date();
   const last=new Date(miYear,miMonth+1,0).getDate();
   const firstDow=(new Date(miYear,miMonth,1).getDay()+6)%7;
-  let cD=0,cM=0,cT=0,cN=0;
+  let cD=0,cM=0,cN=0;
   for(let d=1;d<=last;d++){
     const date=new Date(miYear,miMonth,d);
     const dow=(date.getDay()+6)%7;
@@ -503,9 +504,9 @@ function renderMiTurno(){
     const ri=rowFor(me.startRow,mon);
     const dateStr=miYear+String(miMonth+1).padStart(2,"0")+String(d).padStart(2,"0");
     const ovKey=(userRow-1)+"_"+dateStr;
-    const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA[ri][dow];
+    const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA_ENF[ri][dow];
     const t=cell?cell[0]:null;
-    if(t==="D")cD++;else if(t==="M")cM++;else if(t==="T")cT++;else if(t==="N")cN++;
+    if(t==="D")cD++;else if(t==="M")cM++;else if(t==="N")cN++;
   }
 
   let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px">
@@ -514,8 +515,8 @@ function renderMiTurno(){
     <button onclick="miMonth++;if(miMonth>11){miMonth=0;miYear++;}renderMiTurno()" style="font-size:1.4rem;padding:6px 18px;border-radius:10px;border:1px solid var(--bd);background:var(--s2);cursor:pointer;flex-shrink:0">›</button>
   </div>
   <div style="display:flex;gap:6px;margin-bottom:12px;font-size:.73rem">
+    <span style="background:var(--Ab);color:var(--A);padding:3px 10px;border-radius:6px;font-weight:600">☀️ ${cD}D</span>
     <span style="background:var(--Vb);color:var(--V);padding:3px 10px;border-radius:6px;font-weight:600">🌅 ${cM}M</span>
-    <span style="background:#fff3e0;color:#e65100;padding:3px 10px;border-radius:6px;font-weight:600">🌤 ${cT}T</span>
     <span style="background:var(--Ib);color:var(--I);padding:3px 10px;border-radius:6px;font-weight:600">🌙 ${cN}N</span>
   </div>`;
 
@@ -541,11 +542,9 @@ function renderMiTurno(){
         const ri=rowFor(me.startRow,mon);
         const dateStr=miYear+String(miMonth+1).padStart(2,"0")+String(day).padStart(2,"0");
         const ovKey=(userRow-1)+"_"+dateStr;
-        const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA[ri][dow];
-        const t=cell?cell[0]:null,u=cell?cell[1]:null,u2=cell&&cell[2]?cell[2]:null;
+        const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA_ENF[ri][dow];
+        const t=cell?cell[0]:null,u=cell?cell[1]:null;
         const cls=chipCls(t,u);
-        const cls2=u2?chipCls(t,u2):null;
-        const isCombined=(t==="MT"||t==="TN")&&u2;
         const lbl=t==="V"?"🏖":t==="LD"?"📋":(t||"·");
         const bg=isToday?"#4caf50":isWE?"#f3e5f5":"var(--s1)";
         const numColor=isToday?"#fff":isWE?"#6f42c1":"var(--tx)";
@@ -555,11 +554,7 @@ function renderMiTurno(){
         const miOnClick=miEditMode ? ("openEdit("+(rowFor(me.startRow,mondayOf(new Date(miYear,miMonth,day)))+","+dow+")")) : "";
         html+=`<td data-ri="${rowFor(me.startRow,mondayOf(new Date(miYear,miMonth,day)))}" data-di="${dow}" data-day="${day}" style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:${bg2};border-radius:12px;height:90px;vertical-align:middle;cursor:${miEditMode?"pointer":"default"};position:relative">
           <div style="font-size:1.1rem;font-weight:700;color:${numColor};margin-bottom:6px">${day}</div>
-          <div class="mi-chip ${isCombined ? 'neu' : cls}" style="font-size:1.3rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;gap:2px;${isLorSlash?'background:#fff;color:#333;border:2px solid #333;':''}">
-            ${isCombined && u2 ?
-              '<span class=\'chip '+cls+'\' style=\'padding:2px 4px;border-radius:4px;font-size:1.1rem\'>'+(t==='MT'?'M':'T')+'</span><span class=\'chip '+(cls2||cls)+'\' style=\'padding:2px 4px;border-radius:4px;font-size:1.1rem\'>'+(t==='MT'?'T':'N')+'</span>'
-              : lbl}
-          </div>
+          <div class="mi-chip ${cls}" style="font-size:1.3rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;${isLorSlash?"background:#fff;color:#333;border:2px solid #333;":""}">${lbl}</div>
           ${iconMi?`<div onclick="showMiLog(event,${day})" style="position:absolute;top:3px;right:3px;width:14px;height:14px;background:#ffc107;border-radius:50%;font-size:.55rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2">✎</div>`+
           (()=>{const txt=[iconMi.con&&iconMi.con!=="—"?"🔄 "+iconMi.con:"",iconMi.comentario?"💬 "+iconMi.comentario:""].filter(Boolean).join(" ");return txt?`<div style="font-size:.55rem;color:#555;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${txt}</div>`:""})()
           :""}
@@ -580,12 +575,11 @@ function renderMiTurno(){
     const di=parseInt(td.dataset.di);
     const dk=(userRow-1)+"_"+miYear+String(miMonth+1).padStart(2,"0")+String(day).padStart(2,"0");
     const ov=window.dateOverrides[dk];
-    const base=ROTA[ri][di];
+    const base=ROTA_ENF[ri][di];
     const cell=ov!==undefined?ov:base;
     const t=cell?cell[0]:null;
     openDayAction(day,ri,di,dk,t);
-  };
-}
+  };}
 
 function showMiLog(e,day){
   e.stopPropagation();
@@ -598,16 +592,15 @@ function showMiLog(e,day){
   setTimeout(()=>popup.style.display="none",5000);
 }
 
-const TURNS_LIST=[["M","☀️ M"],["T","🌤 T"],["N","🌙 N"],["MT","☀️🌤 M/T"],["TN","🌤🌙 T/N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
+const TURNS_LIST=[["D","☀️ D"],["M","🌅 M"],["N","🌙 N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
 
 function openEdit(ri,di,dk,force){
   if(!miEditMode&&!force)return;
   editCtx={ri,di,dateKey:dk||""};
   const ovKey=dk||(userRow-1)+"_";
-  const cell=window.dateOverrides[ovKey]||ROTA[ri][di];
+  const cell=window.dateOverrides[ovKey]||ROTA_ENF[ri][di];
   editTurn=cell?cell[0]:null;
   editUnit=cell?cell[1]:null;
-  editUnit2=cell&&cell[2]?cell[2]:null;
   document.getElementById("mTitle").textContent=`${DAYS_ES[di]} — fila ${ri+1}`;
   document.getElementById("mSub").textContent=cell?`Actual: ${cell[0]}${cell[1]?" ("+cell[1]+")":""}`:""
   renderTurnBtns();renderUnitBtns();
@@ -625,43 +618,31 @@ function renderUnitBtns(){
   const show=editTurn&&editTurn!=="L"&&editTurn!=="/"&&editTurn!=="V"&&editTurn!=="LD";
   document.getElementById("unitSection").style.display=show?"":"none";
   if(!show)return;
-  const isCombined=editTurn==="MT"||editTurn==="TN";
-  const lbl1=editTurn==="MT"?"Mañana:":editTurn==="TN"?"Tarde:":"Unidad:";
-  const lbl2=editTurn==="MT"?"Tarde:":"Noche:";
-  document.getElementById("unitLabel1").textContent=lbl1;
   document.getElementById("unitGrid1").innerHTML=UNITS.map(([k,l])=>
     `<div class="ubtn ${k} ${editUnit===k?"active":""}" onclick="selUnit('${k}')">${l}</div>`).join("");
-  const sec2=document.getElementById("unitSection2");
-  if(sec2){
-    sec2.style.display=isCombined?"block":"none";
-    document.getElementById("unitLabel2").textContent=lbl2;
-    document.getElementById("unitGrid2").innerHTML=UNITS.map(([k,l])=>
-      `<div class="ubtn ${k} ${editUnit2===k?"active":""}" onclick="selUnit2('${k}')">${l}</div>`).join("");
-  }
 }
-function selTurn(t){editTurn=t;if(t==="L"||t==="/"||t==="V"||t==="LD"){editUnit=null;editUnit2=null;}if(t!=="MT"&&t!=="TN")editUnit2=null;renderTurnBtns();renderUnitBtns();}
+function selTurn(t){editTurn=t;if(t==="L"||t==="/"||t==="V"||t==="LD")editUnit=null;renderTurnBtns();renderUnitBtns();}
 function selUnit(u){editUnit=u;renderUnitBtns();}
-function selUnit2(u){editUnit2=u;renderUnitBtns();}
-function confirmEdit(){applyEdit(editTurn,editUnit,editUnit2);}
+function confirmEdit(){applyEdit(editTurn,editUnit);}
 
-function applyEdit(t,u,u2){
+function applyEdit(t,u){
   if(!editCtx)return;
-  const val=t?(u2?[t,u||null,u2]:[t,u||null]):null;
+  const val=t?[t,u||null]:null;
   if(editCtx.dateKey){
     window.dateOverrides[editCtx.dateKey]=val;
     const who=document.getElementById("inputWho").value.trim()||userName;
     const withWho=document.getElementById("inputWith").value.trim()||"—";
     const comment=document.getElementById("inputComment").value.trim();
     if(db&&editCtx.dateKey){
-      db.ref("rota_changes/"+editCtx.dateKey).set(val).catch(()=>{});
+      db.ref("enf_changes/"+editCtx.dateKey).set(val).catch(()=>{});
       const parts=editCtx.dateKey.split("_");
       const pi_=parts[0],date_=parts[1];
       if(val){
-        db.ref("change_icons/"+pi_+"/"+date_).set({quien:who,con:withWho,comentario:comment,cambio:val[0]+(val[1]?" ("+val[1]+")":"")}).catch(()=>{});
+        db.ref("enf_icons/"+pi_+"/"+date_).set({quien:who,con:withWho,comentario:comment,cambio:val[0]+(val[1]?" ("+val[1]+")":"")}).catch(()=>{});
       }else{
-        db.ref("change_icons/"+pi_+"/"+date_).remove().catch(()=>{});
+        db.ref("enf_icons/"+pi_+"/"+date_).remove().catch(()=>{});
       }
-      db.ref("change_log").push({quien:who,con:withWho,comentario:comment,fecha:new Date().toLocaleString("es-ES"),dateKey:editCtx.dateKey,cambio:val?val[0]+(val[1]?" ("+val[1]+")":""):"Borrado"}).catch(()=>{});
+      db.ref("enf_log").push({quien:who,con:withWho,comentario:comment,fecha:new Date().toLocaleString("es-ES"),dateKey:editCtx.dateKey,cambio:val?val[0]+(val[1]?" ("+val[1]+")":""):"Borrado"}).catch(()=>{});
     }
   }
   closeModal();render();
@@ -674,7 +655,7 @@ function renderResumen(){
   const myKeys=Object.keys(window.dateOverrides||{}).filter(k=>k.startsWith((userRow-1)+"_"));
   const vacKeys=myKeys.filter(k=>{const v=window.dateOverrides[k];return v&&(Array.isArray(v)?v[0]:v&&v[0])==="V";});
   console.log("Overrides for pi="+(userRow-1)+":", myKeys.length, "vacation days:", vacKeys.length);
-  const me=PEOPLE[userRow-1];
+  const me=PEOPLE_ENF[userRow-1];
   const pi=userRow-1;
 
   // CCOO 2026: 1529-3N (N=noches)
@@ -693,7 +674,7 @@ function renderResumen(){
       const ri=rowFor(me.startRow,mon);
       const ds=yr+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
       const ov=window.dateOverrides[pi+"_"+ds];
-      const baseCell=ROTA[ri][dow];
+      const baseCell=ROTA_ENF[ri][dow];
       const baseT=baseCell&&Array.isArray(baseCell)?baseCell[0]:(baseCell?baseCell[0]:null);
       // Always count base rotation first
       if(baseT==="D") counts.D++;
@@ -782,7 +763,7 @@ function checkPin(){
     return;
   }
   if(db){
-    db.ref("tcaes_pins/"+userRow).once("value").then(snap=>{
+    db.ref("enf_pins/"+userRow).once("value").then(snap=>{
       const stored=snap.val()||"0000";
       if(pin===stored){
         enterApp();
@@ -793,7 +774,7 @@ function checkPin(){
       }
     }).catch(()=>enterApp());
   } else {
-    const stored=localStorage.getItem("tcaes_pin_"+userRow)||"0000";
+    const stored=localStorage.getItem("enf_pin_"+userRow)||"0000";
     if(pin===stored){enterApp();}
     else {
       document.getElementById("pinError").textContent="❌ PIN incorrecto";
@@ -804,7 +785,7 @@ function checkPin(){
 }
 
 function enterApp(){
-  localStorage.setItem("tcaes_verified_"+userRow,"1");
+  localStorage.setItem("enf_verified_"+userRow,"1");
   document.getElementById("nameScreen").style.display="none";
   initApp();
   setTimeout(()=>initProposals(),1000);
@@ -815,14 +796,14 @@ function changePin(){
   const oldPin=prompt("PIN actual:");
   if(!oldPin) return;
   if(db){
-    db.ref("tcaes_pins/"+userRow).once("value").then(snap=>{
+    db.ref("enf_pins/"+userRow).once("value").then(snap=>{
       const stored=snap.val()||"0000";
       if(oldPin!==stored){alert("PIN incorrecto");return;}
       const newPin=prompt("Nuevo PIN (4 números):");
       if(!newPin||!/^[0-9]{4}$/.test(newPin)){alert("El PIN debe ser 4 números");return;}
       const confirm2=prompt("Repite el nuevo PIN:");
       if(newPin!==confirm2){alert("Los PINes no coinciden");return;}
-      db.ref("tcaes_pins/"+userRow).set(newPin).then(()=>alert("✅ PIN cambiado correctamente"));
+      db.ref("enf_pins/"+userRow).set(newPin).then(()=>alert("✅ PIN cambiado correctamente"));
     });
   }
 }
@@ -832,11 +813,8 @@ function changePin(){
 let proposals={}, currentPropKey=null, propFromDay=null, dayActionCtx=null;
 
 function initProposals(){
-  if(!db){
-    setTimeout(initProposals,1000); // retry if db not ready
-    return;
-  }
-  db.ref("tcaes_proposals").on("value",snap=>{
+  if(!db){setTimeout(initProposals,1000);return;}
+  db.ref("enf_proposals").on("value",snap=>{
     proposals=snap.val()||{};
     updatePropBadge();
     const v=document.getElementById("view-props");
@@ -845,7 +823,7 @@ function initProposals(){
 }
 
 function updatePropBadge(){
-  const n=Object.values(proposals).filter(p=>p.to===userRow&&p.status==="pending").length;
+  const n=Object.values(proposals).filter(p=>Number(p.to)===Number(userRow)&&p.status==="pending").length;
   const b=document.getElementById("propBadge");
   if(b){b.textContent=n;b.style.display=n>0?"flex":"none";}
 }
@@ -885,7 +863,7 @@ function openPropModal(dateKey,turno){
   const sel=document.getElementById("propPerson");
   if(sel){
     sel.innerHTML='<option value="">Selecciona...</option>';
-    PEOPLE.forEach((p,i)=>{if(i+1!==userRow)sel.innerHTML+='<option value="'+(i+1)+'">'+p.name+'</option>';});
+    PEOPLE_ENF.forEach((p,i)=>{if(i+1!==userRow)sel.innerHTML+='<option value="'+(i+1)+'">'+p.name+'</option>';});
   }
   const ptd=document.getElementById("propTheirDay");
   if(ptd)ptd.innerHTML='<option value="">Primero selecciona la persona</option>';
@@ -903,7 +881,7 @@ function loadPersonDays(){
   if(!pi)return;
   const sel=document.getElementById("propTheirDay");
   sel.innerHTML='<option value="">Cargando...</option>';
-  const person=PEOPLE[pi-1];
+  const person=PEOPLE_ENF[pi-1];
   const today=new Date();
   const opts=[];
   let d=new Date(today);
@@ -914,7 +892,7 @@ function loadPersonDays(){
     const ri=rowFor(person.startRow,mon);
     const ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
     const ov=window.dateOverrides[(pi-1)+"_"+ds];
-    const cell=ov!==undefined?ov:ROTA[ri][dow];
+    const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
     const t=cell?cell[0]:null;
     if(t)opts.push({dk:(pi-1)+"_"+ds,t,label:String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" ("+t+")"});
     d.setDate(d.getDate()+1);
@@ -929,16 +907,16 @@ function sendProposal(){
   const theirDay=theirDaySel.value;
   const toTurn=theirDaySel.options[theirDaySel.selectedIndex]?theirDaySel.options[theirDaySel.selectedIndex].dataset.turn||"?":"?";
   const comment=(document.getElementById("propComment").value||"").trim();
-  if(!toPi||!theirDay){alert("Selecciona la compañera y el día");return;}
+  if(!toPi||!theirDay){alert("Selecciona a compañeira e o día");return;}
   if(!propFromDay)return;
-  if(!db){alert("Sin conexión");return;}
+  if(!db){alert("Sen conexión");return;}
   const prop={from:userRow,fromName:userName,fromDay:propFromDay.dateKey,fromTurn:propFromDay.turno,
-    to:toPi,toName:PEOPLE[toPi-1].name,toDay:theirDay,toTurn:toTurn,status:"pending",
+    to:toPi,toName:PEOPLE_ENF[toPi-1].name,toDay:theirDay,toTurn:toTurn,status:"pending",
     commentFrom:comment,commentTo:"",createdAt:new Date().toLocaleString("es-ES")};
-  db.ref("tcaes_proposals").push(prop).then(()=>{
+  db.ref("enf_proposals").push(prop).then(()=>{
     closePropModal();
-    alert("✅ Propuesta enviada a "+PEOPLE[toPi-1].name);
-  }).catch(()=>alert("Error al enviar"));
+    alert("✅ Proposta enviada a "+PEOPLE_ENF[toPi-1].name);
+  }).catch(()=>alert("Error ao enviar"));
 }
 
 function openRespondModal(key){
@@ -949,10 +927,10 @@ function openRespondModal(key){
   const fromDs=(p.fromDay||"").split("_")[1];
   const toDs=(p.toDay||"").split("_")[1];
   let html='<div class="prop-card pending" style="margin-bottom:12px">';
-  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> te propone:</p>';
+  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> propóñeche:</p>';
   html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">';
-  html+='🔄 Te da su <b>'+(p.fromTurn||"?")+'</b> del <b>'+fmt(fromDs)+'</b><br>';
-  html+='A cambio quiere tu turno del <b>'+fmt(toDs)+'</b></p>';
+  html+='🔄 Dáche o seu <b>'+(p.fromTurn||"?")+'</b> do <b>'+fmt(fromDs)+'</b><br>';
+  html+='A cambio quere o teu turno do <b>'+fmt(toDs)+'</b></p>';
   if(p.commentFrom)html+='<p style="font-size:.75rem;font-style:italic;color:#555">💬 "'+p.commentFrom+'"</p>';
   html+='</div>';
   document.getElementById("respondContent").innerHTML=html;
@@ -969,92 +947,63 @@ function respondProposal(decision){
   const p=proposals[currentPropKey];
   const comment=(document.getElementById("respondComment").value||"").trim();
   if(decision==="accepted"){
-    // fromDay key: "{fromPi}_{fromDate}" e.g. "3_20260708"
-    // toDay key: "{toPi}_{toDate}" e.g. "13_20260731"
     const fromPi=Number(p.from)-1;
     const toPi=Number(p.to)-1;
-    const fromDate=(p.fromDay||"").split("_")[1]; // e.g. "20260708"
-    const toDate=(p.toDay||"").split("_")[1];     // e.g. "20260731"
-    // fromTurn = what "from" person had on fromDate
+    const fromDate=(p.fromDay||"").split("_")[1];
+    const toDate=(p.toDay||"").split("_")[1];
     const fromTurn=p.fromTurn||"L";
-    // toTurn = what "to" person had on toDate
     const toTurn=p.toTurn||"L";
-    // Swap: from person now has toTurn on toDate, to person now has fromTurn on fromDate
-    // Also free up original days
     const updates={};
-    updates["rota_changes/"+fromPi+"_"+fromDate]="L"; // from person free on original day
-    updates["rota_changes/"+fromPi+"_"+toDate]=toTurn; // from person works to person's day
-    updates["rota_changes/"+toPi+"_"+toDate]="L"; // to person free on original day
-    updates["rota_changes/"+toPi+"_"+fromDate]=fromTurn; // to person works from person's day
+    updates["enf_changes/"+fromPi+"_"+fromDate]="L";
+    updates["enf_changes/"+fromPi+"_"+toDate]=toTurn;
+    updates["enf_changes/"+toPi+"_"+toDate]="L";
+    updates["enf_changes/"+toPi+"_"+fromDate]=fromTurn;
     db.ref().update(updates);
   }
-  db.ref("tcaes_proposals/"+currentPropKey).update({status:decision,commentTo:comment,respondedAt:new Date().toLocaleString("es-ES")}).then(()=>{
+  db.ref("enf_proposals/"+currentPropKey).update({status:decision,commentTo:comment,respondedAt:new Date().toLocaleString("es-ES")}).then(()=>{
     closeRespondModal();
-    if(decision==="accepted"){alert("✅ Cambio aceptado y aplicado");render();}
-    else alert("❌ Propuesta rechazada");
+    if(decision==="accepted"){alert("✅ Cambio aceptado e aplicado");render();}
+    else alert("❌ Proposta rexeitada");
   });
 }
 
 function cancelProposal(key){
-  if(!confirm("¿Cancelar esta propuesta?"))return;
-  db.ref("tcaes_proposals/"+key).update({status:"cancelled"});
+  if(!confirm("¿Cancelar esta proposta?"))return;
+  db.ref("enf_proposals/"+key).update({status:"cancelled"});
 }
 
 function renderProposals(){
   const div=document.getElementById("propsContent");
   if(!div)return;
-  // Debug: show state
-  const totalProps=Object.keys(proposals).length;
-  console.log("renderProposals: userRow="+userRow+", total proposals="+totalProps+", db="+!!db);
-  if(totalProps===0 && !db){
-    div.innerHTML='<p style="color:#c62828;font-size:.82rem">⚠️ Sin conexión con Firebase. Recarga la página.</p>';
-    return;
+  if(!db&&Object.keys(proposals).length===0){
+    div.innerHTML='<p style="color:#c62828;font-size:.82rem">⚠️ Sen conexión. Recarga a páxina.</p>';return;
   }
   const keys=Object.keys(proposals).filter(k=>{
     const p=proposals[k];
     return Number(p.from)===Number(userRow)||Number(p.to)===Number(userRow);
   });
-  if(keys.length===0){
-    div.innerHTML='<p style="color:var(--mu);font-size:.82rem">No tienes propuestas de cambio.</p>';
-    return;
-  }
+  if(keys.length===0){div.innerHTML='<p style="color:var(--mu);font-size:.82rem">Non tes propostas de cambio.</p>';return;}
   const fmt=ds=>ds?ds.slice(6,8)+"/"+ds.slice(4,6):"?";
   let html="";
-  keys.sort((a,b)=>{
-    // Pendientes primero, luego más recientes
-    const ord={pending:0,accepted:1,rejected:2,cancelled:3};
-    const sd=(ord[proposals[a].status]||3)-(ord[proposals[b].status]||3);
-    if(sd!==0)return sd;
-    return (proposals[b].createdAt||"").localeCompare(proposals[a].createdAt||"");
-  }).forEach(key=>{
+  keys.sort((a,b)=>{const ord={pending:0,accepted:1,rejected:2,cancelled:3};return (ord[proposals[a].status]||3)-(ord[proposals[b].status]||3);}).forEach(key=>{
     const p=proposals[key];
     const isFrom=Number(p.from)===Number(userRow);
-    const slabel=p.status==="pending"?"⏳ Pendiente":p.status==="accepted"?"✅ Aceptado":p.status==="rejected"?"❌ Rechazado":"🚫 Cancelado";
+    const slabel=p.status==="pending"?"⏳ Pendente":p.status==="accepted"?"✅ Aceptado":p.status==="rejected"?"❌ Rexeitado":"🚫 Cancelado";
     const ccls=p.status==="accepted"?"accepted":p.status==="pending"?"pending":"rejected";
     const fromDs=(p.fromDay||"").split("_")[1];
     const toDs=(p.toDay||"").split("_")[1];
     html+='<div class="prop-card '+ccls+'" style="margin-bottom:12px">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
-    html+='<span style="font-size:.75rem;font-weight:700">'+slabel+'</span>';
-    html+='<span style="font-size:.7rem;color:var(--mu)">'+(p.createdAt||"")+'</span></div>';
-    html+='<p style="font-size:.82rem">'+(isFrom?"📤 Propuesta a <b>"+p.toName+"</b>":"📥 Propuesta de <b>"+p.fromName+"</b>")+'</p>';
-    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">';
-    html+='🔄 <b>'+p.fromName+'</b> da su <b>'+(p.fromTurn||"?")+'</b> del '+fmt(fromDs)+'<br>';
-    html+='🔄 <b>'+p.toName+'</b> da su turno del '+fmt(toDs)+'</p>';
-    if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555;margin-top:4px">💬 '+p.fromName+': "'+p.commentFrom+'"</p>';
-    if(p.commentTo)html+='<p style="font-size:.75rem;color:#555;margin-top:4px">💬 '+p.toName+': "'+p.commentTo+'"</p>';
-    if(p.status==="pending"){
-      if(!isFrom){
-        html+='<button onclick="openRespondModal(\'' +key+ '\')" style="width:100%;margin-top:10px;padding:10px;border-radius:8px;background:#4caf50;color:#fff;border:none;cursor:pointer;font-weight:600;font-family:\'DM Mono\',monospace">Ver y responder</button>';
-      } else {
-        html+='<button onclick="cancelProposal(\'' +key+ '\')" style="width:100%;margin-top:8px;padding:10px;border-radius:8px;background:var(--s2);color:var(--tx);border:1px solid var(--bd);cursor:pointer;font-weight:600;font-family:\'DM Mono\',monospace">Cancelar propuesta</button>';
-      }
-    }
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:.75rem;font-weight:700">'+slabel+'</span><span style="font-size:.7rem;color:var(--mu)">'+(p.createdAt||"")+'</span></div>';
+    html+='<p style="font-size:.82rem">'+(isFrom?"📤 Proposta a <b>"+p.toName+"</b>":"📥 Proposta de <b>"+p.fromName+"</b>")+'</p>';
+    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">🔄 <b>'+p.fromName+'</b> da o seu <b>'+(p.fromTurn||"?")+'</b> do '+fmt(fromDs)+'<br>🔄 <b>'+p.toName+'</b> da o seu turno do '+fmt(toDs)+'</p>';
+    if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555">💬 '+p.fromName+': "'+p.commentFrom+'"</p>';
+    if(p.commentTo)html+='<p style="font-size:.75rem;color:#555">💬 '+p.toName+': "'+p.commentTo+'"</p>';
+    if(p.status==="pending"&&!isFrom)html+='<button onclick="openRespondModal(\'' + key + '\')">Ver e responder</button>';
+    if(p.status==="pending"&&isFrom)html+='<button onclick="cancelProposal(\'' + key + '\')">Cancelar proposta</button>';
     html+='</div>';
   });
   div.innerHTML=html;
 }
-
 
 function closeNewFeature(){
   document.getElementById("overlayNewFeature").classList.remove("open");
@@ -1064,9 +1013,14 @@ function closeModal(){document.getElementById("overlay").classList.remove("open"
 function outsideClose(e){if(e.target.id==="overlay")closeModal();}
 window.onload=()=>{if(userName){render();renderMiTurno();showTab("mi");setTimeout(goToToday,300);}};
 </script>
+<script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+</script>
 <!-- PROPOSALS VIEW -->
 <div id="view-props" style="flex:1;overflow:auto;padding:14px 16px;display:none">
-  <h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propuestas de cambio</h2>
+  <h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propostas de cambio</h2>
   <div id="propsContent"></div>
 </div>
 
@@ -1076,7 +1030,7 @@ window.onload=()=>{if(userName){render();renderMiTurno();showTab("mi");setTimeou
     <h2 id="dayActionTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px"></h2>
     <div id="dayActionTurn" style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center"></div>
     <button onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
-    <button onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Proponer cambio con compañera/o</button>
+    <button onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
     <button onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
   </div>
 </div>
@@ -1084,18 +1038,18 @@ window.onload=()=>{if(userName){render();renderMiTurno();showTab("mi");setTimeou
 <!-- PROPOSAL MODAL -->
 <div class="overlay" id="overlayProp" onclick="if(event.target.id==='overlayProp')closePropModal()">
   <div class="modal">
-    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Proponer cambio</h2>
+    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
     <p id="propMyDay" style="font-size:.78rem;color:var(--mu);margin-bottom:12px"></p>
-    <div class="slabel">Compañera/o:</div>
+    <div class="slabel">Compañeira/o:</div>
     <select id="propPerson" onchange="loadPersonDays()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
       <option value="">Selecciona...</option>
     </select>
-    <div class="slabel" style="margin-top:10px">Día que quieres de ella/él:</div>
+    <div class="slabel" style="margin-top:10px">Día que queres dela/el:</div>
     <select id="propTheirDay" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
-      <option value="">Primero selecciona la persona</option>
+      <option value="">Primeiro selecciona a persoa</option>
     </select>
     <div class="slabel" style="margin-top:10px">Comentario:</div>
-    <input type="text" id="propComment" placeholder="Explica el motivo...">
+    <input type="text" id="propComment" placeholder="Explica o motivo...">
     <div style="display:flex;gap:8px;margin-top:14px">
       <button class="mbtn mbtn-ghost" onclick="closePropModal()" style="flex:1">← Volver</button>
       <button class="mbtn mbtn-save" onclick="sendProposal()" style="flex:1">Enviar</button>
@@ -1106,13 +1060,13 @@ window.onload=()=>{if(userName){render();renderMiTurno();showTab("mi");setTimeou
 <!-- RESPOND MODAL -->
 <div class="overlay" id="overlayRespond" onclick="if(event.target.id==='overlayRespond')closeRespondModal()">
   <div class="modal">
-    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder propuesta</h2>
+    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder proposta</h2>
     <div id="respondContent"></div>
-    <div class="slabel">Tu comentario (opcional):</div>
-    <input type="text" id="respondComment" placeholder="Tu respuesta...">
+    <div class="slabel">O teu comentario (opcional):</div>
+    <input type="text" id="respondComment" placeholder="A túa resposta...">
     <div style="display:flex;gap:8px;margin-top:14px">
       <button class="mbtn mbtn-ghost" onclick="closeRespondModal()" style="flex:1">← Volver</button>
-      <button class="mbtn mbtn-del" onclick="respondProposal('rejected')" style="flex:1">Rechazar</button>
+      <button class="mbtn mbtn-del" onclick="respondProposal('rejected')" style="flex:1">Rexeitar</button>
       <button class="mbtn mbtn-save" onclick="respondProposal('accepted')" style="flex:1">Aceptar</button>
     </div>
   </div>
@@ -1130,14 +1084,32 @@ window.onload=()=>{if(userName){render();renderMiTurno();showTab("mi");setTimeou
     <ol style="font-size:.78rem;color:var(--tx);margin:0 0 12px 18px;line-height:1.9">
       <li>Vai á pestaña <b>👤 Mi turno</b></li>
       <li>Toca calquera día traballado</li>
-      <li>Escolle <b>🔄 Proponer cambio con compañeira/o</b></li>
+      <li>Escolle <b>🔄 Propoñer cambio con compañeira/o</b></li>
       <li>Selecciona a persoa e o día que queres</li>
       <li>Engade un comentario e envía</li>
     </ol>
-    <p style="font-size:.78rem;color:var(--mu);line-height:1.6">A outra persoa verá un aviso na pestaña <b>🔄 Cambios</b> e poderá aceptar ou rexeitar. Se acepta, o cambio aplícase automaticamente.</p>
+    <p style="font-size:.78rem;color:var(--mu);line-height:1.6">A outra persoa verá un aviso na pestaña <b>🔄 Cambios</b> e poderá aceptar ou rexeitar.</p>
     <button onclick="closeNewFeature()" style="width:100%;margin-top:16px;padding:12px;border-radius:8px;background:var(--I);color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;font-size:.88rem">Entendido ✓</button>
   </div>
 </div>
+
+<!-- BACK BUTTON SUPPORT -->
+<script>
+window.addEventListener("popstate",function(){
+  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlay"];
+  for(const id of modals){
+    const el=document.getElementById(id);
+    if(el&&el.classList.contains("open")){
+      el.classList.remove("open");
+      history.pushState(null,"","");
+      return;
+    }
+  }
+});
+history.pushState(null,"","");
+const _origAdd=DOMTokenList.prototype.add;
+DOMTokenList.prototype.add=function(...a){_origAdd.apply(this,a);if(a.includes("open"))history.pushState(null,"","");};
+</script>
 
 </body>
 </html>
