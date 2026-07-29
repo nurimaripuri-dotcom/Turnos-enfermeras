@@ -411,7 +411,7 @@ function render(){
       const cls=chipCls(t,u);
       const lbl=t==="V"?"🏖":t==="LD"?"📋":(t||"·");
       const cellBg=dc.isToday?"#81c784":dc.isSun?"#f3e5f5":bg;
-      const iconData=changeIcons[pi]&&changeIcons[pi][dateStr];
+      const iconData=changeIcons[pi]&&changeIcons[pi][dateStr]&&cell&&cell[0]!=="V"&&cell&&cell[0]!=="LD";
       const dot=iconData?`<span class="change-dot" style="position:absolute;top:-4px;right:-4px;width:13px;height:13px;background:#ffc107;border-radius:50%;border:1.5px solid #fff;font-size:.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2" onclick="showLog(event,${pi},'${dateStr}')">✎</span>`:"";
       body+=`<td class="${dc.isToday?"today-col":dc.isSun?"sun":""}" style="background:${cellBg}!important">
         <div style="position:relative;display:inline-block">
@@ -550,7 +550,7 @@ function renderMiTurno(){
         const numColor=isToday?"#fff":isWE?"#6f42c1":"var(--tx)";
         const isLorSlash=!t||t==="L"||t==="/";
         const bg2=isLorSlash&&!isToday?"#ffffff":bg;
-        const iconMi=changeIcons[userRow-1]&&changeIcons[userRow-1][dateStr];
+        const iconMi=changeIcons[userRow-1]&&changeIcons[userRow-1][dateStr]&&t!=="V"&&t!=="LD";
         const miOnClick=miEditMode ? ("openEdit("+(rowFor(me.startRow,mondayOf(new Date(miYear,miMonth,day)))+","+dow+")")) : "";
         html+=`<td data-ri="${rowFor(me.startRow,mondayOf(new Date(miYear,miMonth,day)))}" data-di="${dow}" data-day="${day}" style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:${bg2};border-radius:12px;height:90px;vertical-align:middle;cursor:${miEditMode?"pointer":"default"};position:relative">
           <div style="font-size:1.1rem;font-weight:700;color:${numColor};margin-bottom:6px">${day}</div>
