@@ -432,6 +432,11 @@ function toggleTheme(){
   localStorage.setItem("enf_theme",isDark()?"dark":"light");
   const btn=document.getElementById("menuThemeBtn");
   if(btn)btn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
+  if(typeof render==="function")render();
+  if(typeof renderMiTurno==="function")renderMiTurno();
+  if(typeof renderProposals==="function")renderProposals();
+  const rv=document.getElementById("view-resumen");
+  if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
 }
 function MONTHS(){return I18N[lang].months.map(m=>m.charAt(0).toUpperCase()+m.slice(1));}
 function tabTitles(){return {mi:t("tabMi"),todos:t("tabTodos"),props:t("tabCambios"),resumen:t("tabResumen")};}
