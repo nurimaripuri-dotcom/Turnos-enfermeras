@@ -7,11 +7,11 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Enfermeras 3ºC">
-<meta name="theme-color" content="#1565c0">
+<meta name="apple-mobile-web-app-title" content="TCE 3ºC">
+<meta name="theme-color" content="#c0392b">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>Enfermeras 3ºC</title>
-<script>(function(){try{if(localStorage.getItem("enf_theme")==="dark")document.documentElement.classList.add("dark");}catch(e){}})();</script>
+<title>TCE 3ºC</title>
+<script>(function(){try{if(localStorage.getItem("tcaes_theme")==="dark")document.documentElement.classList.add("dark");}catch(e){}})();</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -34,13 +34,17 @@
 }
 :root.dark .lc.neu,:root.dark .chip.neu,:root.dark .mi-chip.neu{background:#000;color:#fff;border-color:#555}
 :root.dark .menu-dropdown{box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.stat-badge-t{background:#fff3e0;color:#e65100}
 .mi-edit-btn{background:#fff3cd;color:#856404}
 .mi-edit-btn.editing-on{background:#d4edda;color:#155724;border-color:#28a745}
 .disclaimer-box{background:#fff3cd;color:#856404}
+:root.dark .stat-badge-t,
 :root.dark .mi-edit-btn,
 :root.dark .mi-edit-btn.editing-on,
 :root.dark .disclaimer-box,
 :root.dark .mbtn-del,
+:root.dark #legendVac,
+:root.dark #legendLD,
 :root.dark #pinLockBanner,
 :root.dark .prop-card.pending,
 :root.dark .prop-card.accepted,
@@ -48,13 +52,12 @@
 :root.dark th.sun,
 :root.dark td.sun{background:#000!important;color:#fff!important;border-color:#555!important}
 /* SPLASH SCREEN */
-#splashScreen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(160deg,#16283d,#0a121d);transition:opacity .45s ease}
+#splashScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#0a121d;transition:opacity .45s ease;overflow:hidden}
 #splashScreen.hide{opacity:0;pointer-events:none}
-.splash-logo{width:52px;height:52px;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.4)}
-.splash-photo-frame{width:230px;height:280px;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:splashPhotoIn 1.8s ease-out infinite}
+.splash-photo-frame{position:absolute;inset:0;width:100%;height:100%;animation:splashPhotoIn 2.4s ease-in-out infinite}
 .splash-photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
+.splash-loading-text{position:absolute;bottom:8%;left:0;right:0;text-align:center;z-index:2;color:#eef2f6;font-family:"DM Mono",monospace;font-size:.78rem;letter-spacing:3px;opacity:.85;text-shadow:0 2px 8px rgba(0,0,0,.6)}
 @keyframes splashPhotoIn{0%{transform:scale(1.06);opacity:.85}50%{transform:scale(1);opacity:1}100%{transform:scale(1.06);opacity:.85}}
-.splash-loading-text{color:#eef2f6;font-family:"DM Mono",monospace;font-size:.78rem;letter-spacing:3px;opacity:.85}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--tx);font-family:"DM Mono",monospace;display:flex;flex-direction:column}
@@ -109,6 +112,7 @@ td.today-col{background:var(--today-bg)!important}
 #view-mi{flex:1;overflow:auto;padding:14px 16px}
 .mi-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
 .mi-month-nav button{font-size:1.4rem;padding:6px 18px;border-radius:10px;border:1px solid var(--bd);background:var(--s2);cursor:pointer;flex-shrink:0}
+.lc.T,.mi-chip.T,.chip.T{background:#ff9800;color:#fff;border-color:#e65100}
 .mi-chip{padding:5px 14px;border-radius:7px;font-size:.85rem;font-weight:700;border:1.5px solid transparent}
 .mi-chip.I{background:var(--Ib);color:var(--I);border-color:var(--Ix)}
 .mi-chip.V{background:var(--Vb);color:var(--V);border-color:var(--Vx)}
@@ -141,17 +145,21 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 #nameScreen{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center}
 .name-card{background:var(--s1);border-radius:16px;padding:28px;width:90%;max-width:340px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.1)}
 .name-card h2{font-family:"Syne",sans-serif;font-size:1.1rem;margin-bottom:8px}
+.proposal-badge{position:absolute;top:-5px;right:-5px;background:#e53935;color:#fff;border-radius:50%;width:16px;height:16px;font-size:.6rem;display:flex;align-items:center;justify-content:center;font-weight:700}
 .prop-card{background:var(--s1);border:1.5px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:10px}
 .prop-card.pending{border-color:#ffc107;background:#fffde7}
 .prop-card.accepted{border-color:#4caf50;background:#f1f8e9}
 .prop-card.rejected{border-color:#ef5350;background:#fde8e8}
+.prop-btn{padding:8px 14px;border-radius:7px;border:none;cursor:pointer;font-size:.8rem;font-weight:600;font-family:"DM Mono",monospace}
+.prop-btn.accept{background:#4caf50;color:#fff}
+.prop-btn.reject{background:#ef5350;color:#fff}
+.prop-btn.cancel{background:var(--s2);color:var(--tx);border:1px solid var(--bd)}
 .log-popup{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 18px;border-radius:10px;font-size:.75rem;z-index:500;max-width:320px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
 
 <div id="splashScreen">
-  <img class="splash-logo" src="icon-192.png" alt="Enfermeras 3ºC">
   <div class="splash-photo-frame">
     <img src="splash-photo.jpg" alt="">
   </div>
@@ -166,7 +174,7 @@ setTimeout(function(){
 
 <div id="nameScreen">
   <div class="name-card">
-    <h2>🏥 Enfermeras <em>3ºC</em></h2>
+    <h2>🏥 TCE <em>3ºC</em></h2>
     <p style="font-size:.78rem;color:var(--mu);margin-bottom:18px" id="askNameP">¿Cuál es tu nombre?</p>
     <!-- STEP 1: Name -->
     <div id="stepName">
@@ -186,7 +194,7 @@ setTimeout(function(){
 </div>
 
 <header>
-  <h1>🏥 Enfermeras <em>3ºC</em></h1>
+  <h1>🏥 TCE <em>3ºC</em></h1>
   <div style="display:flex;gap:6px;align-items:center">
     <button class="hbtn" onclick="changeYear(-1)">‹</button>
     <span id="yearLabel" style="font-family:Syne,sans-serif;font-weight:700;min-width:46px;text-align:center"></span>
@@ -196,11 +204,13 @@ setTimeout(function(){
 </header>
 <div class="legend">
   <span style="color:var(--mu)" id="unidadLegendLabel">Unidad →</span>
-  <div class="lc I">🔴 Ictus</div>
-  <div class="lc A">🔵 338/345</div>
-  <div class="lc V">🟢 351-354/337</div>
-  <div class="lc N2">⚫ L/X: 354+337/339</div>
+  <div class="lc I" onclick="showUnitInfo('I')" style="cursor:pointer">🔴 Ictus</div>
+  <div class="lc V" onclick="showUnitInfo('V')" style="cursor:pointer">🟢 351-353</div>
+  <div class="lc N2" onclick="showUnitInfo('N2')" style="cursor:pointer">⚫ 354/337-339</div>
+  <div class="lc A" onclick="showUnitInfo('A')" style="cursor:pointer">🔵 340-345</div>
   <div class="lc neu">L · /</div>
+  <div class="lc" id="legendVac" style="background:#fff3cd;color:#856404;border-color:#ffc107">🏖 Vac</div>
+  <div class="lc" id="legendLD" style="background:#d1ecf1;color:#0c5460;border-color:#bee5eb">📋 LD</div>
 </div>
 <div id="pinLockBanner" style="display:none;background:#f8d7da;color:#721c24;padding:8px 14px;font-size:.78rem;text-align:center;cursor:pointer" onclick="showPinWarn()">🔒 Código por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.</div>
 <div class="tabs">
@@ -209,7 +219,6 @@ setTimeout(function(){
     <button class="menu-btn" id="menuBtn" onclick="toggleMenu(event)">⋮<span class="menu-badge" id="menuBadge" style="display:none"></span></button>
     <div class="menu-dropdown" id="menuDropdown">
       <button class="menu-item" id="tab-todos" onclick="menuGoTab('todos')">📅 Todos</button>
-      <button class="menu-item" id="tab-resumen" onclick="menuGoTab('resumen')">📊 Resumen</button>
       <button class="menu-item" id="tab-props" onclick="menuGoTab('props')">🔄 Cambios <span id="propBadge" class="menu-item-badge" style="display:none">0</span></button>
       <div class="menu-sep"></div>
       <button class="menu-item" id="tab-mi" onclick="menuGoTab('mi')">🏠 Volver a Mi turno</button>
@@ -223,13 +232,12 @@ setTimeout(function(){
 </div>
 
 <div id="view-mi" style="flex:1;overflow:auto;padding:14px 16px">
-  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px">
-    <button id="miEditBtn" class="mi-edit-btn" onclick="toggleMiEdit()" style="padding:6px 14px;border-radius:8px;border:1px solid #dee2e6;cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔒 Editar mi turno</button>
-  </div>
   <div id="miTurnoContent"></div>
 </div>
 
 <div id="view-todos" style="flex:1;overflow:auto;display:none">
+
+
   <div class="wrap" id="wrap">
     <table id="tbl" style="border-collapse:collapse;width:max-content">
       <thead id="thead"></thead>
@@ -253,6 +261,10 @@ setTimeout(function(){
       <div class="slabel" id="unitLabel1">Unidad:</div>
       <div class="unit-grid" id="unitGrid1"></div>
     </div>
+    <div id="unitSection2" style="display:none;margin-top:8px">
+      <div class="slabel" id="unitLabel2">Segunda unidad:</div>
+      <div class="unit-grid" id="unitGrid2"></div>
+    </div>
     <div class="slabel" id="tuNombreLabel">Tu nombre:</div>
     <input type="text" id="inputWho" placeholder="Tu nombre...">
     <div class="slabel" id="cambioConLabel">Cambio con:</div>
@@ -271,70 +283,46 @@ setTimeout(function(){
 
 <div class="log-popup" id="logPopup" style="display:none"></div>
 
-<div class="overlay" id="overlayPinWarn">
-  <div class="modal">
-    <h2 id="pinWarnTitle" style="font-family:Syne,sans-serif;font-size:1rem;color:#c0392b;margin-bottom:10px">🔒 Cambia tu código</h2>
-    <p id="pinWarnBody" style="font-size:.85rem;color:var(--tx);line-height:1.6;margin-bottom:14px">Sigues usando el código de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.</p>
-    <button id="changeNowBtn" onclick="changePinFromWarn()" style="width:100%;padding:12px;border-radius:8px;background:#c0392b;color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:8px">Cambiar código ahora</button>
-    <button id="notNowBtn" onclick="closePinWarn()" style="width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Ahora no</button>
-  </div>
-</div>
-
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script>
-const ROTA_ENF = [
-  [["L",null],["L",null],["D","I"],["N","I"],["/",null],["L",null],["L",null]],
-  [["L",null],["D","I"],["N","I"],["/",null],["L",null],["L",null],["D","I"]],
-  [["N","I"],["/",null],["L",null],["L",null],["L",null],["D","I"],["N","I"]],
-  [["/",null],["L",null],["L",null],["D","I"],["N","I"],["/",null],["L",null]],
-  [["L",null],["L",null],["D","V"],["N","V"],["/",null],["L",null],["L",null]],
-  [["M","N2"],["L",null],["D","N2"],["L",null],["L",null],["L",null],["L",null]],
-  [["L",null],["D","V"],["N","V"],["/",null],["L",null],["L",null],["D","V"]],
-  [["N","V"],["/",null],["L",null],["L",null],["D","V"],["N","V"],["/",null]],
-  [["L",null],["L",null],["L",null],["D","V"],["N","V"],["/",null],["L",null]],
-  [["L",null],["D","A"],["N","A"],["/",null],["L",null],["L",null],["L",null]],
-  [["D","I"],["N","I"],["/",null],["L",null],["L",null],["D","V"],["N","V"]],
-  [["/",null],["L",null],["L",null],["L",null],["D","I"],["N","I"],["/",null]],
-  [["L",null],["L",null],["D","A"],["N","A"],["/",null],["L",null],["L",null]],
-  [["D","V"],["N","V"],["/",null],["L",null],["L",null],["L",null],["D","A"]],
-  [["N","A"],["/",null],["L",null],["L",null],["D","A"],["N","A"],["/",null]],
-  [["L",null],["L",null],["L",null],["L",null],["L",null],["L",null],["L",null]],
-  [["D","A"],["N","A"],["/",null],["L",null],["L",null],["D","A"],["N","A"]],
-  [["/",null],["L",null],["L",null],["D","A"],["N","A"],["/",null],["L",null]],
+const ROTA = [
+  [["T","V"],["T","I"],["N","I"],["/",null],["L",null],["L",null],["M","I"]],
+  [["M","N2"],["M","N2"],["T","A"],["N","N2"],["/",null],["L",null],["L",null]],
+  [["L",null],["M","A"],["M","A"],["T","A"],["N","N2"],["/",null],["L",null]],
+  [["L",null],["L",null],["T","I"],["N","I"],["/",null],["L",null],["L",null]],
+  [["M","I"],["M","I"],["M","I"],["T","I"],["N","I"],["/",null],["L",null]],
+  [["L",null],["M","V"],["M","V"],["T","V"],["T","V"],["N","N2"],["/",null]],
+  [["L",null],["L",null],["M","N2"],["M","V"],["T","I"],["T","I"],["N","N2"]],
+  [["/",null],["L",null],["L",null],["M","N2"],["M","N2"],["T","V"],["T","V"]],
+  [["N","I"],["/",null],["L",null],["M","I"],["M","I"],["M","I"],["T","I"]],
+  [["T","I"],["N","I"],["/",null],["L",null],["L",null],["M","N2"],["M","N2"]],
+  [["M","A"],["T","A"],["N","N2"],["/",null],["L",null],["L",null],["L",null]],
+  [["M","V"],["T","V"],["T","V"],["L",null],["M","A"],["M","A"],["M","A"]],
+  [["L",null],["L",null],["L",null],["M","A"],["T","A"],["T","A"],["T","A"]],
+  [["N","N2"],["/",null],["L",null],["L",null],["M","V"],["M","V"],["M","V"]],
+  [["T","A"],["N","N2"],["/",null],["L",null],["L",null],["L",null],["L",null]],
 ];
-const PEOPLE_ENF = [
-  {name:"Alba",startRow:1},
-  {name:"Laura V.",startRow:2},
-  {name:"Maite",startRow:3},
-  {name:"Marta",startRow:4},
-  {name:"Estefanía",startRow:5},
-  {name:"Begoña",startRow:6},
-  {name:"Emma",startRow:7},
-  {name:"Sara",startRow:8},
-  {name:"Cris",startRow:9},
-  {name:"Rocío",startRow:10},
-  {name:"Luisa",startRow:11},
-  {name:"Aurora",startRow:12},
-  {name:"Jose",startRow:13},
-  {name:"Mercedes",startRow:14},
-  {name:"Ángeles",startRow:15},
-  {name:"Susana",startRow:16},
-  {name:"Olga",startRow:17},
-  {name:"Patricia R.",startRow:18},
+const PEOPLE = [
+  {name:"Montse",startRow:1},{name:"Manuela",startRow:2},{name:"Ana",startRow:3},
+  {name:"Alberto",startRow:4},{name:"Cristina",startRow:5},{name:"Pilina",startRow:6},
+  {name:"Lara",startRow:7},{name:"Loly",startRow:8},{name:"Pepa",startRow:9},
+  {name:"Ana Irib.",startRow:10},{name:"Vanesa F.",startRow:11},{name:"Manuel",startRow:12},
+  {name:"Isabel",startRow:13},{name:"Adrián",startRow:14},{name:"Susana",startRow:15},
 ];
 
+function MONTHS(){return I18N[lang].months.map(m=>m.charAt(0).toUpperCase()+m.slice(1));}
 const DAYS_ES=["L","M","X","J","V","S","D"];
-const REF_MONDAY_ENF=new Date(2026,1,23); // Feb 23 2026
-const UNITS=[["I","🔴 Ictus"],["A","🔵 338/345"],["V","🟢 351-354/337"],["N2","⚫ 354/337-339"]];
+const REF_MONDAY=new Date(2026,3,6); // 6 abril 2026 // Feb 23 2026
+const UNITS=[["I","🔴 Ictus"],["V","🟢 351-353"],["N2","⚫ 354/337-339"],["A","🔵 340-345"]];
 const TURNS=[["D","☀️ D"],["M","🌅 M"],["N","🌙 N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
 
 let currentYear=new Date().getFullYear();
 let editMode=false,miEditMode=false;
 let pinLocked=false;
 // ===== IDIOMA =====
-let lang=localStorage.getItem("enf_lang")||"es";
+let lang=localStorage.getItem("tcaes_lang")||"es";
 const I18N={
   es:{
     askName:"¿Cuál es tu nombre?", namePh:"Escribe tu nombre...", next:"Siguiente →",
@@ -376,7 +364,6 @@ const I18N={
     tePropone:"te propone:", teDaSu:"Te da su", aCambioQuiere:"A cambio quiere tu turno del",
     cambioAplicado:"✅ Cambio aceptado y aplicado", propuestaRechazada:"❌ Propuesta rechazada",
     confirmCancelar:"¿Cancelar esta propuesta?", filaNoEncontrada:"No se encontró tu fila.", propuestaEnviada:"✅ Propuesta enviada a", errorEnviar:"Error al enviar",
-    editarMiTurno:"🔒 Editar mi turno", editando:"✏️ Editando",
     days:["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],
     months:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]
   },
@@ -420,7 +407,6 @@ const I18N={
     tePropone:"proponche:", teDaSu:"Dáche a súa", aCambioQuiere:"A cambio quere a túa quenda do",
     cambioAplicado:"✅ Cambio aceptado e aplicado", propuestaRechazada:"❌ Proposta rexeitada",
     confirmCancelar:"¿Cancelar esta proposta?", filaNoEncontrada:"Non se atopou a túa fila.", propuestaEnviada:"✅ Proposta enviada a", errorEnviar:"Erro ao enviar",
-    editarMiTurno:"🔒 Editar a miña quenda", editando:"✏️ Editando",
     days:["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"],
     months:["xaneiro","febreiro","marzo","abril","maio","xuño","xullo","agosto","setembro","outubro","novembro","decembro"]
   }
@@ -429,7 +415,7 @@ function t(key){return (I18N[lang]&&I18N[lang][key])!==undefined?I18N[lang][key]
 function isDark(){return document.documentElement.classList.contains("dark");}
 function toggleTheme(){
   document.documentElement.classList.toggle("dark");
-  localStorage.setItem("enf_theme",isDark()?"dark":"light");
+  localStorage.setItem("tcaes_theme",isDark()?"dark":"light");
   const btn=document.getElementById("menuThemeBtn");
   if(btn)btn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
   if(typeof render==="function")render();
@@ -438,18 +424,18 @@ function toggleTheme(){
   const rv=document.getElementById("view-resumen");
   if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
 }
-function MONTHS(){return I18N[lang].months.map(m=>m.charAt(0).toUpperCase()+m.slice(1));}
-function tabTitles(){return {mi:t("tabMi"),todos:t("tabTodos"),props:t("tabCambios"),resumen:t("tabResumen")};}
 function toggleLang(){
   lang=(lang==="es")?"gl":"es";
-  localStorage.setItem("enf_lang",lang);
+  localStorage.setItem("tcaes_lang",lang);
   applyLangStatic();
+  if(document.getElementById("nameScreen").style.display!=="none"){/* login screen, already updated by applyLangStatic */}
   if(typeof render==="function")render();
   if(typeof renderMiTurno==="function")renderMiTurno();
   if(typeof renderProposals==="function")renderProposals();
   const rv=document.getElementById("view-resumen");
   if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
 }
+function tabTitles(){return {mi:t("tabMi"),todos:t("tabTodos"),props:t("tabCambios"),resumen:t("tabResumen")};}
 function applyLangStatic(){
   document.getElementById("askNameP").textContent=t("askName");
   document.getElementById("nameInput").placeholder=t("namePh");
@@ -470,7 +456,7 @@ function applyLangStatic(){
   if(themeBtn)themeBtn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
   document.getElementById("mTurnoLabel").textContent=t("turnoLabel");
   document.getElementById("unitLabel1").textContent=t("unidadLabel");
-  const ul2=document.getElementById("unitLabel2");if(ul2)ul2.textContent=t("unidad2Label");
+  document.getElementById("unitLabel2").textContent=t("unidad2Label");
   document.getElementById("tuNombreLabel").textContent=t("tuNombreLabel");
   document.getElementById("inputWho").placeholder=t("tuNombrePh");
   document.getElementById("cambioConLabel").textContent=t("cambioConLabel");
@@ -501,13 +487,10 @@ function applyLangStatic(){
   document.getElementById("pinWarnBody").innerHTML=t("pinWarnBody");
   document.getElementById("changeNowBtn").textContent=t("changeNow");
   document.getElementById("notNowBtn").textContent=t("notNow");
-  const meb=document.getElementById("miEditBtn");
-  if(meb)meb.textContent=miEditMode?t("editando"):t("editarMiTurno");
 }
 
-let currentTab="mi";
-let userName=localStorage.getItem("enf_user")||"";
-let userRow=parseInt(localStorage.getItem("enf_row")||"0");
+let userName=localStorage.getItem("tcaes_user")||"";
+let userRow=parseInt(localStorage.getItem("tcaes_row")||"0");
 let editCtx=null,editTurn=null,editUnit=null;
 let changeLogData={},changeIcons={};
 window.dateOverrides={};
@@ -524,10 +507,10 @@ try{
     messagingSenderId:"362053048865",
     appId:"1:362053048865:web:e77a2ba4d053c4f7b6a160"
   };
-  if(!firebase.apps.length) firebase.initializeApp(_fc,"enfermeras");
-  else if(!firebase.apps.find(a=>a.name==="enfermeras")) firebase.initializeApp(_fc,"enfermeras");
-  db=firebase.database(firebase.app("enfermeras"));
-  firebase.app("enfermeras").auth().signInAnonymously().catch(e=>console.log("Auth anónima falló:",e));
+  if(!firebase.apps.length) firebase.initializeApp(_fc,"tcaes_app");
+  else if(!firebase.apps.find(a=>a.name==="tcaes_app")) firebase.initializeApp(_fc,"tcaes_app");
+  db=firebase.database(firebase.app("tcaes_app"));
+  firebase.app("tcaes_app").auth().signInAnonymously().catch(e=>console.log("Auth anónima falló:",e));
 }catch(e){console.log("Firebase early init:",e);}
 let miMonth=new Date().getMonth(),miYear=new Date().getFullYear();
 
@@ -535,16 +518,16 @@ function saveName(){
   const n=document.getElementById("nameInput").value.trim();
   if(!n)return;
   const nl=n.toLowerCase();
-  const idx=PEOPLE_ENF.findIndex(p=>p.name.toLowerCase()===nl);
+  const idx=PEOPLE.findIndex(p=>p.name.toLowerCase()===nl);
   if(idx<0){
-    const names=PEOPLE_ENF.map(p=>p.name).join(", ");
+    const names=PEOPLE.map(p=>p.name).join(", ");
     document.getElementById("nameError").textContent="❌ Nombre no encontrado. Válidos: "+names;
     document.getElementById("nameError").style.display="block";
     return;
   }
   userName=n; userRow=idx+1;
-  localStorage.setItem("enf_user",n);
-  localStorage.setItem("enf_row",String(userRow));
+  localStorage.setItem("tcaes_user",n);
+  localStorage.setItem("tcaes_row",String(userRow));
   // Go to PIN step
   document.getElementById("stepName").style.display="none";
   document.getElementById("stepPin").style.display="block";
@@ -561,7 +544,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 function initApp(){
   try{
     // Firebase already initialized early
-    firebase.app("enfermeras").auth().onAuthStateChanged(user=>{
+    firebase.app("tcaes_app").auth().onAuthStateChanged(user=>{
       if(!user)return; // esperamos a que signInAnonymously() complete
       startDataListeners();
     });
@@ -570,7 +553,7 @@ function initApp(){
 
 function startDataListeners(){
   try{
-    db.ref("enf_changes").on("value",snap=>{
+    db.ref("rota_changes").on("value",snap=>{
       const raw=snap.val()||{};
       window.dateOverrides={};
       Object.entries(raw).forEach(([k,v])=>{
@@ -584,11 +567,11 @@ function startDataListeners(){
       const resTab=document.getElementById("view-resumen");
       if(resTab&&resTab.style.display!=="none") renderResumen();
     });
-    db.ref("enf_icons").on("value",snap=>{
+    db.ref("change_icons").on("value",snap=>{
       changeIcons=snap.val()||{};
       render();
     });
-    db.ref("enf_log").on("value",snap=>{
+    db.ref("change_log").on("value",snap=>{
       changeLogData={};
       const logs=snap.val();
       if(logs)Object.values(logs).forEach(e=>{
@@ -602,7 +585,7 @@ function startDataListeners(){
 }
 
 if(userName){
-  const verified=localStorage.getItem("enf_verified_"+userRow);
+  const verified=localStorage.getItem("tcaes_verified_"+userRow);
   if(verified){
     // Device already verified, skip PIN
     document.getElementById("nameScreen").style.display="none";
@@ -622,8 +605,8 @@ if(userName){
 }
 
 function mondayOf(d){const dt=new Date(d);const day=dt.getDay();dt.setDate(dt.getDate()+(day===0?-6:1-day));return dt;}
-function weekOff(mon){return Math.round((mon-REF_MONDAY_ENF)/(7*86400000));}
-function rowFor(sr,mon){const o=weekOff(mon);return((sr-1+o)%18+18)%18;}
+function weekOff(mon){return Math.round((mon-REF_MONDAY)/(7*86400000));}
+function rowFor(sr,mon){const o=weekOff(mon);return((sr-1+o)%15+15)%15;}
 
 function chipCls(t,u){
   if(!t||t==="L"||t==="/"||t==="V"||t==="LD")return"neu";
@@ -661,7 +644,7 @@ function render(){
   document.getElementById("thead").innerHTML=h1+h2;
 
   let body='';
-  PEOPLE_ENF.forEach((p,pi)=>{
+  PEOPLE.forEach((p,pi)=>{
     const isMyRow=(userRow===pi+1);
     const bg=isDark()?"#000":(pi%2===0?"#fff":"#f8f9fa");
     body+=`<tr><td class="name-col" style="background:${bg};${isMyRow?"font-weight:700;color:var(--I)":"color:var(--tx)"}">${p.name}</td>`;
@@ -670,19 +653,29 @@ function render(){
       const ri=rowFor(p.startRow,mon);
       const dateStr=dc.yr+String(dc.mn+1).padStart(2,"0")+String(dc.d).padStart(2,"0");
       const ovKey=pi+"_"+dateStr;
-      const baseCell=ROTA_ENF[ri][dc.dow];
+      const baseCell=ROTA[ri][dc.dow];
       const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:baseCell;
-      const t=cell?cell[0]:null,u=cell?cell[1]:null;
-      const cls=chipCls(t,u);
+      const t=cell?cell[0]:null,u=cell?cell[1]:null,u2=cell&&cell[2]?cell[2]:null;
+      const isCombined=(t==="MT"||t==="TN")&&u2;
+      const lbl1=t==="MT"?"M":"T";
+      const lbl2=t==="MT"?"T":"N";
+      const cls=isCombined?chipCls(lbl1,u):chipCls(t,u);
+      const cls2=isCombined?chipCls(lbl2,u2):(u2?chipCls(t,u2):null);
       const baseTurn=t==="V"&&baseCell?baseCell[0]:null;
       const baseTurnCls=baseTurn?chipCls(baseTurn,baseCell?baseCell[1]:null):"";
       const lbl=t==="V"?"🏖":t==="LD"?"📋":(t||"·");
       const cellBg=dc.isToday?"#81c784":dc.isSun?(isDark()?"#000":"#f3e5f5"):bg;
       const iconData=changeIcons[pi]&&changeIcons[pi][dateStr]&&cell&&cell[0]!=="V"&&cell&&cell[0]!=="LD";
       const dot=iconData?`<span class="change-dot" style="position:absolute;top:-4px;right:-4px;width:13px;height:13px;background:#ffc107;border-radius:50%;border:1.5px solid #fff;font-size:.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2" onclick="showLog(event,${pi},'${dateStr}')">✎</span>`:"";
+      const chipInner=isCombined
+        ?`<div style="display:flex;width:34px;height:34px;border-radius:6px;overflow:hidden;gap:1px">`
+          +`<span class="chip ${cls}" style="width:auto;height:auto;flex:1;min-width:0;padding:0;margin:0;border-radius:0;border:none;font-size:.62rem">${lbl1}</span>`
+          +`<span class="chip ${cls2||cls}" style="width:auto;height:auto;flex:1;min-width:0;padding:0;margin:0;border-radius:0;border:none;font-size:.62rem">${lbl2}</span>`
+          +`</div>`
+        :`<div class="chip ${cls}" style="display:flex;align-items:center;justify-content:center;gap:2px">${lbl}${baseTurn?'<span class="chip '+baseTurnCls+'" style="font-size:.6rem;padding:0 3px;border-radius:3px;line-height:1.4">'+baseTurn+'</span>':""}</div>`;
       body+=`<td class="${dc.isToday?"today-col":dc.isSun?"sun":""}" style="background:${cellBg}!important">
         <div style="position:relative;display:inline-block">
-          <div class="chip ${cls}" style="display:flex;align-items:center;justify-content:center;gap:2px">${lbl}${baseTurn?'<span class="chip '+baseTurnCls+'" style="font-size:.6rem;padding:0 3px;border-radius:3px;line-height:1.4">'+baseTurn+'</span>':""}</div>
+          ${chipInner}
           ${dot}
         </div>
       </td>`;
@@ -714,6 +707,8 @@ function goToToday(){
   },200);
 }
 
+let currentTab="mi";
+
 function toggleMenu(e){
   if(e)e.stopPropagation();
   document.getElementById("menuDropdown").classList.toggle("open");
@@ -731,9 +726,9 @@ function menuGoTab(tab){
 }
 function logout(){
   if(!confirm(t("logoutConfirm")))return;
-  localStorage.removeItem("enf_user");
-  localStorage.removeItem("enf_row");
-  if(userRow)localStorage.removeItem("enf_verified_"+userRow);
+  localStorage.removeItem("tcaes_user");
+  localStorage.removeItem("tcaes_row");
+  if(userRow)localStorage.removeItem("tcaes_verified_"+userRow);
   location.reload();
 }
 
@@ -741,15 +736,13 @@ function showTab(tab){
   currentTab=tab;
   document.getElementById("view-mi").style.display=tab==="mi"?"block":"none";
   document.getElementById("view-todos").style.display=tab==="todos"?"block":"none";
-  document.getElementById("view-resumen").style.display=tab==="resumen"?"block":"none";
   const vp=document.getElementById("view-props");
   if(vp)vp.style.display=tab==="props"?"block":"none";
   const title=document.getElementById("topbarTitle");
   if(title)title.textContent=tabTitles()[tab]||"";
-  if(tab==="resumen")renderResumen();
   if(tab==="props")renderProposals();
   if(tab==="mi"){
-    const annKey="enf_ann_v1";
+    const annKey="tcaes_ann_todos_v1";
     const shown=parseInt(localStorage.getItem(annKey)||"0");
     if(shown<5){
       localStorage.setItem(annKey,String(shown+1));
@@ -757,6 +750,7 @@ function showTab(tab){
     }
   }
   if(tab==="todos"){
+
     setTimeout(()=>{
       const wrap=document.getElementById("wrap");
       const th=document.querySelector("th.today-hdr");
@@ -770,7 +764,7 @@ function toggleMiEdit(){
   miEditMode=!miEditMode;
   const btn=document.getElementById("miEditBtn");
   if(btn){
-    btn.textContent=miEditMode?t("editando"):t("editarMiTurno");
+    btn.textContent=miEditMode?"✏️ Editando":"🔒 Editar mi turno";
     btn.classList.toggle("editing-on",miEditMode);
   }
   renderMiTurno();
@@ -785,25 +779,36 @@ function miDayCellHTML(date,isCurrentMonth,me,today){
   const y=date.getFullYear(),m=date.getMonth(),d=date.getDate();
   const dateStr=y+String(m+1).padStart(2,"0")+String(d).padStart(2,"0");
   const ovKey=(userRow-1)+"_"+dateStr;
-  const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA_ENF[ri][dow];
-  const t=cell?cell[0]:null,u=cell?cell[1]:null;
-  const cls=chipCls(t,u);
+  const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA[ri][dow];
+  const t=cell?cell[0]:null,u=cell?cell[1]:null,u2=cell&&cell[2]?cell[2]:null;
+  const isCombined=(t==="MT"||t==="TN")&&u2;
+  const lbl1=t==="MT"?"M":"T";
+  const lbl2=t==="MT"?"T":"N";
+  const cls=isCombined?chipCls(lbl1,u):chipCls(t,u);
+  const cls2=isCombined?chipCls(lbl2,u2):(u2?chipCls(t,u2):null);
   const lbl=t==="V"?"🏖":t==="LD"?"📋":(t||"·");
-  const isLorSlash=!t||t==="L"||t==="/";
+  const isLorSlash2=!t||t==="L"||t==="/";
+  const chipHtml=isCombined
+    ?"<div class='mi-chip neu' style='font-size:1.3rem;padding:6px 2px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;gap:2px;width:100%;box-sizing:border-box;overflow:hidden'>"
+      +"<span class='chip "+cls+"' style='width:auto;height:auto;min-width:0;flex:1;padding:3px 0;border-radius:4px;font-size:.95rem;line-height:1'>"+lbl1+"</span>"
+      +"<span class='chip "+(cls2||cls)+"' style='width:auto;height:auto;min-width:0;flex:1;padding:3px 0;border-radius:4px;font-size:.95rem;line-height:1'>"+lbl2+"</span>"
+      +"</div>"
+    :"<div class='mi-chip "+cls+"' style='font-size:1.3rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;'>"+lbl+"</div>";
   if(!isCurrentMonth){
     const numColor2="#b9b9be";
     return `<td style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:var(--s1);border-radius:12px;height:90px;vertical-align:middle;cursor:default;position:relative;opacity:.4;pointer-events:none">
       <div style="font-size:1.1rem;font-weight:700;color:${numColor2};margin-bottom:6px">${d}</div>
-      <div class="mi-chip ${cls}" style="font-size:1.3rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;">${lbl}</div>
+      ${chipHtml}
     </td>`;
   }
   const bg=isToday?"#4caf50":isWE?(isDark()?"#000000":"#f3e5f5"):"var(--s1)";
   const numColor=isToday?"#fff":isWE?(isDark()?"#fff":"#6f42c1"):"var(--tx)";
+  const isLorSlash=!t||t==="L"||t==="/";
   const bg2=isLorSlash&&!isToday?(isDark()?"#000000":"#ffffff"):bg;
   const iconMi=changeIcons[userRow-1]&&changeIcons[userRow-1][dateStr]&&t!=="V"&&t!=="LD";
   return `<td data-ri="${ri}" data-di="${dow}" data-day="${d}" style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:${bg2};border-radius:12px;height:90px;vertical-align:middle;cursor:${miEditMode?"pointer":"default"};position:relative">
     <div style="font-size:1.1rem;font-weight:700;color:${numColor};margin-bottom:6px">${d}</div>
-    <div class="mi-chip ${cls}" style="font-size:1.3rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;">${lbl}</div>
+    ${chipHtml}
     ${iconMi?`<div onclick="showMiLog(event,${d})" style="position:absolute;top:3px;right:3px;width:14px;height:14px;background:#ffc107;border-radius:50%;font-size:.55rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2">✎</div>`+
     (()=>{const txt=[iconMi.con&&iconMi.con!=="—"?"🔄 "+iconMi.con:"",iconMi.comentario?"💬 "+iconMi.comentario:""].filter(Boolean).join(" ");return txt?`<div style="font-size:.55rem;color:${isDark()?"#ccc":"#555"};margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${txt}</div>`:""})()
     :""}
@@ -812,11 +817,11 @@ function miDayCellHTML(date,isCurrentMonth,me,today){
 
 function renderMiTurno(){
   if(userRow===0){document.getElementById("miTurnoContent").innerHTML='<p style="color:var(--mu);padding:20px">'+t("filaNoEncontrada")+'</p>';return;}
-  const me=PEOPLE_ENF[userRow-1];
+  const me=PEOPLE[userRow-1];
   const today=new Date();
   const last=new Date(miYear,miMonth+1,0).getDate();
   const firstDow=(new Date(miYear,miMonth,1).getDay()+6)%7;
-  let cD=0,cM=0,cN=0;
+  let cD=0,cM=0,cT=0,cN=0;
   for(let d=1;d<=last;d++){
     const date=new Date(miYear,miMonth,d);
     const dow=(date.getDay()+6)%7;
@@ -824,17 +829,17 @@ function renderMiTurno(){
     const ri=rowFor(me.startRow,mon);
     const dateStr=miYear+String(miMonth+1).padStart(2,"0")+String(d).padStart(2,"0");
     const ovKey=(userRow-1)+"_"+dateStr;
-    const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA_ENF[ri][dow];
+    const cell=window.dateOverrides[ovKey]!==undefined?window.dateOverrides[ovKey]:ROTA[ri][dow];
     const t=cell?cell[0]:null;
-    if(t==="D")cD++;else if(t==="M")cM++;else if(t==="N")cN++;
+    if(t==="D")cD++;else if(t==="M")cM++;else if(t==="T")cT++;else if(t==="N")cN++;
   }
 
   let html=`<div style="display:flex;align-items:center;justify-content:center;margin-bottom:14px;gap:8px">
     <span style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;text-align:center">${MONTHS()[miMonth]}<br><span style="font-size:.8rem;font-weight:600;color:var(--mu)">${miYear}</span></span>
   </div>
   <div style="display:flex;gap:6px;margin-bottom:12px;font-size:.73rem">
-    <span style="background:var(--Ab);color:var(--A);padding:3px 10px;border-radius:6px;font-weight:600">☀️ ${cD}D</span>
     <span style="background:var(--Vb);color:var(--V);padding:3px 10px;border-radius:6px;font-weight:600">🌅 ${cM}M</span>
+    <span class="stat-badge-t" style="padding:3px 10px;border-radius:6px;font-weight:600">🌤 ${cT}T</span>
     <span style="background:var(--Ib);color:var(--I);padding:3px 10px;border-radius:6px;font-weight:600">🌙 ${cN}N</span>
   </div>`;
 
@@ -881,7 +886,7 @@ function renderMiTurno(){
     const di=parseInt(td.dataset.di);
     const dk=(userRow-1)+"_"+miYear+String(miMonth+1).padStart(2,"0")+String(day).padStart(2,"0");
     const ov=window.dateOverrides[dk];
-    const base=ROTA_ENF[ri][di];
+    const base=ROTA[ri][di];
     const cell=ov!==undefined?ov:base;
     const t=cell?cell[0]:null;
     openDayAction(day,ri,di,dk,t);
@@ -897,7 +902,8 @@ function renderMiTurno(){
       else{miMonth--;if(miMonth<0){miMonth=11;miYear--;}}
       renderMiTurno();
     }
-  };}
+  };
+}
 
 function showMiLog(e,day){
   e.stopPropagation();
@@ -914,16 +920,17 @@ function showMiLog(e,day){
   setTimeout(()=>popup.style.display="none",5000);
 }
 
-const TURNS_LIST=[["D","☀️ D"],["M","🌅 M"],["N","🌙 N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
+const TURNS_LIST=[["M","☀️ M"],["T","🌤 T"],["N","🌙 N"],["MT","☀️🌤 M/T"],["TN","🌤🌙 T/N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
 
 function openEdit(ri,di,dk,force){
   if(!miEditMode&&!force)return;
   if(pinLocked){showPinWarn();return;}
   editCtx={ri,di,dateKey:dk||""};
   const ovKey=dk||(userRow-1)+"_";
-  const cell=window.dateOverrides[ovKey]||ROTA_ENF[ri][di];
+  const cell=window.dateOverrides[ovKey]||ROTA[ri][di];
   editTurn=cell?cell[0]:null;
   editUnit=cell?cell[1]:null;
+  editUnit2=cell&&cell[2]?cell[2]:null;
   document.getElementById("mTitle").textContent=`${DAYS_ES[di]} — fila ${ri+1}`;
   document.getElementById("mSub").textContent=cell?`Actual: ${cell[0]}${cell[1]?" ("+cell[1]+")":""}`:""
   renderTurnBtns();renderUnitBtns();
@@ -941,31 +948,64 @@ function renderUnitBtns(){
   const show=editTurn&&editTurn!=="L"&&editTurn!=="/"&&editTurn!=="V"&&editTurn!=="LD";
   document.getElementById("unitSection").style.display=show?"":"none";
   if(!show)return;
+  const isCombined=editTurn==="MT"||editTurn==="TN";
+  const lbl1=editTurn==="MT"?"Mañana:":editTurn==="TN"?"Tarde:":"Unidad:";
+  const lbl2=editTurn==="MT"?"Tarde:":"Noche:";
+  document.getElementById("unitLabel1").textContent=lbl1;
   document.getElementById("unitGrid1").innerHTML=UNITS.map(([k,l])=>
     `<div class="ubtn ${k} ${editUnit===k?"active":""}" onclick="selUnit('${k}')">${l}</div>`).join("");
+  const sec2=document.getElementById("unitSection2");
+  if(sec2){
+    sec2.style.display=isCombined?"block":"none";
+    document.getElementById("unitLabel2").textContent=lbl2;
+    document.getElementById("unitGrid2").innerHTML=UNITS.map(([k,l])=>
+      `<div class="ubtn ${k} ${editUnit2===k?"active":""}" onclick="selUnit2('${k}')">${l}</div>`).join("");
+  }
 }
-function selTurn(t){editTurn=t;if(t==="L"||t==="/"||t==="V"||t==="LD")editUnit=null;renderTurnBtns();renderUnitBtns();}
-function selUnit(u){editUnit=u;renderUnitBtns();}
-function confirmEdit(){applyEdit(editTurn,editUnit);}
+const UNIT_INFO={
+  I:{icon:"🔴",name:"Ictus",color:"var(--I)",manana:"Reondrá y limpiará material de la unidad (farmacia, carro de material, etc.)"},
+  V:{icon:"🟢",name:"351-353",color:"var(--V)",manana:"Llevará las dietas y la colocación de farmacia."},
+  N2:{icon:"⚫",name:"354/337-339",color:"var(--N2)",manana:"Llevará el oficio sucio y la limpieza de carros."},
+  A:{icon:"🔵",name:"340-345",color:"var(--A)",manana:"Llevará el oficio de cocina y la sala de exploraciones."}
+};
+function showUnitInfo(key){
+  const info=UNIT_INFO[key];
+  if(!info)return;
+  document.getElementById("unitInfoContent").innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2 style="font-family:Syne,sans-serif;font-size:.95rem;color:${info.color}">${info.icon} ${info.name}</h2>
+      <span onclick="closeUnitInfo()" style="cursor:pointer;font-size:1.2rem;color:var(--mu);padding:4px 8px">✕</span>
+    </div>
+    <p style="font-size:.78rem;font-weight:700;color:var(--mu);margin-bottom:6px">🌅 Mañana</p>
+    <p style="font-size:.85rem;color:var(--tx);line-height:1.6">${info.manana}</p>
+  `;
+  document.getElementById("overlayUnitInfo").classList.add("open");
+}
+function closeUnitInfo(){document.getElementById("overlayUnitInfo").classList.remove("open");}
 
-function applyEdit(t,u){
+function selTurn(t){editTurn=t;if(t==="L"||t==="/"||t==="V"||t==="LD"){editUnit=null;editUnit2=null;}if(t!=="MT"&&t!=="TN")editUnit2=null;renderTurnBtns();renderUnitBtns();}
+function selUnit(u){editUnit=u;renderUnitBtns();}
+function selUnit2(u){editUnit2=u;renderUnitBtns();}
+function confirmEdit(){applyEdit(editTurn,editUnit,editUnit2);}
+
+function applyEdit(t,u,u2){
   if(!editCtx)return;
-  const val=t?[t,u||null]:null;
+  const val=t?(u2?[t,u||null,u2]:[t,u||null]):null;
   if(editCtx.dateKey){
     window.dateOverrides[editCtx.dateKey]=val;
     const who=document.getElementById("inputWho").value.trim()||userName;
     const withWho=document.getElementById("inputWith").value.trim()||"—";
     const comment=document.getElementById("inputComment").value.trim();
     if(db&&editCtx.dateKey){
-      db.ref("enf_changes/"+editCtx.dateKey).set(val).catch(()=>{});
+      db.ref("rota_changes/"+editCtx.dateKey).set(val).catch(()=>{});
       const parts=editCtx.dateKey.split("_");
       const pi_=parts[0],date_=parts[1];
       if(val){
-        db.ref("enf_icons/"+pi_+"/"+date_).set({quien:who,con:withWho,comentario:comment,cambio:val[0]+(val[1]?" ("+val[1]+")":"")}).catch(()=>{});
+        db.ref("change_icons/"+pi_+"/"+date_).set({quien:who,con:withWho,comentario:comment,cambio:val[0]+(val[1]?" ("+val[1]+")":"")}).catch(()=>{});
       }else{
-        db.ref("enf_icons/"+pi_+"/"+date_).remove().catch(()=>{});
+        db.ref("change_icons/"+pi_+"/"+date_).remove().catch(()=>{});
       }
-      db.ref("enf_log").push({quien:who,con:withWho,comentario:comment,fecha:new Date().toLocaleString("es-ES"),dateKey:editCtx.dateKey,cambio:val?val[0]+(val[1]?" ("+val[1]+")":""):"Borrado"}).catch(()=>{});
+      db.ref("change_log").push({quien:who,con:withWho,comentario:comment,fecha:new Date().toLocaleString("es-ES"),dateKey:editCtx.dateKey,cambio:val?val[0]+(val[1]?" ("+val[1]+")":""):"Borrado"}).catch(()=>{});
     }
   }
   closeModal();render();
@@ -978,7 +1018,7 @@ function renderResumen(){
   const myKeys=Object.keys(window.dateOverrides||{}).filter(k=>k.startsWith((userRow-1)+"_"));
   const vacKeys=myKeys.filter(k=>{const v=window.dateOverrides[k];return v&&(Array.isArray(v)?v[0]:v&&v[0])==="V";});
   console.log("Overrides for pi="+(userRow-1)+":", myKeys.length, "vacation days:", vacKeys.length);
-  const me=PEOPLE_ENF[userRow-1];
+  const me=PEOPLE[userRow-1];
   const pi=userRow-1;
 
   // CCOO 2026: 1529-3N (N=noches)
@@ -997,7 +1037,7 @@ function renderResumen(){
       const ri=rowFor(me.startRow,mon);
       const ds=yr+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
       const ov=window.dateOverrides[pi+"_"+ds];
-      const baseCell=ROTA_ENF[ri][dow];
+      const baseCell=ROTA[ri][dow];
       const baseT=baseCell&&Array.isArray(baseCell)?baseCell[0]:(baseCell?baseCell[0]:null);
       // Always count base rotation first
       if(baseT==="D") counts.D++;
@@ -1086,7 +1126,7 @@ function checkPin(){
     return;
   }
   if(db){
-    db.ref("enf_pins/"+userRow).once("value").then(snap=>{
+    db.ref("tcaes_pins/"+userRow).once("value").then(snap=>{
       const stored=snap.val()||"0000";
       if(pin===stored){
         enterApp();
@@ -1097,7 +1137,7 @@ function checkPin(){
       }
     }).catch(()=>enterApp());
   } else {
-    const stored=localStorage.getItem("enf_pin_"+userRow)||"0000";
+    const stored=localStorage.getItem("tcaes_pin_"+userRow)||"0000";
     if(pin===stored){enterApp();}
     else {
       document.getElementById("pinError").textContent=t("codeWrong");
@@ -1108,7 +1148,7 @@ function checkPin(){
 }
 
 function enterApp(){
-  localStorage.setItem("enf_verified_"+userRow,"1");
+  localStorage.setItem("tcaes_verified_"+userRow,"1");
   document.getElementById("nameScreen").style.display="none";
   initApp();
   setTimeout(()=>initProposals(),1000);
@@ -1118,7 +1158,7 @@ function enterApp(){
 
 function checkPinLock(){
   if(!db){pinLocked=false;return;}
-  db.ref("enf_pins/"+userRow).once("value").then(snap=>{
+  db.ref("tcaes_pins/"+userRow).once("value").then(snap=>{
     const stored=snap.val();
     pinLocked=(!stored||stored==="0000");
     const banner=document.getElementById("pinLockBanner");
@@ -1145,14 +1185,14 @@ function changePin(){
   const oldPin=prompt(t("currentCodePrompt"));
   if(!oldPin) return;
   if(db){
-    db.ref("enf_pins/"+userRow).once("value").then(snap=>{
+    db.ref("tcaes_pins/"+userRow).once("value").then(snap=>{
       const stored=snap.val()||"0000";
       if(oldPin!==stored){alert(t("codeWrong"));return;}
       const newPin=prompt(t("newCodePrompt"));
       if(!newPin||!/^[0-9]{4}$/.test(newPin)){alert(t("codeWrongLen"));return;}
       const confirm2=prompt(t("repeatCodePrompt"));
       if(newPin!==confirm2){alert(t("codesMismatch"));return;}
-      db.ref("enf_pins/"+userRow).set(newPin).then(()=>{
+      db.ref("tcaes_pins/"+userRow).set(newPin).then(()=>{
         alert(t("codeChangedOk"));
         checkPinLock();
       });
@@ -1165,8 +1205,11 @@ function changePin(){
 let proposals={}, currentPropKey=null, propFromDay=null, dayActionCtx=null;
 
 function initProposals(){
-  if(!db){setTimeout(initProposals,1000);return;}
-  db.ref("enf_proposals").on("value",snap=>{
+  if(!db){
+    setTimeout(initProposals,1000); // retry if db not ready
+    return;
+  }
+  db.ref("tcaes_proposals").on("value",snap=>{
     proposals=snap.val()||{};
     updatePropBadge();
     const v=document.getElementById("view-props");
@@ -1175,7 +1218,7 @@ function initProposals(){
 }
 
 function updatePropBadge(){
-  const n=Object.values(proposals).filter(p=>Number(p.to)===Number(userRow)&&p.status==="pending").length;
+  const n=Object.values(proposals).filter(p=>p.to===userRow&&p.status==="pending").length;
   const b=document.getElementById("propBadge");
   if(b){b.textContent=n;b.style.display=n>0?"inline-flex":"none";}
   const mb=document.getElementById("menuBadge");
@@ -1217,7 +1260,7 @@ function openPropModal(dateKey,turno){
   const sel=document.getElementById("propPerson");
   if(sel){
     sel.innerHTML='<option value="" id="propPersonDefaultOpt">'+t("selecciona")+'</option>';
-    PEOPLE_ENF.forEach((p,i)=>{if(i+1!==userRow)sel.innerHTML+='<option value="'+(i+1)+'">'+p.name+'</option>';});
+    PEOPLE.forEach((p,i)=>{if(i+1!==userRow)sel.innerHTML+='<option value="'+(i+1)+'">'+p.name+'</option>';});
   }
   const ptd=document.getElementById("propTheirDay");
   if(ptd)ptd.innerHTML='<option value="" id="propTheirDayDefaultOpt">'+t("primeroSelecciona")+'</option>';
@@ -1235,7 +1278,7 @@ function loadPersonDays(){
   if(!pi)return;
   const sel=document.getElementById("propTheirDay");
   sel.innerHTML='<option value="">'+t("cargando")+'</option>';
-  const person=PEOPLE_ENF[pi-1];
+  const person=PEOPLE[pi-1];
   const today=new Date();
   const opts=[];
   let d=new Date(today);
@@ -1246,7 +1289,7 @@ function loadPersonDays(){
     const ri=rowFor(person.startRow,mon);
     const ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
     const ov=window.dateOverrides[(pi-1)+"_"+ds];
-    const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
+    const cell=ov!==undefined?ov:ROTA[ri][dow];
     const tv=cell?cell[0]:null;
     if(tv)opts.push({dk:(pi-1)+"_"+ds,t:tv,label:String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" ("+tv+")"});
     d.setDate(d.getDate()+1);
@@ -1265,11 +1308,11 @@ function sendProposal(){
   if(!propFromDay)return;
   if(!db){alert(t("sinConexionSimple"));return;}
   const prop={from:userRow,fromName:userName,fromDay:propFromDay.dateKey,fromTurn:propFromDay.turno,
-    to:toPi,toName:PEOPLE_ENF[toPi-1].name,toDay:theirDay,toTurn:toTurn,status:"pending",
+    to:toPi,toName:PEOPLE[toPi-1].name,toDay:theirDay,toTurn:toTurn,status:"pending",
     commentFrom:comment,commentTo:"",createdAt:new Date().toLocaleString("es-ES")};
-  db.ref("enf_proposals").push(prop).then(()=>{
+  db.ref("tcaes_proposals").push(prop).then(()=>{
     closePropModal();
-    alert(t("propuestaEnviada")+" "+PEOPLE_ENF[toPi-1].name);
+    alert(t("propuestaEnviada")+" "+PEOPLE[toPi-1].name);
   }).catch(()=>alert(t("errorEnviar")));
 }
 
@@ -1302,20 +1345,26 @@ function respondProposal(decision){
   const p=proposals[currentPropKey];
   const comment=(document.getElementById("respondComment").value||"").trim();
   if(decision==="accepted"){
+    // fromDay key: "{fromPi}_{fromDate}" e.g. "3_20260708"
+    // toDay key: "{toPi}_{toDate}" e.g. "13_20260731"
     const fromPi=Number(p.from)-1;
     const toPi=Number(p.to)-1;
-    const fromDate=(p.fromDay||"").split("_")[1];
-    const toDate=(p.toDay||"").split("_")[1];
+    const fromDate=(p.fromDay||"").split("_")[1]; // e.g. "20260708"
+    const toDate=(p.toDay||"").split("_")[1];     // e.g. "20260731"
+    // fromTurn = what "from" person had on fromDate
     const fromTurn=p.fromTurn||"L";
+    // toTurn = what "to" person had on toDate
     const toTurn=p.toTurn||"L";
+    // Swap: from person now has toTurn on toDate, to person now has fromTurn on fromDate
+    // Also free up original days
     const updates={};
-    updates["enf_changes/"+fromPi+"_"+fromDate]="L";
-    updates["enf_changes/"+fromPi+"_"+toDate]=toTurn;
-    updates["enf_changes/"+toPi+"_"+toDate]="L";
-    updates["enf_changes/"+toPi+"_"+fromDate]=fromTurn;
+    updates["rota_changes/"+fromPi+"_"+fromDate]="L"; // from person free on original day
+    updates["rota_changes/"+fromPi+"_"+toDate]=toTurn; // from person works to person's day
+    updates["rota_changes/"+toPi+"_"+toDate]="L"; // to person free on original day
+    updates["rota_changes/"+toPi+"_"+fromDate]=fromTurn; // to person works from person's day
     db.ref().update(updates);
   }
-  db.ref("enf_proposals/"+currentPropKey).update({status:decision,commentTo:comment,respondedAt:new Date().toLocaleString("es-ES")}).then(()=>{
+  db.ref("tcaes_proposals/"+currentPropKey).update({status:decision,commentTo:comment,respondedAt:new Date().toLocaleString("es-ES")}).then(()=>{
     closeRespondModal();
     if(decision==="accepted"){alert(t("cambioAplicado"));render();}
     else alert(t("propuestaRechazada"));
@@ -1325,23 +1374,36 @@ function respondProposal(decision){
 function cancelProposal(key){
   if(pinLocked){showPinWarn();return;}
   if(!confirm(t("confirmCancelar")))return;
-  db.ref("enf_proposals/"+key).update({status:"cancelled"});
+  db.ref("tcaes_proposals/"+key).update({status:"cancelled"});
 }
 
 function renderProposals(){
   const div=document.getElementById("propsContent");
   if(!div)return;
-  if(!db&&Object.keys(proposals).length===0){
-    div.innerHTML='<p style="color:#c62828;font-size:.82rem">'+t("sinConexion")+'</p>';return;
+  // Debug: show state
+  const totalProps=Object.keys(proposals).length;
+  console.log("renderProposals: userRow="+userRow+", total proposals="+totalProps+", db="+!!db);
+  if(totalProps===0 && !db){
+    div.innerHTML='<p style="color:#c62828;font-size:.82rem">'+t("sinConexion")+'</p>';
+    return;
   }
   const keys=Object.keys(proposals).filter(k=>{
     const p=proposals[k];
     return Number(p.from)===Number(userRow)||Number(p.to)===Number(userRow);
   });
-  if(keys.length===0){div.innerHTML='<p style="color:var(--mu);font-size:.82rem">'+t("sinPropuestas")+'</p>';return;}
+  if(keys.length===0){
+    div.innerHTML='<p style="color:var(--mu);font-size:.82rem">'+t("sinPropuestas")+'</p>';
+    return;
+  }
   const fmt=ds=>ds?ds.slice(6,8)+"/"+ds.slice(4,6):"?";
   let html="";
-  keys.sort((a,b)=>{const ord={pending:0,accepted:1,rejected:2,cancelled:3};return (ord[proposals[a].status]||3)-(ord[proposals[b].status]||3);}).forEach(key=>{
+  keys.sort((a,b)=>{
+    // Pendientes primero, luego más recientes
+    const ord={pending:0,accepted:1,rejected:2,cancelled:3};
+    const sd=(ord[proposals[a].status]||3)-(ord[proposals[b].status]||3);
+    if(sd!==0)return sd;
+    return (proposals[b].createdAt||"").localeCompare(proposals[a].createdAt||"");
+  }).forEach(key=>{
     const p=proposals[key];
     const isFrom=Number(p.from)===Number(userRow);
     const slabel=p.status==="pending"?t("pendiente"):p.status==="accepted"?t("aceptado"):p.status==="rejected"?t("rechazado"):t("cancelado");
@@ -1349,21 +1411,31 @@ function renderProposals(){
     const fromDs=(p.fromDay||"").split("_")[1];
     const toDs=(p.toDay||"").split("_")[1];
     html+='<div class="prop-card '+ccls+'" style="margin-bottom:12px">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:.75rem;font-weight:700">'+slabel+'</span><span style="font-size:.7rem;color:var(--mu)">'+(p.createdAt||"")+'</span></div>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+    html+='<span style="font-size:.75rem;font-weight:700">'+slabel+'</span>';
+    html+='<span style="font-size:.7rem;color:var(--mu)">'+(p.createdAt||"")+'</span></div>';
     html+='<p style="font-size:.82rem">'+(isFrom?t("propuestaA")+" <b>"+p.toName+"</b>":t("propuestaDe")+" <b>"+p.fromName+"</b>")+'</p>';
-    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">🔄 <b>'+p.fromName+'</b> '+t("daSu")+' <b>'+(p.fromTurn||"?")+'</b> '+t("delDia")+' '+fmt(fromDs)+'<br>🔄 <b>'+p.toName+'</b> '+t("daSu")+' turno '+t("delDia")+' '+fmt(toDs)+'</p>';
+    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">';
+    html+='🔄 <b>'+p.fromName+'</b> '+t("daSu")+' <b>'+(p.fromTurn||"?")+'</b> '+t("delDia")+' '+fmt(fromDs)+'<br>';
+    html+='🔄 <b>'+p.toName+'</b> '+t("daSu")+' turno '+t("delDia")+' '+fmt(toDs)+'</p>';
     if(pinLocked){
       html+='<p style="font-size:.75rem;color:#c0392b;margin-top:4px">'+t("commentLockedLong")+'</p>';
     } else {
-      if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555">💬 '+p.fromName+': "'+p.commentFrom+'"</p>';
-      if(p.commentTo)html+='<p style="font-size:.75rem;color:#555">💬 '+p.toName+': "'+p.commentTo+'"</p>';
+      if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555;margin-top:4px">💬 '+p.fromName+': "'+p.commentFrom+'"</p>';
+      if(p.commentTo)html+='<p style="font-size:.75rem;color:#555;margin-top:4px">💬 '+p.toName+': "'+p.commentTo+'"</p>';
     }
-    if(p.status==="pending"&&!isFrom&&!pinLocked)html+='<button onclick="openRespondModal(\'' + key + '\')">'+t("verYResponder")+'</button>';
-    if(p.status==="pending"&&isFrom&&!pinLocked)html+='<button onclick="cancelProposal(\'' + key + '\')">'+t("cancelarPropuesta")+'</button>';
+    if(p.status==="pending"&&!pinLocked){
+      if(!isFrom){
+        html+='<button onclick="openRespondModal(\'' +key+ '\')" style="width:100%;margin-top:10px;padding:10px;border-radius:8px;background:#4caf50;color:#fff;border:none;cursor:pointer;font-weight:600;font-family:\'DM Mono\',monospace">'+t("verYResponder")+'</button>';
+      } else {
+        html+='<button onclick="cancelProposal(\'' +key+ '\')" style="width:100%;margin-top:8px;padding:10px;border-radius:8px;background:var(--s2);color:var(--tx);border:1px solid var(--bd);cursor:pointer;font-weight:600;font-family:\'DM Mono\',monospace">'+t("cancelarPropuesta")+'</button>';
+      }
+    }
     html+='</div>';
   });
   div.innerHTML=html;
 }
+
 
 function closeNewFeature(){
   document.getElementById("overlayNewFeature").classList.remove("open");
@@ -1373,14 +1445,9 @@ function closeModal(){document.getElementById("overlay").classList.remove("open"
 function outsideClose(e){if(e.target.id==="overlay")closeModal();}
 window.onload=()=>{applyLangStatic();if(userName){render();renderMiTurno();showTab("mi");setTimeout(goToToday,300);}};
 </script>
-<script>
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("sw.js").catch(()=>{});
-}
-</script>
 <!-- PROPOSALS VIEW -->
 <div id="view-props" style="flex:1;overflow:auto;padding:14px 16px;display:none">
-  <h2 id="propsHeading" style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propostas de cambio</h2>
+  <h2 id="propsHeading" style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propuestas de cambio</h2>
   <div id="propsContent"></div>
 </div>
 
@@ -1390,7 +1457,7 @@ if("serviceWorker" in navigator){
     <h2 id="dayActionTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px"></h2>
     <div id="dayActionTurn" style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center"></div>
     <button id="dayActionEditBtn" onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
-    <button id="dayActionProposeBtn" onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
+    <button id="dayActionProposeBtn" onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Proponer cambio con compañera/o</button>
     <button id="dayActionBackBtn" onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
   </div>
 </div>
@@ -1398,18 +1465,18 @@ if("serviceWorker" in navigator){
 <!-- PROPOSAL MODAL -->
 <div class="overlay" id="overlayProp" onclick="if(event.target.id==='overlayProp')closePropModal()">
   <div class="modal">
-    <h2 id="propModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
+    <h2 id="propModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Proponer cambio</h2>
     <p id="propMyDay" style="font-size:.78rem;color:var(--mu);margin-bottom:12px"></p>
-    <div class="slabel" id="propPersonLabel">Compañeira/o:</div>
+    <div class="slabel" id="propPersonLabel">Compañera/o:</div>
     <select id="propPerson" onchange="loadPersonDays()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
       <option value="" id="propPersonDefaultOpt">Selecciona...</option>
     </select>
-    <div class="slabel" id="propTheirDayLabel" style="margin-top:10px">Día que queres dela/el:</div>
+    <div class="slabel" id="propTheirDayLabel" style="margin-top:10px">Día que quieres de ella/él:</div>
     <select id="propTheirDay" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
-      <option value="" id="propTheirDayDefaultOpt">Primeiro selecciona a persoa</option>
+      <option value="" id="propTheirDayDefaultOpt">Primero selecciona la persona</option>
     </select>
     <div class="slabel" id="propCommentLabel" style="margin-top:10px">Comentario:</div>
-    <input type="text" id="propComment" placeholder="Explica o motivo...">
+    <input type="text" id="propComment" placeholder="Explica el motivo...">
     <div style="display:flex;gap:8px;margin-top:14px">
       <button class="mbtn mbtn-ghost" id="propBackBtn" onclick="closePropModal()" style="flex:1">← Volver</button>
       <button class="mbtn mbtn-save" id="propSendBtn" onclick="sendProposal()" style="flex:1">Enviar</button>
@@ -1420,13 +1487,13 @@ if("serviceWorker" in navigator){
 <!-- RESPOND MODAL -->
 <div class="overlay" id="overlayRespond" onclick="if(event.target.id==='overlayRespond')closeRespondModal()">
   <div class="modal">
-    <h2 id="respondModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder proposta</h2>
+    <h2 id="respondModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder propuesta</h2>
     <div id="respondContent"></div>
-    <div class="slabel" id="respondCommentLabel">O teu comentario (opcional):</div>
-    <input type="text" id="respondComment" placeholder="A túa resposta...">
+    <div class="slabel" id="respondCommentLabel">Tu comentario (opcional):</div>
+    <input type="text" id="respondComment" placeholder="Tu respuesta...">
     <div style="display:flex;gap:8px;margin-top:14px">
       <button class="mbtn mbtn-ghost" id="respondBackBtn" onclick="closeRespondModal()" style="flex:1">← Volver</button>
-      <button class="mbtn mbtn-del" id="respondRejectBtn" onclick="respondProposal('rejected')" style="flex:1">Rexeitar</button>
+      <button class="mbtn mbtn-del" id="respondRejectBtn" onclick="respondProposal('rejected')" style="flex:1">Rechazar</button>
       <button class="mbtn mbtn-save" id="respondAcceptBtn" onclick="respondProposal('accepted')" style="flex:1">Aceptar</button>
     </div>
   </div>
@@ -1444,19 +1511,34 @@ if("serviceWorker" in navigator){
     <ol style="font-size:.78rem;color:var(--tx);margin:0 0 12px 18px;line-height:1.9">
       <li>Vai á pestaña <b>👤 Mi turno</b></li>
       <li>Toca calquera día traballado</li>
-      <li>Escolle <b>🔄 Propoñer cambio con compañeira/o</b></li>
+      <li>Escolle <b>🔄 Proponer cambio con compañeira/o</b></li>
       <li>Selecciona a persoa e o día que queres</li>
       <li>Engade un comentario e envía</li>
     </ol>
-    <p style="font-size:.78rem;color:var(--mu);line-height:1.6">A outra persoa verá un aviso na pestaña <b>🔄 Cambios</b> e poderá aceptar ou rexeitar.</p>
+    <p style="font-size:.78rem;color:var(--mu);line-height:1.6">A outra persoa verá un aviso na pestaña <b>🔄 Cambios</b> e poderá aceptar ou rexeitar. Se acepta, o cambio aplícase automaticamente.</p>
     <button onclick="closeNewFeature()" style="width:100%;margin-top:16px;padding:12px;border-radius:8px;background:var(--I);color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;font-size:.88rem">Entendido ✓</button>
   </div>
 </div>
 
-<!-- BACK BUTTON SUPPORT -->
+<div class="overlay" id="overlayPinWarn">
+  <div class="modal">
+    <h2 id="pinWarnTitle" style="font-family:Syne,sans-serif;font-size:1rem;color:#c0392b;margin-bottom:10px">🔒 Cambia tu código</h2>
+    <p id="pinWarnBody" style="font-size:.85rem;color:var(--tx);line-height:1.6;margin-bottom:14px">Sigues usando el código de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.</p>
+    <button id="changeNowBtn" onclick="changePinFromWarn()" style="width:100%;padding:12px;border-radius:8px;background:#c0392b;color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:8px">Cambiar código ahora</button>
+    <button id="notNowBtn" onclick="closePinWarn()" style="width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Ahora no</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlayUnitInfo" onclick="if(event.target.id==='overlayUnitInfo')closeUnitInfo()">
+  <div class="modal" id="unitInfoContent"></div>
+</div>
+
 <script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
 window.addEventListener("popstate",function(){
-  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayPinWarn","overlay"];
+  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayUnitInfo","overlayPinWarn","overlay"];
   for(const id of modals){
     const el=document.getElementById(id);
     if(el&&el.classList.contains("open")){
