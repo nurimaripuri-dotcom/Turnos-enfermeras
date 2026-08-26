@@ -214,7 +214,7 @@ setTimeout(function(){
       <button class="menu-item" id="menuChangeCodeBtn" onclick="closeMenu();changePin()">🔑 Cambiar código</button>
       <button class="menu-item" id="menuLangBtn" onclick="closeMenu();toggleLang()">🌐 Cambiar a Galego</button>
       <button class="menu-item" id="menuThemeBtn" onclick="closeMenu();toggleTheme()">🌙 Modo oscuro</button>
-      <button class="menu-item" id="menuLegalBtn" onclick="closeMenu();showLegalNotice()">ℹ️ Aviso legal</button>
+      <button class="menu-item" id="menuLegalBtn" onclick="closeMenu();showLegalNotice(false)">ℹ️ Aviso legal</button>
       <div class="menu-sep"></div>
       <button class="menu-item danger" id="menuLogoutBtn" onclick="closeMenu();logout()">🚪 Cerrar sesión</button>
     </div>
@@ -332,15 +332,37 @@ function saveHiddenPeople(){localStorage.setItem("enf_hidden_people",JSON.string
 function openComparePeople(){renderPeopleCheckList();document.getElementById("overlayComparePeople").classList.add("open");}
 function closeComparePeople(){document.getElementById("overlayComparePeople").classList.remove("open");}
 
-function showLegalNotice(){
+const LEGAL_VERSION="1";
+function legalKey(){return "enf_legal_v"+LEGAL_VERSION+"_"+userRow;}
+function checkLegalDisclaimer(){
+  if(!userRow)return;
+  if(!localStorage.getItem(legalKey())){
+    showLegalNotice(true);
+  }
+}
+function showLegalNotice(mandatory){
   document.getElementById("legalTitle").textContent=t("legalTitle");
   document.getElementById("legalBody").innerHTML=t("legalBody");
-  document.getElementById("legalUnderstoodBtn").textContent=t("legalUnderstood");
+  document.getElementById("legalAcceptBtn").textContent=t("legalAccept");
+  document.getElementById("legalCloseBtn").textContent=t("cerrar");
+  document.getElementById("legalAcceptBtn").style.display=mandatory?"block":"none";
+  document.getElementById("legalCloseBtn").style.display=mandatory?"none":"block";
   document.getElementById("overlayLegal").classList.add("open");
 }
 function closeLegalNotice(){
   document.getElementById("overlayLegal").classList.remove("open");
-  localStorage.setItem("enf_legal_seen","1");
+}
+function acceptLegal(){
+  if(!confirm(t("legalConfirm")))return;
+  localStorage.setItem(legalKey(),"1");
+  if(db){
+    db.ref("enf_legal_acceptances/"+userRow).set({
+      name:userName,
+      version:LEGAL_VERSION,
+      date:new Date().toLocaleString("es-ES")
+    }).catch(()=>{});
+  }
+  closeLegalNotice();
 }
 function renderPeopleCheckList(){
   const div=document.getElementById("peopleCheckList");
@@ -425,7 +447,9 @@ const I18N={
     compararBtn:"👥 Comparar", comparePeopleTitle:"👥 Comparar turnos", comparePeopleSub:"Elige qué compañeras/os quieres ver en la tabla.",
     selectAll:"Todas", selectNone:"Ninguna", cerrar:"Cerrar",
     legalTitle:"ℹ️ Aviso legal",
-    legalBody:"Esta aplicación es una herramienta informal creada por y para el equipo, para facilitar la consulta y el intercambio de turnos entre compañeras/os.<br><br>No sustituye al cuadrante oficial gestionado por la supervisión ni a los canales oficiales del centro. Ante cualquier duda o discrepancia, prevalece siempre el cuadrante oficial.<br><br><b>No introduzcas datos de pacientes en ningún caso.</b> Los únicos datos que se guardan son nombres y turnos del personal, con el fin de coordinar el trabajo del equipo.<br><br>Al usar la app, cada persona es responsable de la veracidad de los cambios que anote.",
+    legalAccept:"Acepto",
+    legalConfirm:"¿Estás segura? Al aceptar, confirmas que usas la app de forma voluntaria y bajo tu propia responsabilidad.",
+    legalBody:"<p style='margin-bottom:10px'>Esta app es una herramienta informal creada por y para el equipo, para facilitar la consulta y el intercambio de turnos entre compañeras/os. Su uso es <b>totalmente voluntario</b> — nadie está obligado a usarla.</p><p style='margin-bottom:10px'>No sustituye al cuadrante oficial gestionado por la supervisión ni a los canales oficiales del centro. Ante cualquier duda o discrepancia, prevalece siempre el cuadrante oficial.</p><p style='margin-bottom:10px'><b>No introduzcas datos de pacientes en ningún caso.</b> Los datos que se guardan son: nombre, código, turnos, cambios propuestos y comentarios asociados del personal.</p><p style='margin-bottom:10px'>Como responsable técnico de la app, tengo acceso a esos datos desde el sistema donde se almacenan. No se guarda ni se accede a ninguna otra cuenta tuya (email personal, contraseñas, redes sociales, datos bancarios, etc.).</p><p>El uso de la app y la veracidad de los cambios anotados es responsabilidad de cada usuaria. Si tienes dudas o quieres que se eliminen tus datos, puedes contactar conmigo.</p>",
     legalUnderstood:"Entendido", menuLegal:"ℹ️ Aviso legal",
     editarMiTurno:"🔒 Editar mi turno", editando:"✏️ Editando",
     days:["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],
@@ -474,7 +498,9 @@ const I18N={
     compararBtn:"👥 Comparar", comparePeopleTitle:"👥 Comparar quendas", comparePeopleSub:"Escolle que compañeiras/os queres ver na táboa.",
     selectAll:"Todas", selectNone:"Ningunha", cerrar:"Pechar",
     legalTitle:"ℹ️ Aviso legal",
-    legalBody:"Esta aplicación é unha ferramenta informal creada por e para o equipo, para facilitar a consulta e o intercambio de quendas entre compañeiras/os.<br><br>Non substitúe o cadro oficial xestionado pola supervisión nin as canles oficiais do centro. Ante calquera dúbida ou discrepancia, prevalece sempre o cadro oficial.<br><br><b>Non introduzas datos de pacientes en ningún caso.</b> Os únicos datos que se gardan son nomes e quendas do persoal, co fin de coordinar o traballo do equipo.<br><br>Ao usar a app, cada persoa é responsable da veracidade dos cambios que anote.",
+    legalAccept:"Acepto",
+    legalConfirm:"¿Estás segura? Ao aceptar, confirmas que usas a app de forma voluntaria e baixo a túa propia responsabilidade.",
+    legalBody:"<p style='margin-bottom:10px'>Esta app é unha ferramenta informal creada por e para o equipo, para facilitar a consulta e o intercambio de quendas entre compañeiras/os. O seu uso é <b>totalmente voluntario</b> — ninguén está obrigado a usala.</p><p style='margin-bottom:10px'>Non substitúe o cadro oficial xestionado pola supervisión nin as canles oficiais do centro. Ante calquera dúbida ou discrepancia, prevalece sempre o cadro oficial.</p><p style='margin-bottom:10px'><b>Non introduzas datos de pacientes en ningún caso.</b> Os datos que se gardan son: nome, código, quendas, cambios propostos e comentarios asociados do persoal.</p><p style='margin-bottom:10px'>Como responsable técnico da app, teño acceso a eses datos dende o sistema onde se almacenan. Non se garda nin se accede a ningunha outra conta túa (email persoal, contrasinais, redes sociais, datos bancarios, etc.).</p><p>O uso da app e a veracidade dos cambios anotados é responsabilidade de cada usuaria. Se tes dúbidas ou queres que se eliminen os teus datos, podes contactar comigo.</p>",
     legalUnderstood:"Entendido", menuLegal:"ℹ️ Aviso legal",
     editarMiTurno:"🔒 Editar a miña quenda", editando:"✏️ Editando",
     days:["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"],
@@ -674,6 +700,7 @@ if(userName){
     setTimeout(()=>initProposals(),1000);
     setTimeout(()=>{render();renderMiTurno();showTab("mi");setTimeout(goToToday,400);},100);
     setTimeout(()=>checkPinLock(),700);
+    setTimeout(()=>checkLegalDisclaimer(),900);
   } else {
     // Device not verified, show name screen with PIN
     document.getElementById("nameScreen").style.display="flex";
@@ -1181,9 +1208,7 @@ function enterApp(){
   setTimeout(()=>initProposals(),1000);
   setTimeout(()=>{renderMiTurno();showTab("mi");},500);
   setTimeout(()=>checkPinLock(),700);
-  if(!localStorage.getItem("enf_legal_seen")){
-    setTimeout(()=>showLegalNotice(),1200);
-  }
+  setTimeout(()=>checkLegalDisclaimer(),900);
 }
 
 function checkPinLock(){
@@ -1517,11 +1542,12 @@ if("serviceWorker" in navigator){
 </div>
 
 <!-- LEGAL NOTICE MODAL -->
-<div class="overlay" id="overlayLegal" onclick="if(event.target.id==='overlayLegal')closeLegalNotice()">
+<div class="overlay" id="overlayLegal">
   <div class="modal">
     <h2 id="legalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:10px">ℹ️ Aviso legal</h2>
     <div id="legalBody" style="font-size:.8rem;color:var(--tx);line-height:1.7;max-height:55vh;overflow-y:auto"></div>
-    <button class="mbtn mbtn-save" id="legalUnderstoodBtn" onclick="closeLegalNotice()" style="width:100%;margin-top:14px">Entendido</button>
+    <button class="mbtn mbtn-save" id="legalAcceptBtn" onclick="acceptLegal()" style="display:none;width:100%;margin-top:14px">Acepto</button>
+    <button class="mbtn mbtn-save" id="legalCloseBtn" onclick="closeLegalNotice()" style="display:none;width:100%;margin-top:14px">Cerrar</button>
   </div>
 </div>
 
