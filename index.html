@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#1565c0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Enfermeras 3ºC</title>
+<script>(function(){try{if(localStorage.getItem("enf_theme")==="dark")document.documentElement.classList.add("dark");}catch(e){}})();</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -20,6 +21,30 @@
   --tx:#1a1a2e; --mu:#6c757d;
   --today:#1b5e20; --today-bg:#81c784;
 }
+:root.dark {
+  --bd:#3a3a48; --bg:#121218; --s1:#1c1c26; --s2:#272733;
+  --tx:#eceef2; --mu:#9d9dae;
+  --today:#66bb6a; --today-bg:#2e7d32;
+  --I:#ff6b6b; --Ib:#3b1f22; --Ix:#e57373;
+  --V:#69db8f; --Vb:#1f3b2a; --Vx:#57c17f;
+  --N2:#b0bec5; --N2b:#2a2f36; --N2x:#8a97a3;
+  --A:#64b5f6; --Ab:#1f2f45; --Ax:#4fa3e3;
+}
+:root.dark .lc.neu,:root.dark .chip.neu,:root.dark .mi-chip.neu{background:#000;color:#fff;border-color:#555}
+:root.dark .menu-dropdown{box-shadow:0 6px 20px rgba(0,0,0,.5)}
+.mi-edit-btn{background:#fff3cd;color:#856404}
+.mi-edit-btn.editing-on{background:#d4edda;color:#155724;border-color:#28a745}
+.disclaimer-box{background:#fff3cd;color:#856404}
+:root.dark .mi-edit-btn,
+:root.dark .mi-edit-btn.editing-on,
+:root.dark .disclaimer-box,
+:root.dark .mbtn-del,
+:root.dark #pinLockBanner,
+:root.dark .prop-card.pending,
+:root.dark .prop-card.accepted,
+:root.dark .prop-card.rejected,
+:root.dark th.sun,
+:root.dark td.sun{background:#000!important;color:#fff!important;border-color:#555!important}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--tx);font-family:"DM Mono",monospace;display:flex;flex-direction:column}
@@ -39,6 +64,18 @@ h1 em{color:var(--I);font-style:normal}
 .tabs{display:flex;border-bottom:2px solid var(--bd);background:var(--s1);flex-shrink:0}
 .tab-btn{flex:1;padding:10px;border:none;background:transparent;font-family:"DM Mono",monospace;font-size:.82rem;cursor:pointer;color:var(--mu);border-bottom:3px solid transparent}
 .tab-btn.active{color:var(--I);border-bottom-color:var(--I);font-weight:600}
+.topbar-title{font-family:"Syne",sans-serif;font-size:.88rem;font-weight:700;padding:10px 6px;color:var(--tx)}
+.menu-wrap{position:relative;flex-shrink:0}
+.menu-btn{background:transparent;border:none;font-size:1.35rem;line-height:1;padding:8px 12px;cursor:pointer;color:var(--tx);position:relative;border-radius:8px}
+.menu-btn:active{background:var(--s2)}
+.menu-badge{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:#e53935}
+.menu-dropdown{display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--s1);border:1px solid var(--bd);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.15);min-width:200px;z-index:50;overflow:hidden}
+.menu-dropdown.open{display:block}
+.menu-item{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;padding:11px 14px;border:none;background:transparent;font-family:"DM Mono",monospace;font-size:.82rem;color:var(--tx);cursor:pointer}
+.menu-item:active{background:var(--s2)}
+.menu-item.danger{color:#c0392b}
+.menu-sep{height:1px;background:var(--bd);margin:2px 0}
+.menu-item-badge{background:#e53935;color:#fff;border-radius:50%;min-width:16px;height:16px;font-size:.6rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700;padding:0 3px}
 .wrap{flex:1;overflow:auto;min-height:0}
 table{border-collapse:collapse;width:max-content}
 thead th{padding:4px 2px;font-size:.65rem;font-weight:600;color:var(--mu);text-align:center;white-space:nowrap;background:var(--s1);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:3}
@@ -143,23 +180,32 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 </div>
 <div id="pinLockBanner" style="display:none;background:#f8d7da;color:#721c24;padding:8px 14px;font-size:.78rem;text-align:center;cursor:pointer" onclick="showPinWarn()">🔒 PIN por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.</div>
 <div class="tabs">
-  <button class="tab-btn active" id="tab-mi" onclick="showTab('mi')">👤 Mi turno</button>
-  <button class="tab-btn" id="tab-todos" onclick="showTab('todos')">📅 Todos</button>
-  <button class="tab-btn" id="tab-resumen" onclick="showTab('resumen')">📊 Resumen</button>
-  <button class="tab-btn" id="tab-props" onclick="showTab('props')" style="position:relative">
-    🔄 Cambios<span id="propBadge" style="display:none;position:absolute;top:4px;right:8px;background:#e53935;color:#fff;border-radius:50%;width:14px;height:14px;font-size:.55rem;align-items:center;justify-content:center;font-weight:700">0</span>
-  </button>
+  <div class="topbar-title" id="topbarTitle">👤 A miña quenda</div>
+  <div class="menu-wrap">
+    <button class="menu-btn" id="menuBtn" onclick="toggleMenu(event)">⋮<span class="menu-badge" id="menuBadge" style="display:none"></span></button>
+    <div class="menu-dropdown" id="menuDropdown">
+      <button class="menu-item" id="tab-todos" onclick="menuGoTab('todos')">📅 Todos</button>
+      <button class="menu-item" id="tab-resumen" onclick="menuGoTab('resumen')">📊 Resumo</button>
+      <button class="menu-item" id="tab-props" onclick="menuGoTab('props')">🔄 Cambios <span id="propBadge" class="menu-item-badge" style="display:none">0</span></button>
+      <div class="menu-sep"></div>
+      <button class="menu-item" id="tab-mi" onclick="menuGoTab('mi')">🏠 Volver á miña quenda</button>
+      <button class="menu-item" onclick="closeMenu();changePin()">🔑 Cambiar código</button>
+      <button class="menu-item" id="menuThemeBtn" onclick="closeMenu();toggleTheme()">🌙 Modo escuro</button>
+      <button class="menu-item" onclick="closeMenu();showLegalModal(false)">📜 Aviso legal</button>
+      <div class="menu-sep"></div>
+      <button class="menu-item danger" onclick="closeMenu();logout()">🚪 Pechar sesión</button>
+    </div>
+  </div>
 </div>
 
 <div id="view-mi" style="flex:1;overflow:auto;padding:14px 16px">
-  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px">
-    <button onclick="changePin()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--mu);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔑 PIN</button>
-    <button id="miEditBtn" onclick="toggleMiEdit()" style="padding:6px 14px;border-radius:8px;border:1px solid #dee2e6;background:#fff3cd;color:#856404;cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔒 Editar mi turno</button>
-  </div>
   <div id="miTurnoContent"></div>
 </div>
 
 <div id="view-todos" style="flex:1;overflow:auto;display:none">
+  <div style="display:flex;justify-content:flex-end;padding:8px 12px 0">
+    <button id="comparePeopleBtn" onclick="openComparePeople()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">👥 Comparar</button>
+  </div>
   <div class="wrap" id="wrap">
     <table id="tbl" style="border-collapse:collapse;width:max-content">
       <thead id="thead"></thead>
@@ -396,6 +442,7 @@ if(userName){
     setTimeout(()=>initProposals(),1000);
     setTimeout(()=>{render();renderMiTurno();showTab(getDefaultTab());setTimeout(goToToday,400);},100);
     setTimeout(()=>checkPinLock(),700);
+    setTimeout(()=>checkLegalDisclaimer(),900);
   } else {
     // Device not verified, show name screen with PIN
     document.getElementById("nameScreen").style.display="flex";
@@ -448,9 +495,10 @@ function render(){
 
   let body='';
   PEOPLE_ENF.forEach((p,pi)=>{
+    if(hiddenPeople.has(pi))return;
     const isMyRow=(userRow===pi+1);
-    const bg=pi%2===0?"#fff":"#f8f9fa";
-    body+=`<tr><td class="name-col" style="background:${bg};${isMyRow?"font-weight:700;color:var(--I)":""}">${p.name}</td>`;
+    const bg=isDark()?"#000":(pi%2===0?"#fff":"#f8f9fa");
+    body+=`<tr><td class="name-col" style="background:${bg};${isMyRow?"font-weight:700;color:var(--I)":"color:var(--tx)"}">${p.name}</td>`;
     dayCols.forEach(dc=>{
       const mon=mondayOf(new Date(dc.yr,dc.mn,dc.d));
       const ri=rowFor(p.startRow,mon);
@@ -490,6 +538,104 @@ function showLog(e,pi_,dateStr){
 }
 document.addEventListener("click",()=>document.getElementById("logPopup").style.display="none");
 
+function toggleMenu(e){
+  if(e)e.stopPropagation();
+  document.getElementById("menuDropdown").classList.toggle("open");
+}
+function closeMenu(){
+  document.getElementById("menuDropdown").classList.remove("open");
+}
+document.addEventListener("click",function(e){
+  const wrap=document.querySelector(".menu-wrap");
+  if(wrap&&!wrap.contains(e.target))closeMenu();
+});
+function menuGoTab(tab){
+  closeMenu();
+  showTab(tab);
+}
+function isDark(){return document.documentElement.classList.contains("dark");}
+function toggleTheme(){
+  document.documentElement.classList.toggle("dark");
+  localStorage.setItem("enf_theme",isDark()?"dark":"light");
+  const btn=document.getElementById("menuThemeBtn");
+  if(btn)btn.textContent=isDark()?"☀️ Modo normal":"🌙 Modo escuro";
+  if(typeof render==="function")render();
+  if(typeof renderMiTurno==="function")renderMiTurno();
+  if(typeof renderProposals==="function")renderProposals();
+  const rv=document.getElementById("view-resumen");
+  if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
+}
+function logout(){
+  if(!confirm("¿Pechar sesión? Terás que introducir de novo o teu nome e código neste dispositivo."))return;
+  localStorage.removeItem("enf_user");
+  localStorage.removeItem("enf_row");
+  if(userRow)localStorage.removeItem("enf_verified_"+userRow);
+  location.reload();
+}
+
+const LEGAL_VERSION="1";
+function legalKey(){return "enf_legal_v"+LEGAL_VERSION+"_"+userRow;}
+function checkLegalDisclaimer(){
+  if(!userRow)return;
+  if(!localStorage.getItem(legalKey())){
+    showLegalModal(true);
+  }
+}
+function showLegalModal(mandatory){
+  document.getElementById("legalBody").innerHTML="<p style='margin-bottom:10px'>Esta app é un proxecto persoal para facilitar a consulta e xestión dos turnos do servizo. O seu uso é <b>totalmente voluntario</b> — ninguén está obrigado a usala, é unha ferramenta pensada para a comodidade de quen queira aproveitala.</p><p style='margin-bottom:10px'>Datos que se gardan: nome, código, turnos, cambios propostos e comentarios asociados.</p><p style='margin-bottom:10px'>Como responsable técnico da app, teño acceso a eses datos dende o sistema onde se almacenan. Non se garda nin se accede a ningunha outra conta túa (email persoal, contrasinais, redes sociais, datos bancarios, etc.).</p><p>O uso da app é baixo a responsabilidade de cada usuaria. Se tes dúbidas ou queres que se eliminen os teus datos, podes contactar comigo.</p>";
+  document.getElementById("legalAcceptBtn").style.display=mandatory?"block":"none";
+  document.getElementById("legalCloseBtn").style.display=mandatory?"none":"block";
+  document.getElementById("overlayLegal").classList.add("open");
+}
+function closeLegal(){
+  document.getElementById("overlayLegal").classList.remove("open");
+}
+function acceptLegal(){
+  if(!confirm("¿Estás segura? Ao aceptar, confirmas que usas a app de forma voluntaria e baixo a túa propia responsabilidade."))return;
+  localStorage.setItem(legalKey(),"1");
+  if(db){
+    db.ref("legal_acceptances/"+userRow).set({
+      name:userName,
+      version:LEGAL_VERSION,
+      date:new Date().toLocaleString("es-ES")
+    }).catch(()=>{});
+  }
+  closeLegal();
+}
+
+let hiddenPeople=new Set(JSON.parse(localStorage.getItem("enf_hidden_people")||"[]"));
+function saveHiddenPeople(){localStorage.setItem("enf_hidden_people",JSON.stringify([...hiddenPeople]));}
+function openComparePeople(){renderPeopleCheckList();document.getElementById("overlayComparePeople").classList.add("open");}
+function closeComparePeople(){document.getElementById("overlayComparePeople").classList.remove("open");}
+function renderPeopleCheckList(){
+  const div=document.getElementById("peopleCheckList");
+  if(!div)return;
+  div.innerHTML=PEOPLE_ENF.map((p,i)=>{
+    const checked=hiddenPeople.has(i)?"":"checked";
+    return `<label style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--bd);border-radius:8px;cursor:pointer;background:var(--s2)">
+      <input type="checkbox" onchange="togglePersonVisible(${i})" ${checked} style="width:18px;height:18px;flex-shrink:0">
+      <span style="font-size:.85rem;color:var(--tx)">${p.name}</span>
+    </label>`;
+  }).join("");
+}
+function togglePersonVisible(i){
+  if(hiddenPeople.has(i))hiddenPeople.delete(i);else hiddenPeople.add(i);
+  saveHiddenPeople();
+  render();
+}
+function selectAllPeople(){
+  hiddenPeople.clear();
+  saveHiddenPeople();
+  renderPeopleCheckList();
+  render();
+}
+function selectNonePeople(){
+  PEOPLE_ENF.forEach((p,i)=>hiddenPeople.add(i));
+  saveHiddenPeople();
+  renderPeopleCheckList();
+  render();
+}
+
 function changeYear(d){currentYear+=d;render();}
 function goToToday(){
   currentYear=new Date().getFullYear();render();
@@ -500,18 +646,17 @@ function goToToday(){
   },200);
 }
 
+const TAB_TITLES={mi:"👤 A miña quenda",todos:"📅 Todos",resumen:"📊 Resumo",props:"🔄 Cambios"};
+let currentTab="mi";
 function showTab(tab){
+  currentTab=tab;
   document.getElementById("view-mi").style.display=tab==="mi"?"block":"none";
   document.getElementById("view-todos").style.display=tab==="todos"?"block":"none";
-  document.getElementById("tab-mi").classList.toggle("active",tab==="mi");
-  document.getElementById("tab-todos").classList.toggle("active",tab==="todos");
   document.getElementById("view-resumen").style.display=tab==="resumen"?"block":"none";
   const vp=document.getElementById("view-props");
   if(vp)vp.style.display=tab==="props"?"block":"none";
-  ["mi","todos","resumen","props"].forEach(t=>{
-    const el=document.getElementById("tab-"+t);
-    if(el){el.style.color=tab===t?"var(--I)":"var(--mu)";el.style.borderBottom=tab===t?"3px solid var(--I)":"3px solid transparent";el.style.fontWeight=tab===t?"600":"normal";}
-  });
+  const title=document.getElementById("topbarTitle");
+  if(title)title.textContent=TAB_TITLES[tab]||TAB_TITLES.mi;
   if(tab==="resumen")renderResumen();
   if(tab==="props")renderProposals();
   if(tab==="mi"){
@@ -537,9 +682,7 @@ function toggleMiEdit(){
   const btn=document.getElementById("miEditBtn");
   if(btn){
     btn.textContent=miEditMode?"✏️ Editando":"🔒 Editar mi turno";
-    btn.style.background=miEditMode?"#d4edda":"#fff3cd";
-    btn.style.color=miEditMode?"#155724":"#856404";
-    btn.style.borderColor=miEditMode?"#28a745":"var(--bd)";
+    btn.classList.toggle("editing-on",miEditMode);
   }
   renderMiTurno();
 }
@@ -880,6 +1023,7 @@ function enterApp(){
   setTimeout(()=>initProposals(),1000);
   setTimeout(()=>{renderMiTurno();showTab(getDefaultTab());},500);
   setTimeout(()=>checkPinLock(),700);
+  setTimeout(()=>checkLegalDisclaimer(),900);
 }
 
 function checkPinLock(){
@@ -943,7 +1087,9 @@ function initProposals(){
 function updatePropBadge(){
   const n=Object.values(proposals).filter(p=>Number(p.to)===Number(userRow)&&p.status==="pending").length;
   const b=document.getElementById("propBadge");
-  if(b){b.textContent=n;b.style.display=n>0?"flex":"none";}
+  if(b){b.textContent=n;b.style.display=n>0?"inline-flex":"none";}
+  const mb=document.getElementById("menuBadge");
+  if(mb)mb.style.display=n>0?"block":"none";
 }
 
 function openDayAction(day,ri,di,dk,turno){
@@ -1136,7 +1282,11 @@ function closeNewFeature(){
 
 function closeModal(){document.getElementById("overlay").classList.remove("open");editCtx=null;}
 function outsideClose(e){if(e.target.id==="overlay")closeModal();}
-window.onload=()=>{if(userName){render();renderMiTurno();showTab(getDefaultTab());setTimeout(goToToday,300);}};
+window.onload=()=>{
+  const themeBtn=document.getElementById("menuThemeBtn");
+  if(themeBtn)themeBtn.textContent=isDark()?"☀️ Modo normal":"🌙 Modo escuro";
+  if(userName){render();renderMiTurno();showTab(getDefaultTab());setTimeout(goToToday,300);}
+};
 </script>
 <script>
 if("serviceWorker" in navigator){
@@ -1218,10 +1368,34 @@ if("serviceWorker" in navigator){
   </div>
 </div>
 
+<!-- LEGAL DISCLAIMER MODAL -->
+<div class="overlay" id="overlayLegal">
+  <div class="modal">
+    <h2 style="font-family:Syne,sans-serif;font-size:1rem;color:var(--I);margin-bottom:10px">📜 Aviso legal</h2>
+    <div id="legalBody" style="font-size:.82rem;color:var(--tx);line-height:1.7;margin-bottom:16px"></div>
+    <button id="legalAcceptBtn" onclick="acceptLegal()" style="display:none;width:100%;padding:12px;border-radius:8px;background:var(--I);color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace">Acepto</button>
+    <button id="legalCloseBtn" onclick="closeLegal()" style="display:none;width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Pechar</button>
+  </div>
+</div>
+
+<!-- COMPARE PEOPLE MODAL -->
+<div class="overlay" id="overlayComparePeople" onclick="if(event.target.id==='overlayComparePeople')closeComparePeople()">
+  <div class="modal">
+    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">👥 Comparar quendas</h2>
+    <p style="font-size:.78rem;color:var(--mu);margin-bottom:12px">Escolle que compañeiras/os queres ver na táboa.</p>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="mbtn mbtn-ghost" onclick="selectAllPeople()" style="flex:1">Todas</button>
+      <button class="mbtn mbtn-ghost" onclick="selectNonePeople()" style="flex:1">Ningunha</button>
+    </div>
+    <div id="peopleCheckList" style="max-height:48vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
+    <button class="mbtn mbtn-save" onclick="closeComparePeople()" style="width:100%;margin-top:14px">Pechar</button>
+  </div>
+</div>
+
 <!-- BACK BUTTON SUPPORT -->
 <script>
 window.addEventListener("popstate",function(){
-  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayPinWarn","overlay"];
+  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayPinWarn","overlayComparePeople","overlayLegal","overlay"];
   for(const id of modals){
     const el=document.getElementById(id);
     if(el&&el.classList.contains("open")){
