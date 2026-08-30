@@ -4,14 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Enfermeras 3ºC">
 <meta name="theme-color" content="#1565c0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Enfermeras 3ºC</title>
-<script>(function(){try{if(localStorage.getItem("enf_theme")==="dark")document.documentElement.classList.add("dark");}catch(e){}})();</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -23,37 +20,6 @@
   --tx:#1a1a2e; --mu:#6c757d;
   --today:#1b5e20; --today-bg:#81c784;
 }
-:root.dark {
-  --bd:#3a3a48; --bg:#121218; --s1:#1c1c26; --s2:#272733;
-  --tx:#eceef2; --mu:#9d9dae;
-  --today:#66bb6a; --today-bg:#2e7d32;
-  --I:#ff6b6b; --Ib:#3b1f22; --Ix:#e57373;
-  --V:#69db8f; --Vb:#1f3b2a; --Vx:#57c17f;
-  --N2:#b0bec5; --N2b:#2a2f36; --N2x:#8a97a3;
-  --A:#64b5f6; --Ab:#1f2f45; --Ax:#4fa3e3;
-}
-:root.dark .lc.neu,:root.dark .chip.neu,:root.dark .mi-chip.neu{background:#000;color:#fff;border-color:#555}
-:root.dark .menu-dropdown{box-shadow:0 6px 20px rgba(0,0,0,.5)}
-.mi-edit-btn{background:#fff3cd;color:#856404}
-.mi-edit-btn.editing-on{background:#d4edda;color:#155724;border-color:#28a745}
-.disclaimer-box{background:#fff3cd;color:#856404}
-:root.dark .mi-edit-btn,
-:root.dark .mi-edit-btn.editing-on,
-:root.dark .disclaimer-box,
-:root.dark .mbtn-del,
-:root.dark #pinLockBanner,
-:root.dark .prop-card.pending,
-:root.dark .prop-card.accepted,
-:root.dark .prop-card.rejected,
-:root.dark th.sun,
-:root.dark td.sun{background:#000!important;color:#fff!important;border-color:#555!important}
-/* SPLASH SCREEN */
-#splashScreen{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#0a121d;transition:opacity .45s ease;overflow:hidden}
-#splashScreen.hide{opacity:0;pointer-events:none}
-.splash-photo-frame{position:absolute;inset:0;width:100%;height:100%;animation:splashPhotoIn 2.4s ease-in-out infinite}
-.splash-photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center 22%;display:block}
-.splash-loading-text{position:absolute;bottom:8%;left:0;right:0;text-align:center;z-index:2;color:#eef2f6;font-family:"DM Mono",monospace;font-size:.78rem;letter-spacing:3px;opacity:.85;text-shadow:0 2px 8px rgba(0,0,0,.6)}
-@keyframes splashPhotoIn{0%{transform:scale(1.06);opacity:.85}50%{transform:scale(1);opacity:1}100%{transform:scale(1.06);opacity:.85}}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--tx);font-family:"DM Mono",monospace;display:flex;flex-direction:column}
@@ -70,21 +36,9 @@ h1 em{color:var(--I);font-style:normal}
 .lc.N2{background:var(--N2b);color:var(--N2);border-color:var(--N2x)}
 .lc.A{background:var(--Ab);color:var(--A);border-color:var(--Ax)}
 .lc.neu{background:#fff;color:#333;border-color:#333}
-.tabs{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--bd);background:var(--s1);flex-shrink:0;padding:0 6px}
+.tabs{display:flex;border-bottom:2px solid var(--bd);background:var(--s1);flex-shrink:0}
 .tab-btn{flex:1;padding:10px;border:none;background:transparent;font-family:"DM Mono",monospace;font-size:.82rem;cursor:pointer;color:var(--mu);border-bottom:3px solid transparent}
 .tab-btn.active{color:var(--I);border-bottom-color:var(--I);font-weight:600}
-.topbar-title{font-family:"Syne",sans-serif;font-size:.88rem;font-weight:700;padding:10px 6px;color:var(--tx)}
-.menu-wrap{position:relative;flex-shrink:0}
-.menu-btn{background:transparent;border:none;font-size:1.35rem;line-height:1;padding:8px 12px;cursor:pointer;color:var(--tx);position:relative;border-radius:8px}
-.menu-btn:active{background:var(--s2)}
-.menu-badge{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:#e53935}
-.menu-dropdown{display:none;position:absolute;top:calc(100% + 4px);right:0;background:var(--s1);border:1px solid var(--bd);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.15);min-width:190px;z-index:50;overflow:hidden}
-.menu-dropdown.open{display:block}
-.menu-item{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;padding:11px 14px;border:none;background:transparent;font-family:"DM Mono",monospace;font-size:.82rem;color:var(--tx);cursor:pointer}
-.menu-item:active{background:var(--s2)}
-.menu-item.danger{color:#c0392b}
-.menu-sep{height:1px;background:var(--bd);margin:2px 0}
-.menu-item-badge{background:#e53935;color:#fff;border-radius:50%;min-width:16px;height:16px;font-size:.6rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700;padding:0 3px}
 .wrap{flex:1;overflow:auto;min-height:0}
 table{border-collapse:collapse;width:max-content}
 thead th{padding:4px 2px;font-size:.65rem;font-weight:600;color:var(--mu);text-align:center;white-space:nowrap;background:var(--s1);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:3}
@@ -149,36 +103,23 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 </head>
 <body>
 
-<div id="splashScreen">
-  <div class="splash-photo-frame">
-    <img src="splash-photo.jpg" alt="">
-  </div>
-  <div class="splash-loading-text">CARGANDO…</div>
-</div>
-<script>
-setTimeout(function(){
-  var sp=document.getElementById("splashScreen");
-  if(sp){ sp.classList.add("hide"); setTimeout(function(){ sp.remove(); }, 450); }
-}, 1700);
-</script>
-
 <div id="nameScreen">
   <div class="name-card">
     <h2>🏥 Enfermeras <em>3ºC</em></h2>
-    <p style="font-size:.78rem;color:var(--mu);margin-bottom:18px" id="askNameP">¿Cuál es tu nombre?</p>
+    <p style="font-size:.78rem;color:var(--mu);margin-bottom:18px">¿Cuál es tu nombre?</p>
     <!-- STEP 1: Name -->
     <div id="stepName">
       <input type="text" id="nameInput" placeholder="Escribe tu nombre..." autofocus>
       <div id="nameError" style="display:none;color:var(--I);font-size:.72rem;margin-top:8px;text-align:left"></div>
-      <button class="mbtn mbtn-save" id="nextBtn" onclick="saveName()" style="width:100%;margin-top:12px">Siguiente →</button>
+      <button class="mbtn mbtn-save" onclick="saveName()" style="width:100%;margin-top:12px">Siguiente →</button>
     </div>
-    <!-- STEP 2: código -->
+    <!-- STEP 2: PIN -->
     <div id="stepPin" style="display:none">
-      <p style="font-size:.78rem;color:var(--mu);margin-bottom:10px" id="pinLabel">Introduce tu código (por defecto 0000):</p>
+      <p style="font-size:.78rem;color:var(--mu);margin-bottom:10px" id="pinLabel">Introduce tu PIN (por defecto 0000):</p>
       <input type="password" id="pinInput" placeholder="····" maxlength="4" style="text-align:center;font-size:1.5rem;letter-spacing:8px">
       <div id="pinError" style="display:none;color:var(--I);font-size:.72rem;margin-top:8px;text-align:left"></div>
-      <button class="mbtn mbtn-save" id="enterBtn" onclick="checkPin()" style="width:100%;margin-top:12px">Entrar</button>
-      <button class="mbtn mbtn-ghost" id="pinBackBtn" onclick="document.getElementById('stepPin').style.display='none';document.getElementById('stepName').style.display='block'" style="width:100%;margin-top:8px">← Volver</button>
+      <button class="mbtn mbtn-save" onclick="checkPin()" style="width:100%;margin-top:12px">Entrar</button>
+      <button class="mbtn mbtn-ghost" onclick="document.getElementById('stepPin').style.display='none';document.getElementById('stepName').style.display='block'" style="width:100%;margin-top:8px">← Volver</button>
     </div>
   </div>
 </div>
@@ -189,49 +130,36 @@ setTimeout(function(){
     <button class="hbtn" onclick="changeYear(-1)">‹</button>
     <span id="yearLabel" style="font-family:Syne,sans-serif;font-weight:700;min-width:46px;text-align:center"></span>
     <button class="hbtn" onclick="changeYear(1)">›</button>
-    <button class="hbtn primary" id="todayBtn" onclick="goToToday()">📍 Hoy</button>
+    <button class="hbtn primary" onclick="goToToday()">📍 Hoy</button>
   </div>
 </header>
 <div class="legend">
-  <span style="color:var(--mu)" id="unidadLegendLabel">Unidad →</span>
+  <span style="color:var(--mu)">Unidad →</span>
   <div class="lc I">🔴 Ictus</div>
   <div class="lc A">🔵 338/345</div>
   <div class="lc V">🟢 351-354/337</div>
   <div class="lc N2">⚫ L/X: 354+337/339</div>
   <div class="lc neu">L · /</div>
 </div>
-<div id="pinLockBanner" style="display:none;background:#f8d7da;color:#721c24;padding:8px 14px;font-size:.78rem;text-align:center;cursor:pointer" onclick="showPinWarn()">🔒 Código por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.</div>
+<div id="pinLockBanner" style="display:none;background:#f8d7da;color:#721c24;padding:8px 14px;font-size:.78rem;text-align:center;cursor:pointer" onclick="showPinWarn()">🔒 PIN por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.</div>
 <div class="tabs">
-  <div class="topbar-title" id="topbarTitle">👤 Mi turno</div>
-  <div class="menu-wrap">
-    <button class="menu-btn" id="menuBtn" onclick="toggleMenu(event)">⋮<span class="menu-badge" id="menuBadge" style="display:none"></span></button>
-    <div class="menu-dropdown" id="menuDropdown">
-      <button class="menu-item" id="tab-todos" onclick="menuGoTab('todos')">📅 Todos</button>
-      <button class="menu-item" id="tab-resumen" onclick="menuGoTab('resumen')">📊 Resumen</button>
-      <button class="menu-item" id="tab-props" onclick="menuGoTab('props')">🔄 Cambios <span id="propBadge" class="menu-item-badge" style="display:none">0</span></button>
-      <div class="menu-sep"></div>
-      <button class="menu-item" id="tab-mi" onclick="menuGoTab('mi')">🏠 Volver a Mi turno</button>
-      <button class="menu-item" id="menuChangeCodeBtn" onclick="closeMenu();changePin()">🔑 Cambiar código</button>
-      <button class="menu-item" id="menuLangBtn" onclick="closeMenu();toggleLang()">🌐 Cambiar a Galego</button>
-      <button class="menu-item" id="menuThemeBtn" onclick="closeMenu();toggleTheme()">🌙 Modo oscuro</button>
-      <button class="menu-item" id="menuLegalBtn" onclick="closeMenu();showLegalNotice(false)">ℹ️ Aviso legal</button>
-      <div class="menu-sep"></div>
-      <button class="menu-item danger" id="menuLogoutBtn" onclick="closeMenu();logout()">🚪 Cerrar sesión</button>
-    </div>
-  </div>
+  <button class="tab-btn active" id="tab-mi" onclick="showTab('mi')">👤 Mi turno</button>
+  <button class="tab-btn" id="tab-todos" onclick="showTab('todos')">📅 Todos</button>
+  <button class="tab-btn" id="tab-resumen" onclick="showTab('resumen')">📊 Resumen</button>
+  <button class="tab-btn" id="tab-props" onclick="showTab('props')" style="position:relative">
+    🔄 Cambios<span id="propBadge" style="display:none;position:absolute;top:4px;right:8px;background:#e53935;color:#fff;border-radius:50%;width:14px;height:14px;font-size:.55rem;align-items:center;justify-content:center;font-weight:700">0</span>
+  </button>
 </div>
 
-<div id="view-mi" style="flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column">
-  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-shrink:0">
-    <button id="miEditBtn" class="mi-edit-btn" onclick="toggleMiEdit()" style="padding:6px 14px;border-radius:8px;border:1px solid #dee2e6;cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔒 Editar mi turno</button>
+<div id="view-mi" style="flex:1;overflow:auto;padding:14px 16px">
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px">
+    <button onclick="changePin()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--mu);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔑 PIN</button>
+    <button id="miEditBtn" onclick="toggleMiEdit()" style="padding:6px 14px;border-radius:8px;border:1px solid #dee2e6;background:#fff3cd;color:#856404;cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">🔒 Editar mi turno</button>
   </div>
-  <div id="miTurnoContent" style="flex:1;display:flex;flex-direction:column;min-height:0"></div>
+  <div id="miTurnoContent"></div>
 </div>
 
 <div id="view-todos" style="flex:1;overflow:auto;display:none">
-  <div style="display:flex;justify-content:flex-end;padding:8px 12px 0">
-    <button id="comparePeopleBtn" onclick="openComparePeople()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">👥 Comparar</button>
-  </div>
   <div class="wrap" id="wrap">
     <table id="tbl" style="border-collapse:collapse;width:max-content">
       <thead id="thead"></thead>
@@ -249,23 +177,23 @@ setTimeout(function(){
   <div class="modal">
     <h2 id="mTitle">Editar</h2>
     <div class="msub" id="mSub"></div>
-    <div class="slabel" id="mTurnoLabel">Turno:</div>
+    <div class="slabel">Turno:</div>
     <div class="turn-row" id="turnRow"></div>
     <div id="unitSection">
       <div class="slabel" id="unitLabel1">Unidad:</div>
       <div class="unit-grid" id="unitGrid1"></div>
     </div>
-    <div class="slabel" id="tuNombreLabel">Tu nombre:</div>
+    <div class="slabel">Tu nombre:</div>
     <input type="text" id="inputWho" placeholder="Tu nombre...">
-    <div class="slabel" id="cambioConLabel">Cambio con:</div>
+    <div class="slabel">Cambio con:</div>
     <input type="text" id="inputWith" placeholder="Nombre de la compañera...">
-    <div class="slabel" id="comentarioLabel">Comentario (opcional):</div>
+    <div class="slabel">Comentario (opcional):</div>
     <input type="text" id="inputComment" placeholder="Notas...">
     <div class="mfooter">
-      <button class="mbtn mbtn-del" id="borrarBtn" onclick="applyEdit(null,null)">✕ Borrar</button>
+      <button class="mbtn mbtn-del" onclick="applyEdit(null,null)">✕ Borrar</button>
       <div style="display:flex;gap:8px">
-        <button class="mbtn mbtn-ghost" id="cancelarBtn" onclick="closeModal()">Cancelar</button>
-        <button class="mbtn mbtn-save" id="guardarBtn" onclick="confirmEdit()">Guardar</button>
+        <button class="mbtn mbtn-ghost" onclick="closeModal()">Cancelar</button>
+        <button class="mbtn mbtn-save" onclick="confirmEdit()">Guardar</button>
       </div>
     </div>
   </div>
@@ -275,10 +203,10 @@ setTimeout(function(){
 
 <div class="overlay" id="overlayPinWarn">
   <div class="modal">
-    <h2 id="pinWarnTitle" style="font-family:Syne,sans-serif;font-size:1rem;color:#c0392b;margin-bottom:10px">🔒 Cambia tu código</h2>
-    <p id="pinWarnBody" style="font-size:.85rem;color:var(--tx);line-height:1.6;margin-bottom:14px">Sigues usando el código de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.</p>
-    <button id="changeNowBtn" onclick="changePinFromWarn()" style="width:100%;padding:12px;border-radius:8px;background:#c0392b;color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:8px">Cambiar código ahora</button>
-    <button id="notNowBtn" onclick="closePinWarn()" style="width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Ahora no</button>
+    <h2 style="font-family:Syne,sans-serif;font-size:1rem;color:#c0392b;margin-bottom:10px">🔒 Cambia tu PIN</h2>
+    <p style="font-size:.85rem;color:var(--tx);line-height:1.6;margin-bottom:14px">Sigues usando el PIN de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.</p>
+    <button onclick="changePinFromWarn()" style="width:100%;padding:12px;border-radius:8px;background:#c0392b;color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:8px">Cambiar PIN ahora</button>
+    <button onclick="closePinWarn()" style="width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Ahora no</button>
   </div>
 </div>
 
@@ -327,72 +255,7 @@ const PEOPLE_ENF = [
   {name:"Patricia R.",startRow:18},
 ];
 
-let hiddenPeople=new Set(JSON.parse(localStorage.getItem("enf_hidden_people")||"[]"));
-function saveHiddenPeople(){localStorage.setItem("enf_hidden_people",JSON.stringify([...hiddenPeople]));}
-function openComparePeople(){renderPeopleCheckList();document.getElementById("overlayComparePeople").classList.add("open");}
-function closeComparePeople(){document.getElementById("overlayComparePeople").classList.remove("open");}
-
-const LEGAL_VERSION="1";
-function legalKey(){return "enf_legal_v"+LEGAL_VERSION+"_"+userRow;}
-function checkLegalDisclaimer(){
-  if(!userRow)return;
-  if(!localStorage.getItem(legalKey())){
-    showLegalNotice(true);
-  }
-}
-function showLegalNotice(mandatory){
-  document.getElementById("legalTitle").textContent=t("legalTitle");
-  document.getElementById("legalBody").innerHTML=t("legalBody");
-  document.getElementById("legalAcceptBtn").textContent=t("legalAccept");
-  document.getElementById("legalCloseBtn").textContent=t("cerrar");
-  document.getElementById("legalAcceptBtn").style.display=mandatory?"block":"none";
-  document.getElementById("legalCloseBtn").style.display=mandatory?"none":"block";
-  document.getElementById("overlayLegal").classList.add("open");
-}
-function closeLegalNotice(){
-  document.getElementById("overlayLegal").classList.remove("open");
-}
-function acceptLegal(){
-  if(!confirm(t("legalConfirm")))return;
-  localStorage.setItem(legalKey(),"1");
-  if(db){
-    db.ref("enf_legal_acceptances/"+userRow).set({
-      name:userName,
-      version:LEGAL_VERSION,
-      date:new Date().toLocaleString("es-ES")
-    }).catch(()=>{});
-  }
-  closeLegalNotice();
-}
-function renderPeopleCheckList(){
-  const div=document.getElementById("peopleCheckList");
-  if(!div)return;
-  div.innerHTML=PEOPLE_ENF.map((p,i)=>{
-    const checked=hiddenPeople.has(i)?"":"checked";
-    return `<label style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--bd);border-radius:8px;cursor:pointer;background:var(--s2)">
-      <input type="checkbox" onchange="togglePersonVisible(${i})" ${checked} style="width:18px;height:18px;flex-shrink:0">
-      <span style="font-size:.85rem;color:var(--tx)">${p.name}</span>
-    </label>`;
-  }).join("");
-}
-function togglePersonVisible(i){
-  if(hiddenPeople.has(i))hiddenPeople.delete(i);else hiddenPeople.add(i);
-  saveHiddenPeople();
-  render();
-}
-function selectAllPeople(){
-  hiddenPeople.clear();
-  saveHiddenPeople();
-  renderPeopleCheckList();
-  render();
-}
-function selectNonePeople(){
-  PEOPLE_ENF.forEach((p,i)=>hiddenPeople.add(i));
-  saveHiddenPeople();
-  renderPeopleCheckList();
-  render();
-}
-
+const MONTHS_ES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DAYS_ES=["L","M","X","J","V","S","D"];
 const REF_MONDAY_ENF=new Date(2026,1,23); // Feb 23 2026
 const UNITS=[["I","🔴 Ictus"],["A","🔵 338/345"],["V","🟢 351-354/337"],["N2","⚫ 354/337-339"]];
@@ -401,209 +264,28 @@ const TURNS=[["D","☀️ D"],["M","🌅 M"],["N","🌙 N"],["L","✅ L"],["/","
 let currentYear=new Date().getFullYear();
 let editMode=false,miEditMode=false;
 let pinLocked=false;
-// ===== IDIOMA =====
-let lang=localStorage.getItem("enf_lang")||"es";
-const I18N={
-  es:{
-    askName:"¿Cuál es tu nombre?", namePh:"Escribe tu nombre...", next:"Siguiente →",
-    codeLabel:"Introduce tu código (por defecto 0000):", enter:"Entrar", back:"← Volver",
-    today:"📍 Hoy", unidadLegend:"Unidad →",
-    bannerCode:"🔒 Código por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.",
-    tabMi:"👤 Mi turno", tabTodos:"📅 Todos", tabCambios:"🔄 Cambios", tabResumen:"📊 Resumen",
-    menuVolver:"🏠 Volver a Mi turno", menuChangeCode:"🔑 Cambiar código", menuLogout:"🚪 Cerrar sesión",
-    menuLangTo:"🌐 Cambiar a Galego",
-    menuThemeToDark:"🌙 Modo oscuro", menuThemeToLight:"☀️ Modo normal",
-    codeWrongLen:"❌ El código debe ser 4 números", codeWrong:"❌ Código incorrecto",
-    currentCodePrompt:"Código actual:", newCodePrompt:"Nuevo código (4 números):",
-    repeatCodePrompt:"Repite el nuevo código:", codesMismatch:"Los códigos no coinciden",
-    codeChangedOk:"✅ Código cambiado correctamente",
-    pinWarnTitle:"🔒 Cambia tu código",
-    pinWarnBody:"Sigues usando el código de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.",
-    changeNow:"Cambiar código ahora", notNow:"Ahora no",
-    commentLockedShort:"🔒 Cambia tu código para ver este comentario",
-    commentLockedLong:"🔒 Cambia tu código para ver los comentarios",
-    logoutConfirm:"¿Cerrar sesión? Tendrás que volver a introducir tu nombre y código en este dispositivo.",
-    editTitle:"Editar", turnoLabel:"Turno:", unidadLabel:"Unidad:", unidad2Label:"Segunda unidad:",
-    tuNombreLabel:"Tu nombre:", tuNombrePh:"Tu nombre...", cambioConLabel:"Cambio con:",
-    cambioConPh:"Nombre de la compañera...", comentarioLabel:"Comentario (opcional):", comentarioPh:"Notas...",
-    borrar:"✕ Borrar", cancelar:"Cancelar", guardar:"Guardar",
-    propsHeading:"🔄 Propuestas de cambio",
-    dayActionEdit:"✏️ Anotar cambio de turno", dayActionPropose:"🔄 Proponer cambio con compañera/o",
-    propModalTitle:"🔄 Proponer cambio", compLabel:"Compañera/o:", selecciona:"Selecciona...",
-    diaQuieresLabel:"Día que quieres de ella/él:", primeroSelecciona:"Primero selecciona la persona",
-    comentarioLabel2:"Comentario:", comentarioPh2:"Explica el motivo...", enviar:"Enviar",
-    respondModalTitle:"🔄 Responder propuesta", tuComentarioLabel:"Tu comentario (opcional):",
-    tuRespuestaPh:"Tu respuesta...", rechazar:"Rechazar", aceptar:"Aceptar",
-    libre:"Libre",
-    pendiente:"⏳ Pendiente", aceptado:"✅ Aceptado", rechazado:"❌ Rechazado", cancelado:"🚫 Cancelado",
-    propuestaA:"📤 Propuesta a", propuestaDe:"📥 Propuesta de",
-    daSu:"da su", delDia:"del", verYResponder:"Ver y responder", cancelarPropuesta:"Cancelar propuesta",
-    sinConexion:"⚠️ Sin conexión con Firebase. Recarga la página.", sinPropuestas:"No tienes propuestas de cambio.",
-    tuTurnoDel:"Tu turno del", cargando:"Cargando...", seleccionaDia:"Selecciona día...",
-    seleccionaCompYDia:"Selecciona la compañera y el día", sinConexionSimple:"Sin conexión",
-    tePropone:"te propone:", teDaSu:"Te da su", aCambioQuiere:"A cambio quiere tu turno del",
-    cambioAplicado:"✅ Cambio aceptado y aplicado", propuestaRechazada:"❌ Propuesta rechazada",
-    confirmCancelar:"¿Cancelar esta propuesta?", filaNoEncontrada:"No se encontró tu fila.", propuestaEnviada:"✅ Propuesta enviada a", errorEnviar:"Error al enviar",
-    compararBtn:"👥 Comparar", comparePeopleTitle:"👥 Comparar turnos", comparePeopleSub:"Elige qué compañeras/os quieres ver en la tabla.",
-    selectAll:"Todas", selectNone:"Ninguna", cerrar:"Cerrar",
-    legalTitle:"ℹ️ Aviso legal",
-    legalAccept:"Acepto",
-    legalConfirm:"¿Estás segura? Al aceptar, confirmas que usas la app de forma voluntaria y bajo tu propia responsabilidad.",
-    legalBody:"<p style='margin-bottom:10px'>Esta app es una herramienta informal creada por y para el equipo, para facilitar la consulta y el intercambio de turnos entre compañeras/os. Su uso es <b>totalmente voluntario</b> — nadie está obligado a usarla.</p><p style='margin-bottom:10px'>No sustituye al cuadrante oficial gestionado por la supervisión ni a los canales oficiales del centro. Ante cualquier duda o discrepancia, prevalece siempre el cuadrante oficial.</p><p style='margin-bottom:10px'><b>No introduzcas datos de pacientes en ningún caso.</b> Los datos que se guardan son: nombre, código, turnos, cambios propuestos y comentarios asociados del personal.</p><p style='margin-bottom:10px'>Como responsable técnico de la app, tengo acceso a esos datos desde el sistema donde se almacenan. No se guarda ni se accede a ninguna otra cuenta tuya (email personal, contraseñas, redes sociales, datos bancarios, etc.).</p><p>El uso de la app y la veracidad de los cambios anotados es responsabilidad de cada usuaria. Si tienes dudas o quieres que se eliminen tus datos, puedes contactar conmigo.</p>",
-    legalUnderstood:"Entendido", menuLegal:"ℹ️ Aviso legal",
-    editarMiTurno:"🔒 Editar mi turno", editando:"✏️ Editando",
-    days:["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],
-    months:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"]
-  },
-  gl:{
-    askName:"Cal é o teu nome?", namePh:"Escribe o teu nome...", next:"Seguinte →",
-    codeLabel:"Introduce o teu código (por defecto 0000):", enter:"Entrar", back:"← Voltar",
-    today:"📍 Hoxe", unidadLegend:"Unidade →",
-    bannerCode:"🔒 Código por defecto activo — só podes ver, non editar. Toca aquí para cambialo.",
-    tabMi:"👤 A miña quenda", tabTodos:"📅 Todos", tabCambios:"🔄 Cambios", tabResumen:"📊 Resumo",
-    menuVolver:"🏠 Volver á miña quenda", menuChangeCode:"🔑 Cambiar código", menuLogout:"🚪 Pechar sesión",
-    menuLangTo:"🌐 Cambiar a Castellano",
-    menuThemeToDark:"🌙 Modo escuro", menuThemeToLight:"☀️ Modo normal",
-    codeWrongLen:"❌ O código debe ter 4 números", codeWrong:"❌ Código incorrecto",
-    currentCodePrompt:"Código actual:", newCodePrompt:"Novo código (4 números):",
-    repeatCodePrompt:"Repite o novo código:", codesMismatch:"Os códigos non coinciden",
-    codeChangedOk:"✅ Código cambiado correctamente",
-    pinWarnTitle:"🔒 Cambia o teu código",
-    pinWarnBody:"Segues a usar o código por defecto (<b>0000</b>). Mentres non o cambies por un teu, podes ver as quendas, pero <b>non poderás facer cambios, propoñer quendas nin ver comentarios</b> de ninguén.",
-    changeNow:"Cambiar código agora", notNow:"Agora non",
-    commentLockedShort:"🔒 Cambia o teu código para ver este comentario",
-    commentLockedLong:"🔒 Cambia o teu código para ver os comentarios",
-    logoutConfirm:"¿Pechar sesión? Terás que introducir de novo o teu nome e código neste dispositivo.",
-    editTitle:"Editar", turnoLabel:"Quenda:", unidadLabel:"Unidade:", unidad2Label:"Segunda unidade:",
-    tuNombreLabel:"O teu nome:", tuNombrePh:"O teu nome...", cambioConLabel:"Cambio con:",
-    cambioConPh:"Nome da compañeira...", comentarioLabel:"Comentario (opcional):", comentarioPh:"Notas...",
-    borrar:"✕ Borrar", cancelar:"Cancelar", guardar:"Gardar",
-    propsHeading:"🔄 Propostas de cambio",
-    dayActionEdit:"✏️ Anotar cambio de quenda", dayActionPropose:"🔄 Propoñer cambio con compañeira/o",
-    propModalTitle:"🔄 Propoñer cambio", compLabel:"Compañeira/o:", selecciona:"Selecciona...",
-    diaQuieresLabel:"Día que queres dela/del:", primeroSelecciona:"Primeiro selecciona a persoa",
-    comentarioLabel2:"Comentario:", comentarioPh2:"Explica o motivo...", enviar:"Enviar",
-    respondModalTitle:"🔄 Responder proposta", tuComentarioLabel:"O teu comentario (opcional):",
-    tuRespuestaPh:"A túa resposta...", rechazar:"Rexeitar", aceptar:"Aceptar",
-    libre:"Libre",
-    pendiente:"⏳ Pendente", aceptado:"✅ Aceptado", rechazado:"❌ Rexeitado", cancelado:"🚫 Cancelado",
-    propuestaA:"📤 Proposta a", propuestaDe:"📥 Proposta de",
-    daSu:"dá a súa", delDia:"do", verYResponder:"Ver e responder", cancelarPropuesta:"Cancelar proposta",
-    sinConexion:"⚠️ Sen conexión con Firebase. Recarga a páxina.", sinPropuestas:"Non tes propostas de cambio.",
-    tuTurnoDel:"A túa quenda do", cargando:"Cargando...", seleccionaDia:"Selecciona día...",
-    seleccionaCompYDia:"Selecciona a compañeira e o día", sinConexionSimple:"Sen conexión",
-    tePropone:"proponche:", teDaSu:"Dáche a súa", aCambioQuiere:"A cambio quere a túa quenda do",
-    cambioAplicado:"✅ Cambio aceptado e aplicado", propuestaRechazada:"❌ Proposta rexeitada",
-    confirmCancelar:"¿Cancelar esta proposta?", filaNoEncontrada:"Non se atopou a túa fila.", propuestaEnviada:"✅ Proposta enviada a", errorEnviar:"Erro ao enviar",
-    compararBtn:"👥 Comparar", comparePeopleTitle:"👥 Comparar quendas", comparePeopleSub:"Escolle que compañeiras/os queres ver na táboa.",
-    selectAll:"Todas", selectNone:"Ningunha", cerrar:"Pechar",
-    legalTitle:"ℹ️ Aviso legal",
-    legalAccept:"Acepto",
-    legalConfirm:"¿Estás segura? Ao aceptar, confirmas que usas a app de forma voluntaria e baixo a túa propia responsabilidade.",
-    legalBody:"<p style='margin-bottom:10px'>Esta app é unha ferramenta informal creada por e para o equipo, para facilitar a consulta e o intercambio de quendas entre compañeiras/os. O seu uso é <b>totalmente voluntario</b> — ninguén está obrigado a usala.</p><p style='margin-bottom:10px'>Non substitúe o cadro oficial xestionado pola supervisión nin as canles oficiais do centro. Ante calquera dúbida ou discrepancia, prevalece sempre o cadro oficial.</p><p style='margin-bottom:10px'><b>Non introduzas datos de pacientes en ningún caso.</b> Os datos que se gardan son: nome, código, quendas, cambios propostos e comentarios asociados do persoal.</p><p style='margin-bottom:10px'>Como responsable técnico da app, teño acceso a eses datos dende o sistema onde se almacenan. Non se garda nin se accede a ningunha outra conta túa (email persoal, contrasinais, redes sociais, datos bancarios, etc.).</p><p>O uso da app e a veracidade dos cambios anotados é responsabilidade de cada usuaria. Se tes dúbidas ou queres que se eliminen os teus datos, podes contactar comigo.</p>",
-    legalUnderstood:"Entendido", menuLegal:"ℹ️ Aviso legal",
-    editarMiTurno:"🔒 Editar a miña quenda", editando:"✏️ Editando",
-    days:["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"],
-    months:["xaneiro","febreiro","marzo","abril","maio","xuño","xullo","agosto","setembro","outubro","novembro","decembro"]
-  }
-};
-function t(key){return (I18N[lang]&&I18N[lang][key])!==undefined?I18N[lang][key]:key;}
-function isDark(){return document.documentElement.classList.contains("dark");}
-function toggleTheme(){
-  document.documentElement.classList.toggle("dark");
-  localStorage.setItem("enf_theme",isDark()?"dark":"light");
-  const btn=document.getElementById("menuThemeBtn");
-  if(btn)btn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
-  if(typeof render==="function")render();
-  if(typeof renderMiTurno==="function")renderMiTurno();
-  if(typeof renderProposals==="function")renderProposals();
-  const rv=document.getElementById("view-resumen");
-  if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
-}
-function MONTHS(){return I18N[lang].months.map(m=>m.charAt(0).toUpperCase()+m.slice(1));}
-function tabTitles(){return {mi:t("tabMi"),todos:t("tabTodos"),props:t("tabCambios"),resumen:t("tabResumen")};}
-function toggleLang(){
-  lang=(lang==="es")?"gl":"es";
-  localStorage.setItem("enf_lang",lang);
-  applyLangStatic();
-  if(typeof render==="function")render();
-  if(typeof renderMiTurno==="function")renderMiTurno();
-  if(typeof renderProposals==="function")renderProposals();
-  const rv=document.getElementById("view-resumen");
-  if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
-}
-function applyLangStatic(){
-  document.getElementById("askNameP").textContent=t("askName");
-  document.getElementById("nameInput").placeholder=t("namePh");
-  document.getElementById("nextBtn").textContent=t("next");
-  document.getElementById("pinLabel").textContent=t("codeLabel");
-  document.getElementById("enterBtn").textContent=t("enter");
-  document.getElementById("pinBackBtn").textContent=t("back");
-  document.getElementById("todayBtn").textContent=t("today");
-  document.getElementById("unidadLegendLabel").textContent=t("unidadLegend");
-  document.getElementById("pinLockBanner").textContent=t("bannerCode");
-  const title=document.getElementById("topbarTitle");
-  if(title)title.textContent=tabTitles()[typeof currentTab!=="undefined"?currentTab:"mi"]||t("tabMi");
-  document.getElementById("tab-mi").textContent=t("menuVolver");
-  document.getElementById("menuChangeCodeBtn").textContent=t("menuChangeCode");
-  document.getElementById("menuLogoutBtn").textContent=t("menuLogout");
-  document.getElementById("menuLangBtn").textContent=t("menuLangTo");
-  const themeBtn=document.getElementById("menuThemeBtn");
-  if(themeBtn)themeBtn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
-  document.getElementById("mTurnoLabel").textContent=t("turnoLabel");
-  document.getElementById("unitLabel1").textContent=t("unidadLabel");
-  const ul2=document.getElementById("unitLabel2");if(ul2)ul2.textContent=t("unidad2Label");
-  document.getElementById("tuNombreLabel").textContent=t("tuNombreLabel");
-  document.getElementById("inputWho").placeholder=t("tuNombrePh");
-  document.getElementById("cambioConLabel").textContent=t("cambioConLabel");
-  document.getElementById("inputWith").placeholder=t("cambioConPh");
-  document.getElementById("comentarioLabel").textContent=t("comentarioLabel");
-  document.getElementById("inputComment").placeholder=t("comentarioPh");
-  document.getElementById("borrarBtn").textContent=t("borrar");
-  document.getElementById("cancelarBtn").textContent=t("cancelar");
-  document.getElementById("guardarBtn").textContent=t("guardar");
-  document.getElementById("propsHeading").textContent=t("propsHeading");
-  document.getElementById("dayActionEditBtn").textContent=t("dayActionEdit");
-  document.getElementById("dayActionProposeBtn").textContent=t("dayActionPropose");
-  document.getElementById("dayActionBackBtn").textContent=t("back");
-  document.getElementById("propModalTitle").textContent=t("propModalTitle");
-  document.getElementById("propPersonLabel").textContent=t("compLabel");
-  document.getElementById("propTheirDayLabel").textContent=t("diaQuieresLabel");
-  document.getElementById("propCommentLabel").textContent=t("comentarioLabel2");
-  document.getElementById("propComment").placeholder=t("comentarioPh2");
-  document.getElementById("propBackBtn").textContent=t("back");
-  document.getElementById("propSendBtn").textContent=t("enviar");
-  document.getElementById("respondModalTitle").textContent=t("respondModalTitle");
-  document.getElementById("respondCommentLabel").textContent=t("tuComentarioLabel");
-  document.getElementById("respondComment").placeholder=t("tuRespuestaPh");
-  document.getElementById("respondBackBtn").textContent=t("back");
-  document.getElementById("respondRejectBtn").textContent=t("rechazar");
-  document.getElementById("respondAcceptBtn").textContent=t("aceptar");
-  document.getElementById("pinWarnTitle").textContent=t("pinWarnTitle");
-  document.getElementById("pinWarnBody").innerHTML=t("pinWarnBody");
-  document.getElementById("changeNowBtn").textContent=t("changeNow");
-  document.getElementById("comparePeopleBtn").textContent=t("compararBtn");
-  document.getElementById("comparePeopleTitle").textContent=t("comparePeopleTitle");
-  document.getElementById("comparePeopleSub").textContent=t("comparePeopleSub");
-  document.getElementById("selectAllPeopleBtn").textContent=t("selectAll");
-  document.getElementById("selectNonePeopleBtn").textContent=t("selectNone");
-  document.getElementById("closeComparePeopleBtn").textContent=t("cerrar");
-  document.getElementById("menuLegalBtn").textContent=t("menuLegal");
-  document.getElementById("legalTitle").textContent=t("legalTitle");
-  document.getElementById("legalBody").innerHTML=t("legalBody");
-  document.getElementById("legalUnderstoodBtn").textContent=t("legalUnderstood");
-  document.getElementById("notNowBtn").textContent=t("notNow");
-  const meb=document.getElementById("miEditBtn");
-  if(meb)meb.textContent=miEditMode?t("editando"):t("editarMiTurno");
-}
-
-let currentTab="mi";
 let userName=localStorage.getItem("enf_user")||"";
 let userRow=parseInt(localStorage.getItem("enf_row")||"0");
+// Acceso oculto de administración: no forma parte de PEOPLE_ENF, no aparece en listas ni en la tabla "Todos".
+const ADMIN_USER="berto";
+let isAdminLogin=(userRow===0 && localStorage.getItem("enf_admin")==="1");
 let editCtx=null,editTurn=null,editUnit=null;
 let changeLogData={},changeIcons={};
 window.dateOverrides={};
 let db=null;
+
+// Vista por defecto personalizada por dispositivo (no afecta a otras usuarias).
+// Para activarla en un dispositivo, abrir una vez: index_enf.html?vertodos=1
+// Para desactivarla: index_enf.html?vertodos=0
+(function(){
+  const qp=new URLSearchParams(location.search).get("vertodos");
+  if(qp==="1") localStorage.setItem("enf_default_todos","1");
+  if(qp==="0") localStorage.removeItem("enf_default_todos");
+})();
+function getDefaultTab(){
+  if(localStorage.getItem("enf_admin")==="1") return "todos";
+  return localStorage.getItem("enf_default_todos")==="1" ? "todos" : "mi";
+}
 
 // Initialize Firebase early for PIN verification
 try{
@@ -627,6 +309,18 @@ function saveName(){
   const n=document.getElementById("nameInput").value.trim();
   if(!n)return;
   const nl=n.toLowerCase();
+  if(nl===ADMIN_USER){
+    userName="Berto"; userRow=0; isAdminLogin=true;
+    localStorage.setItem("enf_user","Berto");
+    localStorage.setItem("enf_row","0");
+    document.getElementById("stepName").style.display="none";
+    document.getElementById("stepPin").style.display="block";
+    document.getElementById("pinInput").value="";
+    document.getElementById("pinError").style.display="none";
+    document.getElementById("pinInput").focus();
+    return;
+  }
+  isAdminLogin=false;
   const idx=PEOPLE_ENF.findIndex(p=>p.name.toLowerCase()===nl);
   if(idx<0){
     const names=PEOPLE_ENF.map(p=>p.name).join(", ");
@@ -652,10 +346,12 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 function initApp(){
   try{
-    // Las reglas de la base de datos son abiertas, no hace falta esperar a la autenticación
-    // (intentamos igualmente el login anónimo por si acaso, pero no bloqueamos la carga de datos por él)
-    startDataListeners();
-  }catch(e){console.log("initApp error:",e);render();}
+    // Firebase already initialized early
+    firebase.app("enfermeras").auth().onAuthStateChanged(user=>{
+      if(!user)return; // esperamos a que signInAnonymously() complete
+      startDataListeners();
+    });
+  }catch(e){render();}
 }
 
 function startDataListeners(){
@@ -698,9 +394,8 @@ if(userName){
     document.getElementById("nameScreen").style.display="none";
     initApp();
     setTimeout(()=>initProposals(),1000);
-    setTimeout(()=>{render();renderMiTurno();showTab("mi");setTimeout(goToToday,400);},100);
+    setTimeout(()=>{render();renderMiTurno();showTab(getDefaultTab());setTimeout(goToToday,400);},100);
     setTimeout(()=>checkPinLock(),700);
-    setTimeout(()=>checkLegalDisclaimer(),900);
   } else {
     // Device not verified, show name screen with PIN
     document.getElementById("nameScreen").style.display="flex";
@@ -737,9 +432,9 @@ function render(){
   let h1='<tr><th class="name-col" rowspan="2" style="position:sticky;left:0;top:0;z-index:5">Nombre</th>';
   let prev=-1,span=0;
   dayCols.forEach((dc,i)=>{
-    if(dc.mn!==prev){if(span>0)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS()[dayCols[i-span].mn]}</th>`;span=0;prev=dc.mn;}
+    if(dc.mn!==prev){if(span>0)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS_ES[dayCols[i-span].mn]}</th>`;span=0;prev=dc.mn;}
     span++;
-    if(i===dayCols.length-1)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS()[dc.mn]}</th>`;
+    if(i===dayCols.length-1)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS_ES[dc.mn]}</th>`;
   });
   h1+='</tr>';
 
@@ -753,10 +448,9 @@ function render(){
 
   let body='';
   PEOPLE_ENF.forEach((p,pi)=>{
-    if(hiddenPeople.has(pi))return;
     const isMyRow=(userRow===pi+1);
-    const bg=isDark()?"#000":(pi%2===0?"#fff":"#f8f9fa");
-    body+=`<tr><td class="name-col" style="background:${bg};${isMyRow?"font-weight:700;color:var(--I)":"color:var(--tx)"}">${p.name}</td>`;
+    const bg=pi%2===0?"#fff":"#f8f9fa";
+    body+=`<tr><td class="name-col" style="background:${bg};${isMyRow?"font-weight:700;color:var(--I)":""}">${p.name}</td>`;
     dayCols.forEach(dc=>{
       const mon=mondayOf(new Date(dc.yr,dc.mn,dc.d));
       const ri=rowFor(p.startRow,mon);
@@ -769,7 +463,7 @@ function render(){
       const baseTurn=t==="V"&&baseCell?baseCell[0]:null;
       const baseTurnCls=baseTurn?chipCls(baseTurn,baseCell?baseCell[1]:null):"";
       const lbl=t==="V"?"🏖":t==="LD"?"📋":(t||"·");
-      const cellBg=dc.isToday?"#81c784":dc.isSun?(isDark()?"#000":"#f3e5f5"):bg;
+      const cellBg=dc.isToday?"#81c784":dc.isSun?"#f3e5f5":bg;
       const iconData=changeIcons[pi]&&changeIcons[pi][dateStr]&&cell&&cell[0]!=="V"&&cell&&cell[0]!=="LD";
       const dot=iconData?`<span class="change-dot" style="position:absolute;top:-4px;right:-4px;width:13px;height:13px;background:#ffc107;border-radius:50%;border:1.5px solid #fff;font-size:.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2" onclick="showLog(event,${pi},'${dateStr}')">✎</span>`:"";
       body+=`<td class="${dc.isToday?"today-col":dc.isSun?"sun":""}" style="background:${cellBg}!important">
@@ -806,38 +500,18 @@ function goToToday(){
   },200);
 }
 
-function toggleMenu(e){
-  if(e)e.stopPropagation();
-  document.getElementById("menuDropdown").classList.toggle("open");
-}
-function closeMenu(){
-  document.getElementById("menuDropdown").classList.remove("open");
-}
-document.addEventListener("click",function(e){
-  const wrap=document.querySelector(".menu-wrap");
-  if(wrap&&!wrap.contains(e.target))closeMenu();
-});
-function menuGoTab(tab){
-  closeMenu();
-  showTab(tab);
-}
-function logout(){
-  if(!confirm(t("logoutConfirm")))return;
-  localStorage.removeItem("enf_user");
-  localStorage.removeItem("enf_row");
-  if(userRow)localStorage.removeItem("enf_verified_"+userRow);
-  location.reload();
-}
-
 function showTab(tab){
-  currentTab=tab;
   document.getElementById("view-mi").style.display=tab==="mi"?"block":"none";
   document.getElementById("view-todos").style.display=tab==="todos"?"block":"none";
+  document.getElementById("tab-mi").classList.toggle("active",tab==="mi");
+  document.getElementById("tab-todos").classList.toggle("active",tab==="todos");
   document.getElementById("view-resumen").style.display=tab==="resumen"?"block":"none";
   const vp=document.getElementById("view-props");
   if(vp)vp.style.display=tab==="props"?"block":"none";
-  const title=document.getElementById("topbarTitle");
-  if(title)title.textContent=tabTitles()[tab]||"";
+  ["mi","todos","resumen","props"].forEach(t=>{
+    const el=document.getElementById("tab-"+t);
+    if(el){el.style.color=tab===t?"var(--I)":"var(--mu)";el.style.borderBottom=tab===t?"3px solid var(--I)":"3px solid transparent";el.style.fontWeight=tab===t?"600":"normal";}
+  });
   if(tab==="resumen")renderResumen();
   if(tab==="props")renderProposals();
   if(tab==="mi"){
@@ -862,8 +536,10 @@ function toggleMiEdit(){
   miEditMode=!miEditMode;
   const btn=document.getElementById("miEditBtn");
   if(btn){
-    btn.textContent=miEditMode?t("editando"):t("editarMiTurno");
-    btn.classList.toggle("editing-on",miEditMode);
+    btn.textContent=miEditMode?"✏️ Editando":"🔒 Editar mi turno";
+    btn.style.background=miEditMode?"#d4edda":"#fff3cd";
+    btn.style.color=miEditMode?"#155724":"#856404";
+    btn.style.borderColor=miEditMode?"#28a745":"var(--bd)";
   }
   renderMiTurno();
 }
@@ -884,26 +560,26 @@ function miDayCellHTML(date,isCurrentMonth,me,today){
   const isLorSlash=!t||t==="L"||t==="/";
   if(!isCurrentMonth){
     const numColor2="#b9b9be";
-    return `<td style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:var(--s1);border-radius:12px;min-height:78px;vertical-align:middle;cursor:default;position:relative;opacity:.4;pointer-events:none">
-      <div style="font-size:1.25rem;font-weight:700;color:${numColor2};margin-bottom:6px">${d}</div>
-      <div class="mi-chip ${cls}" style="font-size:1.5rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;">${lbl}</div>
+    return `<td style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:var(--s1);border-radius:12px;height:90px;vertical-align:middle;cursor:default;position:relative;opacity:.4;pointer-events:none">
+      <div style="font-size:1.1rem;font-weight:700;color:${numColor2};margin-bottom:6px">${d}</div>
+      <div class="mi-chip ${cls}" style="font-size:1.3rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;${isLorSlash?"background:#fff;color:#333;border:2px solid #333;":""}">${lbl}</div>
     </td>`;
   }
-  const bg=isToday?"#4caf50":isWE?(isDark()?"#000000":"#f3e5f5"):"var(--s1)";
-  const numColor=isToday?"#fff":isWE?(isDark()?"#fff":"#6f42c1"):"var(--tx)";
-  const bg2=isLorSlash&&!isToday?(isDark()?"#000000":"#ffffff"):bg;
+  const bg=isToday?"#4caf50":isWE?"#f3e5f5":"var(--s1)";
+  const numColor=isToday?"#fff":isWE?"#6f42c1":"var(--tx)";
+  const bg2=isLorSlash&&!isToday?"#ffffff":bg;
   const iconMi=changeIcons[userRow-1]&&changeIcons[userRow-1][dateStr]&&t!=="V"&&t!=="LD";
-  return `<td data-ri="${ri}" data-di="${dow}" data-day="${d}" style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:${bg2};border-radius:12px;min-height:78px;vertical-align:middle;cursor:${miEditMode?"pointer":"default"};position:relative">
-    <div style="font-size:1.25rem;font-weight:700;color:${numColor};margin-bottom:6px">${d}</div>
-    <div class="mi-chip ${cls}" style="font-size:1.5rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;">${lbl}</div>
+  return `<td data-ri="${ri}" data-di="${dow}" data-day="${d}" style="padding:3px 2px;text-align:center;border:1px solid var(--bd);background:${bg2};border-radius:12px;height:90px;vertical-align:middle;cursor:${miEditMode?"pointer":"default"};position:relative">
+    <div style="font-size:1.1rem;font-weight:700;color:${numColor};margin-bottom:6px">${d}</div>
+    <div class="mi-chip ${cls}" style="font-size:1.3rem;padding:8px 4px;display:flex;align-items:center;justify-content:center;border-radius:9px;font-weight:800;${isLorSlash?"background:#fff;color:#333;border:2px solid #333;":""}">${lbl}</div>
     ${iconMi?`<div onclick="showMiLog(event,${d})" style="position:absolute;top:3px;right:3px;width:14px;height:14px;background:#ffc107;border-radius:50%;font-size:.55rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2">✎</div>`+
-    (()=>{const txt=[iconMi.con&&iconMi.con!=="—"?"🔄 "+iconMi.con:"",iconMi.comentario?"💬 "+iconMi.comentario:""].filter(Boolean).join(" ");return txt?`<div style="font-size:.6rem;color:${isDark()?"#ccc":"#555"};margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${txt}</div>`:""})()
+    (()=>{const txt=[iconMi.con&&iconMi.con!=="—"?"🔄 "+iconMi.con:"",iconMi.comentario?"💬 "+iconMi.comentario:""].filter(Boolean).join(" ");return txt?`<div style="font-size:.55rem;color:#555;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${txt}</div>`:""})()
     :""}
   </td>`;
 }
 
 function renderMiTurno(){
-  if(userRow===0){document.getElementById("miTurnoContent").innerHTML='<p style="color:var(--mu);padding:20px">'+t("filaNoEncontrada")+'</p>';return;}
+  if(userRow===0){document.getElementById("miTurnoContent").innerHTML='<p style="color:var(--mu);padding:20px">No se encontró tu fila.</p>';return;}
   const me=PEOPLE_ENF[userRow-1];
   const today=new Date();
   const last=new Date(miYear,miMonth+1,0).getDate();
@@ -921,20 +597,19 @@ function renderMiTurno(){
     if(t==="D")cD++;else if(t==="M")cM++;else if(t==="N")cN++;
   }
 
-  let html=`<div style="display:flex;align-items:center;justify-content:center;margin-bottom:14px;gap:8px;flex-shrink:0">
-    <span style="font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;text-align:center">${MONTHS()[miMonth]}<br><span style="font-size:.85rem;font-weight:600;color:var(--mu)">${miYear}</span></span>
+  let html=`<div style="display:flex;align-items:center;justify-content:center;margin-bottom:14px;gap:8px">
+    <span style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;text-align:center">${MONTHS_ES[miMonth]}<br><span style="font-size:.8rem;font-weight:600;color:var(--mu)">${miYear}</span></span>
   </div>
-  <div style="display:flex;gap:6px;margin-bottom:12px;font-size:.78rem;flex-shrink:0">
-    <span style="background:var(--Ab);color:var(--A);padding:4px 11px;border-radius:6px;font-weight:600">☀️ ${cD}D</span>
-    <span style="background:var(--Vb);color:var(--V);padding:4px 11px;border-radius:6px;font-weight:600">🌅 ${cM}M</span>
-    <span style="background:var(--Ib);color:var(--I);padding:4px 11px;border-radius:6px;font-weight:600">🌙 ${cN}N</span>
+  <div style="display:flex;gap:6px;margin-bottom:12px;font-size:.73rem">
+    <span style="background:var(--Ab);color:var(--A);padding:3px 10px;border-radius:6px;font-weight:600">☀️ ${cD}D</span>
+    <span style="background:var(--Vb);color:var(--V);padding:3px 10px;border-radius:6px;font-weight:600">🌅 ${cM}M</span>
+    <span style="background:var(--Ib);color:var(--I);padding:3px 10px;border-radius:6px;font-weight:600">🌙 ${cN}N</span>
   </div>`;
 
-  html+=`<div style="flex:1;min-height:0;display:flex;flex-direction:column">
-  <table style="width:100%;height:100%;border-collapse:collapse;table-layout:fixed"><thead><tr>`;
+  html+=`<table style="width:100%;border-collapse:collapse;table-layout:fixed"><thead><tr>`;
   ["L","M","X","J","V","S","D"].forEach((d,i)=>{
     const isWE=i>=5;
-    html+=`<th style="text-align:center;padding:8px 2px;font-size:.95rem;color:${isWE?"#6f42c1":"var(--mu)"};font-weight:700;border-bottom:2px solid var(--bd)">${d}</th>`;
+    html+=`<th style="text-align:center;padding:8px 2px;font-size:.88rem;color:${isWE?"#6f42c1":"var(--mu)"};font-weight:700;border-bottom:2px solid var(--bd)">${d}</th>`;
   });
   html+=`</tr></thead><tbody>`;
 
@@ -964,8 +639,7 @@ function renderMiTurno(){
     html+=`</tr>`;
     if(!started)started=true;
   }
-  html+=`</tbody></table>
-  </div>`;
+  html+=`</tbody></table>`;
   document.getElementById("miTurnoContent").innerHTML=html;
   document.getElementById("miTurnoContent").onclick=function(e){
     const td=e.target.closest("td[data-ri]");
@@ -1000,7 +674,7 @@ function showMiLog(e,day){
   if(!data)return;
   const popup=document.getElementById("logPopup");
   if(pinLocked){
-    popup.innerHTML=t("commentLockedShort");
+    popup.innerHTML=`🔒 Cambia tu PIN para ver este comentario`;
   } else {
     popup.innerHTML=`👤 <b>${data.quien||"?"}</b> 🔄 Con: <b>${data.con||"—"}</b><br>${data.comentario?"💬 "+data.comentario+"<br>":""}📋 ${data.cambio||""}`;
   }
@@ -1067,7 +741,7 @@ function applyEdit(t,u){
 
 
 function renderResumen(){
-  if(userRow===0){document.getElementById("resumenContent").innerHTML='<p style="color:var(--mu);padding:20px">'+t("filaNoEncontrada")+'</p>';return;}
+  if(userRow===0){document.getElementById("resumenContent").innerHTML='<p style="color:var(--mu);padding:20px">No se encontró tu fila.</p>';return;}
   // Debug: count overrides for this person
   const myKeys=Object.keys(window.dateOverrides||{}).filter(k=>k.startsWith((userRow-1)+"_"));
   const vacKeys=myKeys.filter(k=>{const v=window.dateOverrides[k];return v&&(Array.isArray(v)?v[0]:v&&v[0])==="V";});
@@ -1167,7 +841,7 @@ function renderResumen(){
   let html=`<h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:4px">📊 Resumen de <span style="color:var(--I)">${me.name}</span></h2>`;
   html+=buildTable(year);
   html+=buildTable(year+1);
-  html+=`<div class="disclaimer-box" style="margin-top:16px;padding:12px;border:1px solid #ffc107;border-radius:8px;font-size:.72rem;line-height:1.5">
+  html+=`<div style="margin-top:16px;padding:12px;background:#fff3cd;border:1px solid #ffc107;border-radius:8px;font-size:.72rem;color:#856404;line-height:1.5">
     ⚠️ <b>Cálculo orientativo.</b> Este resumen puede contener errores. Por favor, consulta con tu supervisor/a antes de tomar decisiones basadas en estos datos.
   </div>`;
   document.getElementById("resumenContent").innerHTML=html;
@@ -1175,29 +849,27 @@ function renderResumen(){
 function checkPin(){
   const pin=document.getElementById("pinInput").value.trim();
   if(pin.length!==4||!/^[0-9]{4}$/.test(pin)){
-    document.getElementById("pinError").textContent=t("codeWrongLen");
+    document.getElementById("pinError").textContent="❌ El PIN debe ser 4 números";
     document.getElementById("pinError").style.display="block";
     return;
   }
+  const onOk=()=>{
+    if(isAdminLogin) localStorage.setItem("enf_admin","1");
+    enterApp();
+  };
+  const onFail=()=>{
+    document.getElementById("pinError").textContent="❌ PIN incorrecto";
+    document.getElementById("pinError").style.display="block";
+    document.getElementById("pinInput").value="";
+  };
   if(db){
     db.ref("enf_pins/"+userRow).once("value").then(snap=>{
       const stored=snap.val()||"0000";
-      if(pin===stored){
-        enterApp();
-      } else {
-        document.getElementById("pinError").textContent=t("codeWrong");
-        document.getElementById("pinError").style.display="block";
-        document.getElementById("pinInput").value="";
-      }
-    }).catch(()=>enterApp());
+      if(pin===stored) onOk(); else onFail();
+    }).catch(()=>onOk());
   } else {
     const stored=localStorage.getItem("enf_pin_"+userRow)||"0000";
-    if(pin===stored){enterApp();}
-    else {
-      document.getElementById("pinError").textContent=t("codeWrong");
-      document.getElementById("pinError").style.display="block";
-      document.getElementById("pinInput").value="";
-    }
+    if(pin===stored) onOk(); else onFail();
   }
 }
 
@@ -1206,9 +878,8 @@ function enterApp(){
   document.getElementById("nameScreen").style.display="none";
   initApp();
   setTimeout(()=>initProposals(),1000);
-  setTimeout(()=>{renderMiTurno();showTab("mi");},500);
+  setTimeout(()=>{renderMiTurno();showTab(getDefaultTab());},500);
   setTimeout(()=>checkPinLock(),700);
-  setTimeout(()=>checkLegalDisclaimer(),900);
 }
 
 function checkPinLock(){
@@ -1237,18 +908,18 @@ function changePinFromWarn(){
 }
 
 function changePin(){
-  const oldPin=prompt(t("currentCodePrompt"));
+  const oldPin=prompt("PIN actual:");
   if(!oldPin) return;
   if(db){
     db.ref("enf_pins/"+userRow).once("value").then(snap=>{
       const stored=snap.val()||"0000";
-      if(oldPin!==stored){alert(t("codeWrong"));return;}
-      const newPin=prompt(t("newCodePrompt"));
-      if(!newPin||!/^[0-9]{4}$/.test(newPin)){alert(t("codeWrongLen"));return;}
-      const confirm2=prompt(t("repeatCodePrompt"));
-      if(newPin!==confirm2){alert(t("codesMismatch"));return;}
+      if(oldPin!==stored){alert("PIN incorrecto");return;}
+      const newPin=prompt("Nuevo PIN (4 números):");
+      if(!newPin||!/^[0-9]{4}$/.test(newPin)){alert("El PIN debe ser 4 números");return;}
+      const confirm2=prompt("Repite el nuevo PIN:");
+      if(newPin!==confirm2){alert("Los PINes no coinciden");return;}
       db.ref("enf_pins/"+userRow).set(newPin).then(()=>{
-        alert(t("codeChangedOk"));
+        alert("✅ PIN cambiado correctamente");
         checkPinLock();
       });
     });
@@ -1272,17 +943,16 @@ function initProposals(){
 function updatePropBadge(){
   const n=Object.values(proposals).filter(p=>Number(p.to)===Number(userRow)&&p.status==="pending").length;
   const b=document.getElementById("propBadge");
-  if(b){b.textContent=n;b.style.display=n>0?"inline-flex":"none";}
-  const mb=document.getElementById("menuBadge");
-  if(mb)mb.style.display=n>0?"block":"none";
+  if(b){b.textContent=n;b.style.display=n>0?"flex":"none";}
 }
 
 function openDayAction(day,ri,di,dk,turno){
   dayActionCtx={day,ri,di,dk,turno};
   const date=new Date(miYear,miMonth,day);
+  const DL=["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"];
   const dow=(date.getDay()+6)%7;
-  document.getElementById("dayActionTitle").textContent=I18N[lang].days[dow]+" "+day+"/"+(miMonth+1)+"/"+miYear;
-  document.getElementById("dayActionTurn").textContent=turno||t("libre");
+  document.getElementById("dayActionTitle").textContent=DL[dow]+" "+day+"/"+(miMonth+1)+"/"+miYear;
+  document.getElementById("dayActionTurn").textContent=turno||"Libre";
   document.getElementById("overlayDayAction").classList.add("open");
 }
 function closeDayAction(){
@@ -1308,14 +978,14 @@ function openPropModal(dateKey,turno){
   const date=(dateKey.split("_")[1])||"";
   const dy=date.slice(6,8),mo=date.slice(4,6),yr=date.slice(0,4);
   const pd=document.getElementById("propMyDay");
-  if(pd)pd.textContent=t("tuTurnoDel")+" "+dy+"/"+mo+"/"+yr+": "+(turno||"");
+  if(pd)pd.textContent="Tu turno del "+dy+"/"+mo+"/"+yr+": "+(turno||"");
   const sel=document.getElementById("propPerson");
   if(sel){
-    sel.innerHTML='<option value="" id="propPersonDefaultOpt">'+t("selecciona")+'</option>';
+    sel.innerHTML='<option value="">Selecciona...</option>';
     PEOPLE_ENF.forEach((p,i)=>{if(i+1!==userRow)sel.innerHTML+='<option value="'+(i+1)+'">'+p.name+'</option>';});
   }
   const ptd=document.getElementById("propTheirDay");
-  if(ptd)ptd.innerHTML='<option value="" id="propTheirDayDefaultOpt">'+t("primeroSelecciona")+'</option>';
+  if(ptd)ptd.innerHTML='<option value="">Primero selecciona la persona</option>';
   const pc=document.getElementById("propComment");
   if(pc)pc.value="";
   document.getElementById("overlayProp").classList.add("open");
@@ -1329,7 +999,7 @@ function loadPersonDays(){
   const pi=parseInt(document.getElementById("propPerson").value);
   if(!pi)return;
   const sel=document.getElementById("propTheirDay");
-  sel.innerHTML='<option value="">'+t("cargando")+'</option>';
+  sel.innerHTML='<option value="">Cargando...</option>';
   const person=PEOPLE_ENF[pi-1];
   const today=new Date();
   const opts=[];
@@ -1342,11 +1012,11 @@ function loadPersonDays(){
     const ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
     const ov=window.dateOverrides[(pi-1)+"_"+ds];
     const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
-    const tv=cell?cell[0]:null;
-    if(tv)opts.push({dk:(pi-1)+"_"+ds,t:tv,label:String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" ("+tv+")"});
+    const t=cell?cell[0]:null;
+    if(t)opts.push({dk:(pi-1)+"_"+ds,t,label:String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" ("+t+")"});
     d.setDate(d.getDate()+1);
   }
-  sel.innerHTML='<option value="">'+t("seleccionaDia")+'</option>';
+  sel.innerHTML='<option value="">Selecciona día...</option>';
   opts.forEach(o=>sel.innerHTML+='<option value="'+o.dk+'" data-turn="'+o.t+'">'+o.label+'</option>');
 }
 
@@ -1356,16 +1026,16 @@ function sendProposal(){
   const theirDay=theirDaySel.value;
   const toTurn=theirDaySel.options[theirDaySel.selectedIndex]?theirDaySel.options[theirDaySel.selectedIndex].dataset.turn||"?":"?";
   const comment=(document.getElementById("propComment").value||"").trim();
-  if(!toPi||!theirDay){alert(t("seleccionaCompYDia"));return;}
+  if(!toPi||!theirDay){alert("Selecciona a compañeira e o día");return;}
   if(!propFromDay)return;
-  if(!db){alert(t("sinConexionSimple"));return;}
+  if(!db){alert("Sen conexión");return;}
   const prop={from:userRow,fromName:userName,fromDay:propFromDay.dateKey,fromTurn:propFromDay.turno,
     to:toPi,toName:PEOPLE_ENF[toPi-1].name,toDay:theirDay,toTurn:toTurn,status:"pending",
     commentFrom:comment,commentTo:"",createdAt:new Date().toLocaleString("es-ES")};
   db.ref("enf_proposals").push(prop).then(()=>{
     closePropModal();
-    alert(t("propuestaEnviada")+" "+PEOPLE_ENF[toPi-1].name);
-  }).catch(()=>alert(t("errorEnviar")));
+    alert("✅ Proposta enviada a "+PEOPLE_ENF[toPi-1].name);
+  }).catch(()=>alert("Error ao enviar"));
 }
 
 function openRespondModal(key){
@@ -1376,10 +1046,10 @@ function openRespondModal(key){
   const fromDs=(p.fromDay||"").split("_")[1];
   const toDs=(p.toDay||"").split("_")[1];
   let html='<div class="prop-card pending" style="margin-bottom:12px">';
-  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> '+t("tePropone")+'</p>';
+  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> propóñeche:</p>';
   html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">';
-  html+='🔄 '+t("teDaSu")+' <b>'+(p.fromTurn||"?")+'</b> '+t("delDia")+' <b>'+fmt(fromDs)+'</b><br>';
-  html+=t("aCambioQuiere")+' <b>'+fmt(toDs)+'</b></p>';
+  html+='🔄 Dáche o seu <b>'+(p.fromTurn||"?")+'</b> do <b>'+fmt(fromDs)+'</b><br>';
+  html+='A cambio quere o teu turno do <b>'+fmt(toDs)+'</b></p>';
   if(p.commentFrom)html+='<p style="font-size:.75rem;font-style:italic;color:#555">💬 "'+p.commentFrom+'"</p>';
   html+='</div>';
   document.getElementById("respondContent").innerHTML=html;
@@ -1412,14 +1082,14 @@ function respondProposal(decision){
   }
   db.ref("enf_proposals/"+currentPropKey).update({status:decision,commentTo:comment,respondedAt:new Date().toLocaleString("es-ES")}).then(()=>{
     closeRespondModal();
-    if(decision==="accepted"){alert(t("cambioAplicado"));render();}
-    else alert(t("propuestaRechazada"));
+    if(decision==="accepted"){alert("✅ Cambio aceptado e aplicado");render();}
+    else alert("❌ Proposta rexeitada");
   });
 }
 
 function cancelProposal(key){
   if(pinLocked){showPinWarn();return;}
-  if(!confirm(t("confirmCancelar")))return;
+  if(!confirm("¿Cancelar esta proposta?"))return;
   db.ref("enf_proposals/"+key).update({status:"cancelled"});
 }
 
@@ -1427,34 +1097,34 @@ function renderProposals(){
   const div=document.getElementById("propsContent");
   if(!div)return;
   if(!db&&Object.keys(proposals).length===0){
-    div.innerHTML='<p style="color:#c62828;font-size:.82rem">'+t("sinConexion")+'</p>';return;
+    div.innerHTML='<p style="color:#c62828;font-size:.82rem">⚠️ Sen conexión. Recarga a páxina.</p>';return;
   }
   const keys=Object.keys(proposals).filter(k=>{
     const p=proposals[k];
     return Number(p.from)===Number(userRow)||Number(p.to)===Number(userRow);
   });
-  if(keys.length===0){div.innerHTML='<p style="color:var(--mu);font-size:.82rem">'+t("sinPropuestas")+'</p>';return;}
+  if(keys.length===0){div.innerHTML='<p style="color:var(--mu);font-size:.82rem">Non tes propostas de cambio.</p>';return;}
   const fmt=ds=>ds?ds.slice(6,8)+"/"+ds.slice(4,6):"?";
   let html="";
   keys.sort((a,b)=>{const ord={pending:0,accepted:1,rejected:2,cancelled:3};return (ord[proposals[a].status]||3)-(ord[proposals[b].status]||3);}).forEach(key=>{
     const p=proposals[key];
     const isFrom=Number(p.from)===Number(userRow);
-    const slabel=p.status==="pending"?t("pendiente"):p.status==="accepted"?t("aceptado"):p.status==="rejected"?t("rechazado"):t("cancelado");
+    const slabel=p.status==="pending"?"⏳ Pendente":p.status==="accepted"?"✅ Aceptado":p.status==="rejected"?"❌ Rexeitado":"🚫 Cancelado";
     const ccls=p.status==="accepted"?"accepted":p.status==="pending"?"pending":"rejected";
     const fromDs=(p.fromDay||"").split("_")[1];
     const toDs=(p.toDay||"").split("_")[1];
     html+='<div class="prop-card '+ccls+'" style="margin-bottom:12px">';
     html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:.75rem;font-weight:700">'+slabel+'</span><span style="font-size:.7rem;color:var(--mu)">'+(p.createdAt||"")+'</span></div>';
-    html+='<p style="font-size:.82rem">'+(isFrom?t("propuestaA")+" <b>"+p.toName+"</b>":t("propuestaDe")+" <b>"+p.fromName+"</b>")+'</p>';
-    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">🔄 <b>'+p.fromName+'</b> '+t("daSu")+' <b>'+(p.fromTurn||"?")+'</b> '+t("delDia")+' '+fmt(fromDs)+'<br>🔄 <b>'+p.toName+'</b> '+t("daSu")+' turno '+t("delDia")+' '+fmt(toDs)+'</p>';
+    html+='<p style="font-size:.82rem">'+(isFrom?"📤 Proposta a <b>"+p.toName+"</b>":"📥 Proposta de <b>"+p.fromName+"</b>")+'</p>';
+    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">🔄 <b>'+p.fromName+'</b> da o seu <b>'+(p.fromTurn||"?")+'</b> do '+fmt(fromDs)+'<br>🔄 <b>'+p.toName+'</b> da o seu turno do '+fmt(toDs)+'</p>';
     if(pinLocked){
-      html+='<p style="font-size:.75rem;color:#c0392b;margin-top:4px">'+t("commentLockedLong")+'</p>';
+      html+='<p style="font-size:.75rem;color:#c0392b;margin-top:4px">🔒 Cambia o teu PIN para ver os comentarios</p>';
     } else {
       if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555">💬 '+p.fromName+': "'+p.commentFrom+'"</p>';
       if(p.commentTo)html+='<p style="font-size:.75rem;color:#555">💬 '+p.toName+': "'+p.commentTo+'"</p>';
     }
-    if(p.status==="pending"&&!isFrom&&!pinLocked)html+='<button onclick="openRespondModal(\'' + key + '\')">'+t("verYResponder")+'</button>';
-    if(p.status==="pending"&&isFrom&&!pinLocked)html+='<button onclick="cancelProposal(\'' + key + '\')">'+t("cancelarPropuesta")+'</button>';
+    if(p.status==="pending"&&!isFrom&&!pinLocked)html+='<button onclick="openRespondModal(\'' + key + '\')">Ver e responder</button>';
+    if(p.status==="pending"&&isFrom&&!pinLocked)html+='<button onclick="cancelProposal(\'' + key + '\')">Cancelar proposta</button>';
     html+='</div>';
   });
   div.innerHTML=html;
@@ -1466,7 +1136,7 @@ function closeNewFeature(){
 
 function closeModal(){document.getElementById("overlay").classList.remove("open");editCtx=null;}
 function outsideClose(e){if(e.target.id==="overlay")closeModal();}
-window.onload=()=>{applyLangStatic();if(userName){render();renderMiTurno();showTab("mi");setTimeout(goToToday,300);}};
+window.onload=()=>{if(userName){render();renderMiTurno();showTab(getDefaultTab());setTimeout(goToToday,300);}};
 </script>
 <script>
 if("serviceWorker" in navigator){
@@ -1475,7 +1145,7 @@ if("serviceWorker" in navigator){
 </script>
 <!-- PROPOSALS VIEW -->
 <div id="view-props" style="flex:1;overflow:auto;padding:14px 16px;display:none">
-  <h2 id="propsHeading" style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propostas de cambio</h2>
+  <h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propostas de cambio</h2>
   <div id="propsContent"></div>
 </div>
 
@@ -1484,30 +1154,30 @@ if("serviceWorker" in navigator){
   <div class="modal">
     <h2 id="dayActionTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px"></h2>
     <div id="dayActionTurn" style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center"></div>
-    <button id="dayActionEditBtn" onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
-    <button id="dayActionProposeBtn" onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
-    <button id="dayActionBackBtn" onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
+    <button onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
+    <button onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
+    <button onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
   </div>
 </div>
 
 <!-- PROPOSAL MODAL -->
 <div class="overlay" id="overlayProp" onclick="if(event.target.id==='overlayProp')closePropModal()">
   <div class="modal">
-    <h2 id="propModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
+    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
     <p id="propMyDay" style="font-size:.78rem;color:var(--mu);margin-bottom:12px"></p>
-    <div class="slabel" id="propPersonLabel">Compañeira/o:</div>
+    <div class="slabel">Compañeira/o:</div>
     <select id="propPerson" onchange="loadPersonDays()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
-      <option value="" id="propPersonDefaultOpt">Selecciona...</option>
+      <option value="">Selecciona...</option>
     </select>
-    <div class="slabel" id="propTheirDayLabel" style="margin-top:10px">Día que queres dela/el:</div>
+    <div class="slabel" style="margin-top:10px">Día que queres dela/el:</div>
     <select id="propTheirDay" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
-      <option value="" id="propTheirDayDefaultOpt">Primeiro selecciona a persoa</option>
+      <option value="">Primeiro selecciona a persoa</option>
     </select>
-    <div class="slabel" id="propCommentLabel" style="margin-top:10px">Comentario:</div>
+    <div class="slabel" style="margin-top:10px">Comentario:</div>
     <input type="text" id="propComment" placeholder="Explica o motivo...">
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="mbtn mbtn-ghost" id="propBackBtn" onclick="closePropModal()" style="flex:1">← Volver</button>
-      <button class="mbtn mbtn-save" id="propSendBtn" onclick="sendProposal()" style="flex:1">Enviar</button>
+      <button class="mbtn mbtn-ghost" onclick="closePropModal()" style="flex:1">← Volver</button>
+      <button class="mbtn mbtn-save" onclick="sendProposal()" style="flex:1">Enviar</button>
     </div>
   </div>
 </div>
@@ -1515,39 +1185,15 @@ if("serviceWorker" in navigator){
 <!-- RESPOND MODAL -->
 <div class="overlay" id="overlayRespond" onclick="if(event.target.id==='overlayRespond')closeRespondModal()">
   <div class="modal">
-    <h2 id="respondModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder proposta</h2>
+    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder proposta</h2>
     <div id="respondContent"></div>
-    <div class="slabel" id="respondCommentLabel">O teu comentario (opcional):</div>
+    <div class="slabel">O teu comentario (opcional):</div>
     <input type="text" id="respondComment" placeholder="A túa resposta...">
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="mbtn mbtn-ghost" id="respondBackBtn" onclick="closeRespondModal()" style="flex:1">← Volver</button>
-      <button class="mbtn mbtn-del" id="respondRejectBtn" onclick="respondProposal('rejected')" style="flex:1">Rexeitar</button>
-      <button class="mbtn mbtn-save" id="respondAcceptBtn" onclick="respondProposal('accepted')" style="flex:1">Aceptar</button>
+      <button class="mbtn mbtn-ghost" onclick="closeRespondModal()" style="flex:1">← Volver</button>
+      <button class="mbtn mbtn-del" onclick="respondProposal('rejected')" style="flex:1">Rexeitar</button>
+      <button class="mbtn mbtn-save" onclick="respondProposal('accepted')" style="flex:1">Aceptar</button>
     </div>
-  </div>
-</div>
-
-<!-- COMPARE PEOPLE MODAL -->
-<div class="overlay" id="overlayComparePeople" onclick="if(event.target.id==='overlayComparePeople')closeComparePeople()">
-  <div class="modal">
-    <h2 id="comparePeopleTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">👥 Comparar turnos</h2>
-    <p id="comparePeopleSub" style="font-size:.78rem;color:var(--mu);margin-bottom:12px">Elige qué compañeras/os quieres ver en la tabla.</p>
-    <div style="display:flex;gap:8px;margin-bottom:10px">
-      <button class="mbtn mbtn-ghost" id="selectAllPeopleBtn" onclick="selectAllPeople()" style="flex:1">Todas</button>
-      <button class="mbtn mbtn-ghost" id="selectNonePeopleBtn" onclick="selectNonePeople()" style="flex:1">Ninguna</button>
-    </div>
-    <div id="peopleCheckList" style="max-height:48vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
-    <button class="mbtn mbtn-save" id="closeComparePeopleBtn" onclick="closeComparePeople()" style="width:100%;margin-top:14px">Cerrar</button>
-  </div>
-</div>
-
-<!-- LEGAL NOTICE MODAL -->
-<div class="overlay" id="overlayLegal">
-  <div class="modal">
-    <h2 id="legalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:10px">ℹ️ Aviso legal</h2>
-    <div id="legalBody" style="font-size:.8rem;color:var(--tx);line-height:1.7;max-height:55vh;overflow-y:auto"></div>
-    <button class="mbtn mbtn-save" id="legalAcceptBtn" onclick="acceptLegal()" style="display:none;width:100%;margin-top:14px">Acepto</button>
-    <button class="mbtn mbtn-save" id="legalCloseBtn" onclick="closeLegalNotice()" style="display:none;width:100%;margin-top:14px">Cerrar</button>
   </div>
 </div>
 
@@ -1575,7 +1221,7 @@ if("serviceWorker" in navigator){
 <!-- BACK BUTTON SUPPORT -->
 <script>
 window.addEventListener("popstate",function(){
-  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayPinWarn","overlayComparePeople","overlayLegal","overlay"];
+  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayPinWarn","overlay"];
   for(const id of modals){
     const el=document.getElementById(id);
     if(el&&el.classList.contains("open")){
