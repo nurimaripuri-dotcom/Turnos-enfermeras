@@ -225,8 +225,8 @@ setTimeout(function(){
   <div id="miTurnoContent"></div>
 </div>
 
-<div id="view-todos" style="flex:1;overflow:auto;display:none">
-  <div style="display:flex;justify-content:flex-end;padding:8px 12px 0">
+<div id="view-todos" style="flex:1;min-height:0;overflow:hidden;flex-direction:column;display:none">
+  <div style="display:flex;justify-content:flex-end;padding:8px 12px 0;flex-shrink:0">
     <button id="comparePeopleBtn" onclick="openComparePeople()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">👥 Comparar</button>
   </div>
   <div class="wrap" id="wrap">
@@ -839,7 +839,7 @@ let currentTab="mi";
 function showTab(tab){
   currentTab=tab;
   document.getElementById("view-mi").style.display=tab==="mi"?"block":"none";
-  document.getElementById("view-todos").style.display=tab==="todos"?"block":"none";
+  document.getElementById("view-todos").style.display=tab==="todos"?"flex":"none";
   document.getElementById("view-resumen").style.display=tab==="resumen"?"block":"none";
   const vp=document.getElementById("view-props");
   if(vp)vp.style.display=tab==="props"?"block":"none";
