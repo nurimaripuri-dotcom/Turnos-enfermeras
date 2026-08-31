@@ -165,20 +165,20 @@ setTimeout(function(){
 <div id="nameScreen">
   <div class="name-card">
     <h2>🏥 Enfermeras <em>3ºC</em></h2>
-    <p style="font-size:.78rem;color:var(--mu);margin-bottom:18px">¿Cuál es tu nombre?</p>
+    <p style="font-size:.78rem;color:var(--mu);margin-bottom:18px" id="askNameP">¿Cuál es tu nombre?</p>
     <!-- STEP 1: Name -->
     <div id="stepName">
       <input type="text" id="nameInput" placeholder="Escribe tu nombre..." autofocus>
       <div id="nameError" style="display:none;color:var(--I);font-size:.72rem;margin-top:8px;text-align:left"></div>
-      <button class="mbtn mbtn-save" onclick="saveName()" style="width:100%;margin-top:12px">Siguiente →</button>
+      <button class="mbtn mbtn-save" id="nextBtn" onclick="saveName()" style="width:100%;margin-top:12px">Siguiente →</button>
     </div>
     <!-- STEP 2: PIN -->
     <div id="stepPin" style="display:none">
       <p style="font-size:.78rem;color:var(--mu);margin-bottom:10px" id="pinLabel">Introduce tu PIN (por defecto 0000):</p>
       <input type="password" id="pinInput" placeholder="····" maxlength="4" style="text-align:center;font-size:1.5rem;letter-spacing:8px">
       <div id="pinError" style="display:none;color:var(--I);font-size:.72rem;margin-top:8px;text-align:left"></div>
-      <button class="mbtn mbtn-save" onclick="checkPin()" style="width:100%;margin-top:12px">Entrar</button>
-      <button class="mbtn mbtn-ghost" onclick="document.getElementById('stepPin').style.display='none';document.getElementById('stepName').style.display='block'" style="width:100%;margin-top:8px">← Volver</button>
+      <button class="mbtn mbtn-save" id="enterBtn" onclick="checkPin()" style="width:100%;margin-top:12px">Entrar</button>
+      <button class="mbtn mbtn-ghost" id="pinBackBtn" onclick="document.getElementById('stepPin').style.display='none';document.getElementById('stepName').style.display='block'" style="width:100%;margin-top:8px">← Volver</button>
     </div>
   </div>
 </div>
@@ -189,11 +189,11 @@ setTimeout(function(){
     <button class="hbtn" onclick="changeYear(-1)">‹</button>
     <span id="yearLabel" style="font-family:Syne,sans-serif;font-weight:700;min-width:46px;text-align:center"></span>
     <button class="hbtn" onclick="changeYear(1)">›</button>
-    <button class="hbtn primary" onclick="goToToday()">📍 Hoy</button>
+    <button class="hbtn primary" id="todayBtn" onclick="goToToday()">📍 Hoy</button>
   </div>
 </header>
 <div class="legend">
-  <span style="color:var(--mu)">Unidad →</span>
+  <span style="color:var(--mu)" id="unidadLegendLabel">Unidad →</span>
   <div class="lc I">🔴 Ictus</div>
   <div class="lc A">🔵 338/345</div>
   <div class="lc V">🟢 351-354/337</div>
@@ -211,11 +211,12 @@ setTimeout(function(){
       <button class="menu-item" id="tab-props" onclick="menuGoTab('props')">🔄 Cambios <span id="propBadge" class="menu-item-badge" style="display:none">0</span></button>
       <div class="menu-sep"></div>
       <button class="menu-item" id="tab-mi" onclick="menuGoTab('mi')">🏠 Volver á miña quenda</button>
-      <button class="menu-item" onclick="closeMenu();changePin()">🔑 Cambiar código</button>
+      <button class="menu-item" id="menuChangeCodeBtn" onclick="closeMenu();changePin()">🔑 Cambiar código</button>
+      <button class="menu-item" id="menuLangBtn" onclick="closeMenu();toggleLang()">🌐 Cambiar a Castellano</button>
       <button class="menu-item" id="menuThemeBtn" onclick="closeMenu();toggleTheme()">🌙 Modo escuro</button>
-      <button class="menu-item" onclick="closeMenu();showLegalModal(false)">📜 Aviso legal</button>
+      <button class="menu-item" id="menuLegalBtn" onclick="closeMenu();showLegalModal(false)">📜 Aviso legal</button>
       <div class="menu-sep"></div>
-      <button class="menu-item danger" onclick="closeMenu();logout()">🚪 Pechar sesión</button>
+      <button class="menu-item danger" id="menuLogoutBtn" onclick="closeMenu();logout()">🚪 Pechar sesión</button>
     </div>
   </div>
 </div>
@@ -245,23 +246,23 @@ setTimeout(function(){
   <div class="modal">
     <h2 id="mTitle">Editar</h2>
     <div class="msub" id="mSub"></div>
-    <div class="slabel">Turno:</div>
+    <div class="slabel" id="mTurnoLabel">Turno:</div>
     <div class="turn-row" id="turnRow"></div>
     <div id="unitSection">
       <div class="slabel" id="unitLabel1">Unidad:</div>
       <div class="unit-grid" id="unitGrid1"></div>
     </div>
-    <div class="slabel">Tu nombre:</div>
+    <div class="slabel" id="tuNombreLabel">Tu nombre:</div>
     <input type="text" id="inputWho" placeholder="Tu nombre...">
-    <div class="slabel">Cambio con:</div>
+    <div class="slabel" id="cambioConLabel">Cambio con:</div>
     <input type="text" id="inputWith" placeholder="Nombre de la compañera...">
-    <div class="slabel">Comentario (opcional):</div>
+    <div class="slabel" id="comentarioLabel">Comentario (opcional):</div>
     <input type="text" id="inputComment" placeholder="Notas...">
     <div class="mfooter">
-      <button class="mbtn mbtn-del" onclick="applyEdit(null,null)">✕ Borrar</button>
+      <button class="mbtn mbtn-del" id="borrarBtn" onclick="applyEdit(null,null)">✕ Borrar</button>
       <div style="display:flex;gap:8px">
-        <button class="mbtn mbtn-ghost" onclick="closeModal()">Cancelar</button>
-        <button class="mbtn mbtn-save" onclick="confirmEdit()">Guardar</button>
+        <button class="mbtn mbtn-ghost" id="cancelarBtn" onclick="closeModal()">Cancelar</button>
+        <button class="mbtn mbtn-save" id="guardarBtn" onclick="confirmEdit()">Guardar</button>
       </div>
     </div>
   </div>
@@ -271,10 +272,10 @@ setTimeout(function(){
 
 <div class="overlay" id="overlayPinWarn">
   <div class="modal">
-    <h2 style="font-family:Syne,sans-serif;font-size:1rem;color:#c0392b;margin-bottom:10px">🔒 Cambia tu PIN</h2>
-    <p style="font-size:.85rem;color:var(--tx);line-height:1.6;margin-bottom:14px">Sigues usando el PIN de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.</p>
-    <button onclick="changePinFromWarn()" style="width:100%;padding:12px;border-radius:8px;background:#c0392b;color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:8px">Cambiar PIN ahora</button>
-    <button onclick="closePinWarn()" style="width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Ahora no</button>
+    <h2 id="pinWarnTitle" style="font-family:Syne,sans-serif;font-size:1rem;color:#c0392b;margin-bottom:10px">🔒 Cambia tu código</h2>
+    <p id="pinWarnBody" style="font-size:.85rem;color:var(--tx);line-height:1.6;margin-bottom:14px">Sigues usando el código de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.</p>
+    <button id="changeNowBtn" onclick="changePinFromWarn()" style="width:100%;padding:12px;border-radius:8px;background:#c0392b;color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:8px">Cambiar código ahora</button>
+    <button id="notNowBtn" onclick="closePinWarn()" style="width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Ahora no</button>
   </div>
 </div>
 
@@ -328,6 +329,98 @@ const DAYS_ES=["L","M","X","J","V","S","D"];
 const REF_MONDAY_ENF=new Date(2026,1,23); // Feb 23 2026
 const UNITS=[["I","🔴 Ictus"],["A","🔵 338/345"],["V","🟢 351-354/337"],["N2","⚫ 354/337-339"]];
 const TURNS=[["D","☀️ D"],["M","🌅 M"],["N","🌙 N"],["L","✅ L"],["/","/ Sal"],["V","🏖 Vac"],["LD","📋 LD"]];
+
+const I18N={
+  es:{
+    askName:"¿Cuál es tu nombre?", namePh:"Escribe tu nombre...", next:"Siguiente →",
+    codeLabel:"Introduce tu código (por defecto 0000):", enter:"Entrar", back:"← Volver",
+    today:"📍 Hoy", unidadLegend:"Unidad →",
+    bannerCode:"🔒 Código por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.",
+    tabMi:"👤 Mi turno", tabTodos:"📅 Todos", tabCambios:"🔄 Cambios", tabResumen:"📊 Resumen",
+    menuVolver:"🏠 Volver a Mi turno", menuChangeCode:"🔑 Cambiar código", menuLogout:"🚪 Cerrar sesión",
+    menuLangTo:"🌐 Cambiar a Galego",
+    menuThemeToDark:"🌙 Modo oscuro", menuThemeToLight:"☀️ Modo normal",
+    codeWrongLen:"❌ El código debe ser 4 números", codeWrong:"❌ Código incorrecto",
+    currentCodePrompt:"Código actual:", newCodePrompt:"Nuevo código (4 números):",
+    repeatCodePrompt:"Repite el nuevo código:", codesMismatch:"Los códigos no coinciden",
+    codeChangedOk:"✅ Código cambiado correctamente",
+    pinWarnTitle:"🔒 Cambia tu código",
+    pinWarnBody:"Sigues usando el código de por defecto (<b>0000</b>). Mientras no lo cambies por uno tuyo, puedes ver los turnos, pero <b>no podrás hacer cambios, proponer turnos ni ver comentarios</b> de nadie.",
+    changeNow:"Cambiar código ahora", notNow:"Ahora no",
+    logoutConfirm:"¿Cerrar sesión? Tendrás que volver a introducir tu nombre y código en este dispositivo.",
+    editTitle:"Editar", turnoLabel:"Turno:", unidadLabel:"Unidad:",
+    tuNombreLabel:"Tu nombre:", tuNombrePh:"Tu nombre...", cambioConLabel:"Cambio con:",
+    cambioConPh:"Nombre de la compañera...", comentarioLabel:"Comentario (opcional):", comentarioPh:"Notas...",
+    borrar:"✕ Borrar", cancelar:"Cancelar", guardar:"Guardar",
+    propsHeading:"🔄 Propuestas de cambio",
+    dayActionEdit:"✏️ Anotar cambio de turno", dayActionPropose:"🔄 Proponer cambio con compañera/o",
+    propModalTitle:"🔄 Proponer cambio", compLabel:"Compañera/o:", selecciona:"Selecciona...",
+    diaQuieresLabel:"Día que quieres de ella/él:", primeroSelecciona:"Primero selecciona la persona",
+    comentarioLabel2:"Comentario:", comentarioPh2:"Explica el motivo...", enviar:"Enviar",
+    respondModalTitle:"🔄 Responder propuesta", tuComentarioLabel:"Tu comentario (opcional):",
+    tuRespuestaPh:"Tu respuesta...", rechazar:"Rechazar", aceptar:"Aceptar",
+    libre:"Libre",
+    daSu:"da su", delDia:"del", tePropone:"te propone:", teDaSu:"Te da su", aCambioQuiere:"A cambio quiere tu turno del",
+    sinConexion:"⚠️ Sin conexión con Firebase. Recarga la página.",
+    tuTurnoDel:"Tu turno del", cargando:"Cargando...", seleccionaDia:"Selecciona día...",
+    seleccionaCompYDia:"Selecciona la compañera y el día", sinConexionSimple:"Sin conexión",
+    propuestaEnviada:"✅ Proposta enviada a", errorEnviar:"Error al enviar",
+    compararBtn:"👥 Comparar", comparePeopleTitle:"👥 Comparar turnos", comparePeopleSub:"Elige qué compañeras/os quieres ver en la tabla.",
+    selectAll:"Todas", selectNone:"Ninguna", cerrar:"Cerrar",
+    menuLegal:"📜 Aviso legal", legalTitle:"📜 Aviso legal", legalAccept:"Acepto",
+    legalConfirm:"¿Estás segura? Al aceptar, confirmas que usas la app de forma voluntaria y bajo tu propia responsabilidad.",
+    logoutConfirmTitle:"¿Cerrar sesión?",
+    legalBody:"<p style='margin-bottom:10px'>Esta app es un proyecto personal para facilitar la consulta y gestión de los turnos del servicio. Su uso es <b>totalmente voluntario</b> — nadie está obligado a usarla, es una herramienta pensada para la comodidad de quien quiera aprovecharla.</p><p style='margin-bottom:10px'>Datos que se guardan: nombre, código, turnos, cambios propuestos y comentarios asociados.</p><p style='margin-bottom:10px'>Como responsable técnico de la app, tengo acceso a esos datos desde el sistema donde se almacenan. No se guarda ni se accede a ninguna otra cuenta tuya (email personal, contraseñas, redes sociales, datos bancarios, etc.).</p><p>El uso de la app es bajo la responsabilidad de cada usuaria. Si tienes dudas o quieres que se eliminen tus datos, puedes contactar conmigo.</p>",
+    days:["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],
+    months:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+  },
+  gl:{
+    askName:"Cal é o teu nome?", namePh:"Escribe o teu nome...", next:"Seguinte →",
+    codeLabel:"Introduce o teu código (por defecto 0000):", enter:"Entrar", back:"← Voltar",
+    today:"📍 Hoxe", unidadLegend:"Unidade →",
+    bannerCode:"🔒 Código por defecto activo — só podes ver, non editar. Toca aquí para cambialo.",
+    tabMi:"👤 A miña quenda", tabTodos:"📅 Todos", tabCambios:"🔄 Cambios", tabResumen:"📊 Resumo",
+    menuVolver:"🏠 Volver á miña quenda", menuChangeCode:"🔑 Cambiar código", menuLogout:"🚪 Pechar sesión",
+    menuLangTo:"🌐 Cambiar a Castellano",
+    menuThemeToDark:"🌙 Modo escuro", menuThemeToLight:"☀️ Modo normal",
+    codeWrongLen:"❌ O código debe ter 4 números", codeWrong:"❌ Código incorrecto",
+    currentCodePrompt:"Código actual:", newCodePrompt:"Novo código (4 números):",
+    repeatCodePrompt:"Repite o novo código:", codesMismatch:"Os códigos non coinciden",
+    codeChangedOk:"✅ Código cambiado correctamente",
+    pinWarnTitle:"🔒 Cambia o teu código",
+    pinWarnBody:"Segues a usar o código por defecto (<b>0000</b>). Mentres non o cambies por un teu, podes ver as quendas, pero <b>non poderás facer cambios, propoñer quendas nin ver comentarios</b> de ninguén.",
+    changeNow:"Cambiar código agora", notNow:"Agora non",
+    logoutConfirm:"¿Pechar sesión? Terás que introducir de novo o teu nome e código neste dispositivo.",
+    editTitle:"Editar", turnoLabel:"Quenda:", unidadLabel:"Unidade:",
+    tuNombreLabel:"O teu nome:", tuNombrePh:"O teu nome...", cambioConLabel:"Cambio con:",
+    cambioConPh:"Nome da compañeira...", comentarioLabel:"Comentario (opcional):", comentarioPh:"Notas...",
+    borrar:"✕ Borrar", cancelar:"Cancelar", guardar:"Gardar",
+    propsHeading:"🔄 Propostas de cambio",
+    dayActionEdit:"✏️ Anotar cambio de quenda", dayActionPropose:"🔄 Propoñer cambio con compañeira/o",
+    propModalTitle:"🔄 Propoñer cambio", compLabel:"Compañeira/o:", selecciona:"Selecciona...",
+    diaQuieresLabel:"Día que queres dela/del:", primeroSelecciona:"Primeiro selecciona a persoa",
+    comentarioLabel2:"Comentario:", comentarioPh2:"Explica o motivo...", enviar:"Enviar",
+    respondModalTitle:"🔄 Responder proposta", tuComentarioLabel:"O teu comentario (opcional):",
+    tuRespuestaPh:"A túa resposta...", rechazar:"Rexeitar", aceptar:"Aceptar",
+    libre:"Libre",
+    daSu:"dá a súa", delDia:"do", tePropone:"propóñeche:", teDaSu:"Dáche o seu", aCambioQuiere:"A cambio quere a túa quenda do",
+    sinConexion:"⚠️ Sen conexión con Firebase. Recarga a páxina.",
+    tuTurnoDel:"A túa quenda do", cargando:"Cargando...", seleccionaDia:"Selecciona día...",
+    seleccionaCompYDia:"Selecciona a compañeira e o día", sinConexionSimple:"Sen conexión",
+    propuestaEnviada:"✅ Proposta enviada a", errorEnviar:"Erro ao enviar",
+    compararBtn:"👥 Comparar", comparePeopleTitle:"👥 Comparar quendas", comparePeopleSub:"Escolle que compañeiras/os queres ver na táboa.",
+    selectAll:"Todas", selectNone:"Ningunha", cerrar:"Pechar",
+    menuLegal:"📜 Aviso legal", legalTitle:"📜 Aviso legal", legalAccept:"Acepto",
+    legalConfirm:"¿Estás segura? Ao aceptar, confirmas que usas a app de forma voluntaria e baixo a túa propia responsabilidade.",
+    logoutConfirmTitle:"¿Pechar sesión?",
+    legalBody:"<p style='margin-bottom:10px'>Esta app é un proxecto persoal para facilitar a consulta e xestión dos turnos do servizo. O seu uso é <b>totalmente voluntario</b> — ninguén está obrigado a usala, é unha ferramenta pensada para a comodidade de quen queira aproveitala.</p><p style='margin-bottom:10px'>Datos que se gardan: nome, código, turnos, cambios propostos e comentarios asociados.</p><p style='margin-bottom:10px'>Como responsable técnico da app, teño acceso a eses datos dende o sistema onde se almacenan. Non se garda nin se accede a ningunha outra conta túa (email persoal, contrasinais, redes sociais, datos bancarios, etc.).</p><p>O uso da app é baixo a responsabilidade de cada usuaria. Se tes dúbidas ou queres que se eliminen os teus datos, podes contactar comigo.</p>",
+    days:["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"],
+    months:["Xaneiro","Febreiro","Marzo","Abril","Maio","Xuño","Xullo","Agosto","Setembro","Outubro","Novembro","Decembro"]
+  }
+};
+let lang=localStorage.getItem("enf_lang")||"gl";
+function t(key){return (I18N[lang]&&I18N[lang][key])!==undefined?I18N[lang][key]:key;}
+function MONTHS(){return I18N[lang].months;}
 
 let currentYear=new Date().getFullYear();
 let editMode=false,miEditMode=false;
@@ -501,9 +594,9 @@ function render(){
   let h1='<tr><th class="name-col" rowspan="2" style="position:sticky;left:0;top:0;z-index:5">Nombre</th>';
   let prev=-1,span=0;
   dayCols.forEach((dc,i)=>{
-    if(dc.mn!==prev){if(span>0)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS_ES[dayCols[i-span].mn]}</th>`;span=0;prev=dc.mn;}
+    if(dc.mn!==prev){if(span>0)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS()[dayCols[i-span].mn]}</th>`;span=0;prev=dc.mn;}
     span++;
-    if(i===dayCols.length-1)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS_ES[dc.mn]}</th>`;
+    if(i===dayCols.length-1)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS()[dc.mn]}</th>`;
   });
   h1+='</tr>';
 
@@ -580,15 +673,88 @@ function toggleTheme(){
   document.documentElement.classList.toggle("dark");
   localStorage.setItem("enf_theme",isDark()?"dark":"light");
   const btn=document.getElementById("menuThemeBtn");
-  if(btn)btn.textContent=isDark()?"☀️ Modo normal":"🌙 Modo escuro";
+  if(btn)btn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
   if(typeof render==="function")render();
   if(typeof renderMiTurno==="function")renderMiTurno();
   if(typeof renderProposals==="function")renderProposals();
   const rv=document.getElementById("view-resumen");
   if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
 }
+function toggleLang(){
+  lang=(lang==="es")?"gl":"es";
+  localStorage.setItem("enf_lang",lang);
+  applyLangStatic();
+  if(typeof render==="function")render();
+  if(typeof renderMiTurno==="function")renderMiTurno();
+  if(typeof renderProposals==="function")renderProposals();
+  const rv=document.getElementById("view-resumen");
+  if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
+}
+function tabTitles(){return {mi:t("tabMi"),todos:t("tabTodos"),props:t("tabCambios"),resumen:t("tabResumen")};}
+function applyLangStatic(){
+  const set=(id,val,attr)=>{const el=document.getElementById(id);if(el){if(attr)el.setAttribute(attr,val);else el.textContent=val;}};
+  set("askNameP",t("askName"));
+  const ni=document.getElementById("nameInput");if(ni)ni.placeholder=t("namePh");
+  set("nextBtn",t("next"));
+  set("pinLabel",t("codeLabel"));
+  set("enterBtn",t("enter"));
+  set("pinBackBtn",t("back"));
+  set("todayBtn",t("today"));
+  set("unidadLegendLabel",t("unidadLegend"));
+  set("pinLockBanner",t("bannerCode"));
+  const title=document.getElementById("topbarTitle");
+  if(title)title.textContent=tabTitles()[typeof currentTab!=="undefined"?currentTab:"mi"]||t("tabMi");
+  set("tab-mi",t("menuVolver"));
+  set("menuChangeCodeBtn",t("menuChangeCode"));
+  set("menuLogoutBtn",t("menuLogout"));
+  set("menuLangBtn",t("menuLangTo"));
+  set("menuLegalBtn",t("menuLegal"));
+  const themeBtn=document.getElementById("menuThemeBtn");
+  if(themeBtn)themeBtn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
+  set("mTurnoLabel",t("turnoLabel"));
+  set("unitLabel1",t("unidadLabel"));
+  set("tuNombreLabel",t("tuNombreLabel"));
+  const iw=document.getElementById("inputWho");if(iw)iw.placeholder=t("tuNombrePh");
+  set("cambioConLabel",t("cambioConLabel"));
+  const iwi=document.getElementById("inputWith");if(iwi)iwi.placeholder=t("cambioConPh");
+  set("comentarioLabel",t("comentarioLabel"));
+  const ic=document.getElementById("inputComment");if(ic)ic.placeholder=t("comentarioPh");
+  set("borrarBtn",t("borrar"));
+  set("cancelarBtn",t("cancelar"));
+  set("guardarBtn",t("guardar"));
+  set("propsHeading",t("propsHeading"));
+  set("dayActionEditBtn",t("dayActionEdit"));
+  set("dayActionProposeBtn",t("dayActionPropose"));
+  set("dayActionBackBtn",t("back"));
+  set("propModalTitle",t("propModalTitle"));
+  set("propPersonLabel",t("compLabel"));
+  set("propTheirDayLabel",t("diaQuieresLabel"));
+  set("propCommentLabel",t("comentarioLabel2"));
+  const pc=document.getElementById("propComment");if(pc)pc.placeholder=t("comentarioPh2");
+  set("propBackBtn",t("back"));
+  set("propSendBtn",t("enviar"));
+  set("respondModalTitle",t("respondModalTitle"));
+  set("respondCommentLabel",t("tuComentarioLabel"));
+  const rc=document.getElementById("respondComment");if(rc)rc.placeholder=t("tuRespuestaPh");
+  set("respondBackBtn",t("back"));
+  set("respondRejectBtn",t("rechazar"));
+  set("respondAcceptBtn",t("aceptar"));
+  set("pinWarnTitle",t("pinWarnTitle"));
+  const pwb=document.getElementById("pinWarnBody");if(pwb)pwb.innerHTML=t("pinWarnBody");
+  set("changeNowBtn",t("changeNow"));
+  set("notNowBtn",t("notNow"));
+  set("comparePeopleBtn",t("compararBtn"));
+  set("comparePeopleTitle",t("comparePeopleTitle"));
+  set("comparePeopleSub",t("comparePeopleSub"));
+  set("selectAllPeopleBtn",t("selectAll"));
+  set("selectNonePeopleBtn",t("selectNone"));
+  set("closeComparePeopleBtn",t("cerrar"));
+  set("legalTitle",t("legalTitle"));
+  const lAccept=document.getElementById("legalAcceptBtn");if(lAccept)lAccept.textContent=t("legalAccept");
+  const lClose=document.getElementById("legalCloseBtn");if(lClose)lClose.textContent=t("cerrar");
+}
 function logout(){
-  if(!confirm("¿Pechar sesión? Terás que introducir de novo o teu nome e código neste dispositivo."))return;
+  if(!confirm(t("logoutConfirm")))return;
   localStorage.removeItem("enf_user");
   localStorage.removeItem("enf_row");
   if(userRow)localStorage.removeItem("enf_verified_"+userRow);
@@ -604,7 +770,7 @@ function checkLegalDisclaimer(){
   }
 }
 function showLegalModal(mandatory){
-  document.getElementById("legalBody").innerHTML="<p style='margin-bottom:10px'>Esta app é un proxecto persoal para facilitar a consulta e xestión dos turnos do servizo. O seu uso é <b>totalmente voluntario</b> — ninguén está obrigado a usala, é unha ferramenta pensada para a comodidade de quen queira aproveitala.</p><p style='margin-bottom:10px'>Datos que se gardan: nome, código, turnos, cambios propostos e comentarios asociados.</p><p style='margin-bottom:10px'>Como responsable técnico da app, teño acceso a eses datos dende o sistema onde se almacenan. Non se garda nin se accede a ningunha outra conta túa (email persoal, contrasinais, redes sociais, datos bancarios, etc.).</p><p>O uso da app é baixo a responsabilidade de cada usuaria. Se tes dúbidas ou queres que se eliminen os teus datos, podes contactar comigo.</p>";
+  document.getElementById("legalBody").innerHTML=t("legalBody");
   document.getElementById("legalAcceptBtn").style.display=mandatory?"block":"none";
   document.getElementById("legalCloseBtn").style.display=mandatory?"none":"block";
   document.getElementById("overlayLegal").classList.add("open");
@@ -613,7 +779,7 @@ function closeLegal(){
   document.getElementById("overlayLegal").classList.remove("open");
 }
 function acceptLegal(){
-  if(!confirm("¿Estás segura? Ao aceptar, confirmas que usas a app de forma voluntaria e baixo a túa propia responsabilidade."))return;
+  if(!confirm(t("legalConfirm")))return;
   localStorage.setItem(legalKey(),"1");
   if(db){
     db.ref("legal_acceptances/"+userRow).set({
@@ -678,7 +844,7 @@ function showTab(tab){
   const vp=document.getElementById("view-props");
   if(vp)vp.style.display=tab==="props"?"block":"none";
   const title=document.getElementById("topbarTitle");
-  if(title)title.textContent=TAB_TITLES[tab]||TAB_TITLES.mi;
+  if(title)title.textContent=tabTitles()[tab]||tabTitles().mi;
   if(tab==="resumen")renderResumen();
   if(tab==="props")renderProposals();
   if(tab==="mi"){
@@ -763,7 +929,7 @@ function renderMiTurno(){
   }
 
   let html=`<div style="display:flex;align-items:center;justify-content:center;margin-bottom:14px;gap:8px">
-    <span style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;text-align:center">${MONTHS_ES[miMonth]}<br><span style="font-size:.8rem;font-weight:600;color:var(--mu)">${miYear}</span></span>
+    <span style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;text-align:center">${MONTHS()[miMonth]}<br><span style="font-size:.8rem;font-weight:600;color:var(--mu)">${miYear}</span></span>
   </div>
   <div style="display:flex;gap:6px;margin-bottom:12px;font-size:.73rem">
     <span style="background:var(--Ab);color:var(--A);padding:3px 10px;border-radius:6px;font-weight:600">☀️ ${cD}D</span>
@@ -1014,7 +1180,7 @@ function renderResumen(){
 function checkPin(){
   const pin=document.getElementById("pinInput").value.trim();
   if(pin.length!==4||!/^[0-9]{4}$/.test(pin)){
-    document.getElementById("pinError").textContent="❌ El PIN debe ser 4 números";
+    document.getElementById("pinError").textContent=t("codeWrongLen");
     document.getElementById("pinError").style.display="block";
     return;
   }
@@ -1023,7 +1189,7 @@ function checkPin(){
     enterApp();
   };
   const onFail=()=>{
-    document.getElementById("pinError").textContent="❌ PIN incorrecto";
+    document.getElementById("pinError").textContent=t("codeWrong");
     document.getElementById("pinError").style.display="block";
     document.getElementById("pinInput").value="";
   };
@@ -1074,18 +1240,18 @@ function changePinFromWarn(){
 }
 
 function changePin(){
-  const oldPin=prompt("PIN actual:");
+  const oldPin=prompt(t("currentCodePrompt"));
   if(!oldPin) return;
   if(db){
     db.ref("enf_pins/"+userRow).once("value").then(snap=>{
       const stored=snap.val()||"0000";
-      if(oldPin!==stored){alert("PIN incorrecto");return;}
-      const newPin=prompt("Nuevo PIN (4 números):");
-      if(!newPin||!/^[0-9]{4}$/.test(newPin)){alert("El PIN debe ser 4 números");return;}
-      const confirm2=prompt("Repite el nuevo PIN:");
-      if(newPin!==confirm2){alert("Los PINes no coinciden");return;}
+      if(oldPin!==stored){alert(t("codeWrong"));return;}
+      const newPin=prompt(t("newCodePrompt"));
+      if(!newPin||!/^[0-9]{4}$/.test(newPin)){alert(t("codeWrongLen"));return;}
+      const confirm2=prompt(t("repeatCodePrompt"));
+      if(newPin!==confirm2){alert(t("codesMismatch"));return;}
       db.ref("enf_pins/"+userRow).set(newPin).then(()=>{
-        alert("✅ PIN cambiado correctamente");
+        alert(t("codeChangedOk"));
         checkPinLock();
       });
     });
@@ -1117,10 +1283,9 @@ function updatePropBadge(){
 function openDayAction(day,ri,di,dk,turno){
   dayActionCtx={day,ri,di,dk,turno};
   const date=new Date(miYear,miMonth,day);
-  const DL=["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"];
   const dow=(date.getDay()+6)%7;
-  document.getElementById("dayActionTitle").textContent=DL[dow]+" "+day+"/"+(miMonth+1)+"/"+miYear;
-  document.getElementById("dayActionTurn").textContent=turno||"Libre";
+  document.getElementById("dayActionTitle").textContent=I18N[lang].days[dow]+" "+day+"/"+(miMonth+1)+"/"+miYear;
+  document.getElementById("dayActionTurn").textContent=turno||t("libre");
   document.getElementById("overlayDayAction").classList.add("open");
 }
 function closeDayAction(){
@@ -1146,14 +1311,14 @@ function openPropModal(dateKey,turno){
   const date=(dateKey.split("_")[1])||"";
   const dy=date.slice(6,8),mo=date.slice(4,6),yr=date.slice(0,4);
   const pd=document.getElementById("propMyDay");
-  if(pd)pd.textContent="Tu turno del "+dy+"/"+mo+"/"+yr+": "+(turno||"");
+  if(pd)pd.textContent=t("tuTurnoDel")+" "+dy+"/"+mo+"/"+yr+": "+(turno||"");
   const sel=document.getElementById("propPerson");
   if(sel){
-    sel.innerHTML='<option value="">Selecciona...</option>';
+    sel.innerHTML='<option value="">'+t("selecciona")+'</option>';
     PEOPLE_ENF.forEach((p,i)=>{if(i+1!==userRow)sel.innerHTML+='<option value="'+(i+1)+'">'+p.name+'</option>';});
   }
   const ptd=document.getElementById("propTheirDay");
-  if(ptd)ptd.innerHTML='<option value="">Primero selecciona la persona</option>';
+  if(ptd)ptd.innerHTML='<option value="">'+t("primeroSelecciona")+'</option>';
   const pc=document.getElementById("propComment");
   if(pc)pc.value="";
   document.getElementById("overlayProp").classList.add("open");
@@ -1167,7 +1332,7 @@ function loadPersonDays(){
   const pi=parseInt(document.getElementById("propPerson").value);
   if(!pi)return;
   const sel=document.getElementById("propTheirDay");
-  sel.innerHTML='<option value="">Cargando...</option>';
+  sel.innerHTML='<option value="">'+t("cargando")+'</option>';
   const person=PEOPLE_ENF[pi-1];
   const today=new Date();
   const opts=[];
@@ -1180,11 +1345,11 @@ function loadPersonDays(){
     const ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");
     const ov=window.dateOverrides[(pi-1)+"_"+ds];
     const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
-    const t=cell?cell[0]:null;
-    if(t)opts.push({dk:(pi-1)+"_"+ds,t,label:String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" ("+t+")"});
+    const tv=cell?cell[0]:null;
+    if(tv)opts.push({dk:(pi-1)+"_"+ds,t:tv,label:String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")+" ("+tv+")"});
     d.setDate(d.getDate()+1);
   }
-  sel.innerHTML='<option value="">Selecciona día...</option>';
+  sel.innerHTML='<option value="">'+t("seleccionaDia")+'</option>';
   opts.forEach(o=>sel.innerHTML+='<option value="'+o.dk+'" data-turn="'+o.t+'">'+o.label+'</option>');
 }
 
@@ -1194,16 +1359,16 @@ function sendProposal(){
   const theirDay=theirDaySel.value;
   const toTurn=theirDaySel.options[theirDaySel.selectedIndex]?theirDaySel.options[theirDaySel.selectedIndex].dataset.turn||"?":"?";
   const comment=(document.getElementById("propComment").value||"").trim();
-  if(!toPi||!theirDay){alert("Selecciona a compañeira e o día");return;}
+  if(!toPi||!theirDay){alert(t("seleccionaCompYDia"));return;}
   if(!propFromDay)return;
-  if(!db){alert("Sen conexión");return;}
+  if(!db){alert(t("sinConexionSimple"));return;}
   const prop={from:userRow,fromName:userName,fromDay:propFromDay.dateKey,fromTurn:propFromDay.turno,
     to:toPi,toName:PEOPLE_ENF[toPi-1].name,toDay:theirDay,toTurn:toTurn,status:"pending",
     commentFrom:comment,commentTo:"",createdAt:new Date().toLocaleString("es-ES")};
   db.ref("enf_proposals").push(prop).then(()=>{
     closePropModal();
-    alert("✅ Proposta enviada a "+PEOPLE_ENF[toPi-1].name);
-  }).catch(()=>alert("Error ao enviar"));
+    alert(t("propuestaEnviada")+" "+PEOPLE_ENF[toPi-1].name);
+  }).catch(()=>alert(t("errorEnviar")));
 }
 
 function openRespondModal(key){
@@ -1214,10 +1379,10 @@ function openRespondModal(key){
   const fromDs=(p.fromDay||"").split("_")[1];
   const toDs=(p.toDay||"").split("_")[1];
   let html='<div class="prop-card pending" style="margin-bottom:12px">';
-  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> propóñeche:</p>';
+  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> '+t("tePropone")+'</p>';
   html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">';
-  html+='🔄 Dáche o seu <b>'+(p.fromTurn||"?")+'</b> do <b>'+fmt(fromDs)+'</b><br>';
-  html+='A cambio quere o teu turno do <b>'+fmt(toDs)+'</b></p>';
+  html+='🔄 '+t("teDaSu")+' <b>'+(p.fromTurn||"?")+'</b> '+t("delDia")+' <b>'+fmt(fromDs)+'</b><br>';
+  html+=t("aCambioQuiere")+' <b>'+fmt(toDs)+'</b></p>';
   if(p.commentFrom)html+='<p style="font-size:.75rem;font-style:italic;color:#555">💬 "'+p.commentFrom+'"</p>';
   html+='</div>';
   document.getElementById("respondContent").innerHTML=html;
@@ -1305,8 +1470,7 @@ function closeNewFeature(){
 function closeModal(){document.getElementById("overlay").classList.remove("open");editCtx=null;}
 function outsideClose(e){if(e.target.id==="overlay")closeModal();}
 window.onload=()=>{
-  const themeBtn=document.getElementById("menuThemeBtn");
-  if(themeBtn)themeBtn.textContent=isDark()?"☀️ Modo normal":"🌙 Modo escuro";
+  applyLangStatic();
   if(userName){render();renderMiTurno();showTab(getDefaultTab());setTimeout(goToToday,300);}
 };
 </script>
@@ -1317,7 +1481,7 @@ if("serviceWorker" in navigator){
 </script>
 <!-- PROPOSALS VIEW -->
 <div id="view-props" style="flex:1;overflow:auto;padding:14px 16px;display:none">
-  <h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px">🔄 Propostas de cambio</h2>
+  <h2 style="font-family:Syne,sans-serif;font-size:1rem;margin-bottom:14px" id="propsHeading">🔄 Propostas de cambio</h2>
   <div id="propsContent"></div>
 </div>
 
@@ -1326,30 +1490,30 @@ if("serviceWorker" in navigator){
   <div class="modal">
     <h2 id="dayActionTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px"></h2>
     <div id="dayActionTurn" style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center"></div>
-    <button onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
-    <button onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
-    <button onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
+    <button id="dayActionEditBtn" onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
+    <button id="dayActionProposeBtn" onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
+    <button id="dayActionBackBtn" onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
   </div>
 </div>
 
 <!-- PROPOSAL MODAL -->
 <div class="overlay" id="overlayProp" onclick="if(event.target.id==='overlayProp')closePropModal()">
   <div class="modal">
-    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
+    <h2 id="propModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
     <p id="propMyDay" style="font-size:.78rem;color:var(--mu);margin-bottom:12px"></p>
-    <div class="slabel">Compañeira/o:</div>
+    <div class="slabel" id="propPersonLabel">Compañeira/o:</div>
     <select id="propPerson" onchange="loadPersonDays()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
       <option value="">Selecciona...</option>
     </select>
-    <div class="slabel" style="margin-top:10px">Día que queres dela/el:</div>
+    <div class="slabel" id="propTheirDayLabel" style="margin-top:10px">Día que queres dela/el:</div>
     <select id="propTheirDay" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
       <option value="">Primeiro selecciona a persoa</option>
     </select>
-    <div class="slabel" style="margin-top:10px">Comentario:</div>
+    <div class="slabel" id="propCommentLabel" style="margin-top:10px">Comentario:</div>
     <input type="text" id="propComment" placeholder="Explica o motivo...">
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="mbtn mbtn-ghost" onclick="closePropModal()" style="flex:1">← Volver</button>
-      <button class="mbtn mbtn-save" onclick="sendProposal()" style="flex:1">Enviar</button>
+      <button class="mbtn mbtn-ghost" id="propBackBtn" onclick="closePropModal()" style="flex:1">← Volver</button>
+      <button class="mbtn mbtn-save" id="propSendBtn" onclick="sendProposal()" style="flex:1">Enviar</button>
     </div>
   </div>
 </div>
@@ -1357,14 +1521,14 @@ if("serviceWorker" in navigator){
 <!-- RESPOND MODAL -->
 <div class="overlay" id="overlayRespond" onclick="if(event.target.id==='overlayRespond')closeRespondModal()">
   <div class="modal">
-    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder proposta</h2>
+    <h2 id="respondModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px">🔄 Responder proposta</h2>
     <div id="respondContent"></div>
-    <div class="slabel">O teu comentario (opcional):</div>
+    <div class="slabel" id="respondCommentLabel">O teu comentario (opcional):</div>
     <input type="text" id="respondComment" placeholder="A túa resposta...">
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button class="mbtn mbtn-ghost" onclick="closeRespondModal()" style="flex:1">← Volver</button>
-      <button class="mbtn mbtn-del" onclick="respondProposal('rejected')" style="flex:1">Rexeitar</button>
-      <button class="mbtn mbtn-save" onclick="respondProposal('accepted')" style="flex:1">Aceptar</button>
+      <button class="mbtn mbtn-ghost" id="respondBackBtn" onclick="closeRespondModal()" style="flex:1">← Volver</button>
+      <button class="mbtn mbtn-del" id="respondRejectBtn" onclick="respondProposal('rejected')" style="flex:1">Rexeitar</button>
+      <button class="mbtn mbtn-save" id="respondAcceptBtn" onclick="respondProposal('accepted')" style="flex:1">Aceptar</button>
     </div>
   </div>
 </div>
@@ -1393,7 +1557,7 @@ if("serviceWorker" in navigator){
 <!-- LEGAL DISCLAIMER MODAL -->
 <div class="overlay" id="overlayLegal">
   <div class="modal">
-    <h2 style="font-family:Syne,sans-serif;font-size:1rem;color:var(--I);margin-bottom:10px">📜 Aviso legal</h2>
+    <h2 id="legalTitle" style="font-family:Syne,sans-serif;font-size:1rem;color:var(--I);margin-bottom:10px">📜 Aviso legal</h2>
     <div id="legalBody" style="font-size:.82rem;color:var(--tx);line-height:1.7;margin-bottom:16px"></div>
     <button id="legalAcceptBtn" onclick="acceptLegal()" style="display:none;width:100%;padding:12px;border-radius:8px;background:var(--I);color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace">Acepto</button>
     <button id="legalCloseBtn" onclick="closeLegal()" style="display:none;width:100%;padding:10px;border-radius:8px;background:var(--s2);color:var(--mu);border:1px solid var(--bd);cursor:pointer;font-family:'DM Mono',monospace">Pechar</button>
@@ -1403,14 +1567,14 @@ if("serviceWorker" in navigator){
 <!-- COMPARE PEOPLE MODAL -->
 <div class="overlay" id="overlayComparePeople" onclick="if(event.target.id==='overlayComparePeople')closeComparePeople()">
   <div class="modal">
-    <h2 style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">👥 Comparar quendas</h2>
-    <p style="font-size:.78rem;color:var(--mu);margin-bottom:12px">Escolle que compañeiras/os queres ver na táboa.</p>
+    <h2 id="comparePeopleTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">👥 Comparar quendas</h2>
+    <p id="comparePeopleSub" style="font-size:.78rem;color:var(--mu);margin-bottom:12px">Escolle que compañeiras/os queres ver na táboa.</p>
     <div style="display:flex;gap:8px;margin-bottom:10px">
-      <button class="mbtn mbtn-ghost" onclick="selectAllPeople()" style="flex:1">Todas</button>
-      <button class="mbtn mbtn-ghost" onclick="selectNonePeople()" style="flex:1">Ningunha</button>
+      <button class="mbtn mbtn-ghost" id="selectAllPeopleBtn" onclick="selectAllPeople()" style="flex:1">Todas</button>
+      <button class="mbtn mbtn-ghost" id="selectNonePeopleBtn" onclick="selectNonePeople()" style="flex:1">Ningunha</button>
     </div>
     <div id="peopleCheckList" style="max-height:48vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
-    <button class="mbtn mbtn-save" onclick="closeComparePeople()" style="width:100%;margin-top:14px">Pechar</button>
+    <button class="mbtn mbtn-save" id="closeComparePeopleBtn" onclick="closeComparePeople()" style="width:100%;margin-top:14px">Pechar</button>
   </div>
 </div>
 
