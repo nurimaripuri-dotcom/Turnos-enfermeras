@@ -145,6 +145,14 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 .prop-card.accepted{border-color:#4caf50;background:#f1f8e9}
 .prop-card.rejected{border-color:#ef5350;background:#fde8e8}
 .log-popup{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:12px 18px;border-radius:10px;font-size:.75rem;z-index:500;max-width:320px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,.3)}
+@keyframes videoPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.45)}
+  50%{box-shadow:0 0 0 8px rgba(192,57,43,0)}
+}
+.video-promo-banner{
+  animation:videoPulse 1.8s ease-out infinite;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -214,6 +222,7 @@ setTimeout(function(){
       <button class="menu-item" id="menuChangeCodeBtn" onclick="closeMenu();changePin()">🔑 Cambiar código</button>
       <button class="menu-item" id="menuLangBtn" onclick="closeMenu();toggleLang()">🌐 Cambiar a Castellano</button>
       <button class="menu-item" id="menuThemeBtn" onclick="closeMenu();toggleTheme()">🌙 Modo escuro</button>
+      <button class="menu-item" id="menuVideoBtn" onclick="closeMenu();openVideoHelp()">🎥 Vídeo de axuda</button>
       <button class="menu-item" id="menuLegalBtn" onclick="closeMenu();showLegalModal(false)">📜 Aviso legal</button>
       <div class="menu-sep"></div>
       <button class="menu-item danger" id="menuLogoutBtn" onclick="closeMenu();logout()">🚪 Pechar sesión</button>
@@ -372,7 +381,9 @@ const I18N={
     logoutConfirmTitle:"¿Cerrar sesión?",
     legalBody:"<p style='margin-bottom:10px'>Esta app es un proyecto personal para facilitar la consulta y gestión de los turnos del servicio. Su uso es <b>totalmente voluntario</b> — nadie está obligado a usarla, es una herramienta pensada para la comodidad de quien quiera aprovecharla.</p><p style='margin-bottom:10px'>Datos que se guardan: nombre, código, turnos, cambios propuestos y comentarios asociados.</p><p style='margin-bottom:10px'>Como responsable técnico de la app, tengo acceso a esos datos desde el sistema donde se almacenan. No se guarda ni se accede a ninguna otra cuenta tuya (email personal, contraseñas, redes sociales, datos bancarios, etc.).</p><p>El uso de la app es bajo la responsabilidad de cada usuaria. Si tienes dudas o quieres que se eliminen tus datos, puedes contactar conmigo.</p>",
     days:["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],
-    months:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+    months:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+    menuVideo:"🎥 Vídeo de ayuda", videoTitle:"🎥 Vídeo de ayuda",
+    videoPromoBanner:"🎥 Nuevo: vídeo de ayuda de la app — toca para verlo"
   },
   gl:{
     askName:"Cal é o teu nome?", namePh:"Escribe o teu nome...", next:"Seguinte →",
@@ -415,7 +426,9 @@ const I18N={
     logoutConfirmTitle:"¿Pechar sesión?",
     legalBody:"<p style='margin-bottom:10px'>Esta app é un proxecto persoal para facilitar a consulta e xestión dos turnos do servizo. O seu uso é <b>totalmente voluntario</b> — ninguén está obrigado a usala, é unha ferramenta pensada para a comodidade de quen queira aproveitala.</p><p style='margin-bottom:10px'>Datos que se gardan: nome, código, turnos, cambios propostos e comentarios asociados.</p><p style='margin-bottom:10px'>Como responsable técnico da app, teño acceso a eses datos dende o sistema onde se almacenan. Non se garda nin se accede a ningunha outra conta túa (email persoal, contrasinais, redes sociais, datos bancarios, etc.).</p><p>O uso da app é baixo a responsabilidade de cada usuaria. Se tes dúbidas ou queres que se eliminen os teus datos, podes contactar comigo.</p>",
     days:["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"],
-    months:["Xaneiro","Febreiro","Marzo","Abril","Maio","Xuño","Xullo","Agosto","Setembro","Outubro","Novembro","Decembro"]
+    months:["Xaneiro","Febreiro","Marzo","Abril","Maio","Xuño","Xullo","Agosto","Setembro","Outubro","Novembro","Decembro"],
+    menuVideo:"🎥 Vídeo de axuda", videoTitle:"🎥 Vídeo de axuda",
+    videoPromoBanner:"🎥 Novo: vídeo de axuda da app — toca para velo"
   }
 };
 let lang=localStorage.getItem("enf_lang")||"gl";
@@ -709,6 +722,7 @@ function applyLangStatic(){
   set("menuLogoutBtn",t("menuLogout"));
   set("menuLangBtn",t("menuLangTo"));
   set("menuLegalBtn",t("menuLegal"));
+  set("menuVideoBtn",t("menuVideo"));
   const themeBtn=document.getElementById("menuThemeBtn");
   if(themeBtn)themeBtn.textContent=isDark()?t("menuThemeToLight"):t("menuThemeToDark");
   set("mTurnoLabel",t("turnoLabel"));
@@ -795,6 +809,17 @@ let hiddenPeople=new Set(JSON.parse(localStorage.getItem("enf_hidden_people")||"
 function saveHiddenPeople(){localStorage.setItem("enf_hidden_people",JSON.stringify([...hiddenPeople]));}
 function openComparePeople(){renderPeopleCheckList();document.getElementById("overlayComparePeople").classList.add("open");}
 function closeComparePeople(){document.getElementById("overlayComparePeople").classList.remove("open");}
+
+const HELP_VIDEO_ID="f2ntwQXH-YA";
+function openVideoHelp(){
+  document.getElementById("videoTitleEl").textContent=t("videoTitle");
+  document.getElementById("helpVideoFrame").src="https://www.youtube.com/embed/"+HELP_VIDEO_ID+"?autoplay=1";
+  document.getElementById("overlayVideo").classList.add("open");
+}
+function closeVideoHelp(){
+  document.getElementById("overlayVideo").classList.remove("open");
+  document.getElementById("helpVideoFrame").src="";
+}
 function renderPeopleCheckList(){
   const div=document.getElementById("peopleCheckList");
   if(!div)return;
@@ -971,6 +996,7 @@ function renderMiTurno(){
     if(!started)started=true;
   }
   html+=`</tbody></table>`;
+  html+=`<div class="video-promo-banner" onclick="openVideoHelp()" style="background:var(--I);color:#fff;border-radius:12px;padding:10px 14px;margin-top:12px;text-align:center;font-weight:700;font-size:.8rem;flex-shrink:0">${t("videoPromoBanner")}</div>`;
   document.getElementById("miTurnoContent").innerHTML=html;
   document.getElementById("miTurnoContent").onclick=function(e){
     const td=e.target.closest("td[data-ri]");
@@ -1578,14 +1604,28 @@ if("serviceWorker" in navigator){
   </div>
 </div>
 
+<!-- VÍDEO DE AXUDA -->
+<div class="overlay" id="overlayVideo" onclick="if(event.target.id==='overlayVideo')closeVideoHelp()">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h2 id="videoTitleEl" style="font-family:Syne,sans-serif;font-size:.95rem">🎥 Vídeo de axuda</h2>
+      <span onclick="closeVideoHelp()" style="cursor:pointer;font-size:1.2rem;color:var(--mu);padding:4px 8px">✕</span>
+    </div>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;background:#000">
+      <iframe id="helpVideoFrame" src="" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
 <!-- BACK BUTTON SUPPORT -->
 <script>
 window.addEventListener("popstate",function(){
-  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayPinWarn","overlayComparePeople","overlayLegal","overlay"];
+  const modals=["overlayRespond","overlayProp","overlayDayAction","overlayNewFeature","overlayPinWarn","overlayComparePeople","overlayLegal","overlayVideo","overlay"];
   for(const id of modals){
     const el=document.getElementById(id);
     if(el&&el.classList.contains("open")){
       el.classList.remove("open");
+      if(id==="overlayVideo"){const f=document.getElementById("helpVideoFrame");if(f)f.src="";}
       history.pushState(null,"","");
       return;
     }
