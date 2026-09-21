@@ -383,7 +383,7 @@ const I18N={
     days:["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"],
     months:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
     menuVideo:"🎥 Vídeo de ayuda", videoTitle:"🎥 Vídeo de ayuda",
-    videoPromoBanner:"🎥 Lo que el kéfir realmente hace en tu cuerpo — toca para verlo"
+    videoPromoBanner:"🎥 La adicción del cuerpo al movimiento. Si no lo usas, lo pierdes — toca para verlo"
   },
   gl:{
     askName:"Cal é o teu nome?", namePh:"Escribe o teu nome...", next:"Seguinte →",
@@ -428,7 +428,7 @@ const I18N={
     days:["Luns","Martes","Mércores","Xoves","Venres","Sábado","Domingo"],
     months:["Xaneiro","Febreiro","Marzo","Abril","Maio","Xuño","Xullo","Agosto","Setembro","Outubro","Novembro","Decembro"],
     menuVideo:"🎥 Vídeo de axuda", videoTitle:"🎥 Vídeo de axuda",
-    videoPromoBanner:"🎥 Lo que el kéfir realmente hace en tu cuerpo — toca para velo"
+    videoPromoBanner:"🎥 La adicción del cuerpo al movimiento. Si no lo usas, lo pierdes — toca para velo"
   }
 };
 let lang=localStorage.getItem("enf_lang")||"gl";
@@ -810,7 +810,7 @@ function saveHiddenPeople(){localStorage.setItem("enf_hidden_people",JSON.string
 function openComparePeople(){renderPeopleCheckList();document.getElementById("overlayComparePeople").classList.add("open");}
 function closeComparePeople(){document.getElementById("overlayComparePeople").classList.remove("open");}
 
-const HELP_VIDEO_ID="f2ntwQXH-YA";
+const HELP_VIDEO_ID="Qfm1c_x7YVA";
 function openVideoHelp(){
   document.getElementById("videoTitleEl").textContent=t("videoTitle");
   document.getElementById("helpVideoFrame").src="https://www.youtube.com/embed/"+HELP_VIDEO_ID+"?autoplay=1";
