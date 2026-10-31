@@ -73,6 +73,10 @@ h1 em{color:var(--I);font-style:normal}
 .tabs{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--bd);background:var(--s1);flex-shrink:0;padding:0 6px}
 .tab-btn{flex:1;padding:10px;border:none;background:transparent;font-family:"DM Mono",monospace;font-size:.82rem;cursor:pointer;color:var(--mu);border-bottom:3px solid transparent}
 .tab-btn.active{color:var(--I);border-bottom-color:var(--I);font-weight:600}
+.main-tabs{display:flex;flex:1;min-width:0}
+.main-tabs .tab-btn{padding:10px 2px;font-size:.78rem;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.tab-hint{font-size:.68rem;color:var(--mu);padding:0 4px}
+.unit-legend{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:6px 12px 0;font-size:.68rem;color:var(--mu)}
 .topbar-title{font-family:"Syne",sans-serif;font-size:.88rem;font-weight:700;padding:10px 6px;color:var(--tx)}
 .menu-wrap{position:relative;flex-shrink:0}
 .menu-btn{background:transparent;border:none;font-size:1.35rem;line-height:1;padding:8px 12px;cursor:pointer;color:var(--tx);position:relative;border-radius:8px}
@@ -210,15 +214,17 @@ setTimeout(function(){
 </div>
 <div id="pinLockBanner" style="display:none;background:#f8d7da;color:#721c24;padding:8px 14px;font-size:.78rem;text-align:center;cursor:pointer" onclick="showPinWarn()">🔒 PIN por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.</div>
 <div class="tabs">
-  <div class="topbar-title" id="topbarTitle">👤 A miña quenda</div>
+  <div class="main-tabs" id="mainTabs">
+    <button class="tab-btn active" id="mtab-mi" onclick="showTab('mi')">👤 A miña quenda</button>
+    <button class="tab-btn" id="mtab-todos" onclick="showTab('todos')">👥 DUE</button>
+    <button class="tab-btn" id="mtab-tce" onclick="showTab('tce')">📋 TCE</button>
+  </div>
   <div class="menu-wrap">
     <button class="menu-btn" id="menuBtn" onclick="toggleMenu(event)">⋮<span class="menu-badge" id="menuBadge" style="display:none"></span></button>
     <div class="menu-dropdown" id="menuDropdown">
-      <button class="menu-item" id="tab-todos" onclick="menuGoTab('todos')">📅 Todos</button>
       <button class="menu-item" id="tab-resumen" onclick="menuGoTab('resumen')">📊 Resumo</button>
       <button class="menu-item" id="tab-props" onclick="menuGoTab('props')">🔄 Cambios <span id="propBadge" class="menu-item-badge" style="display:none">0</span></button>
       <div class="menu-sep"></div>
-      <button class="menu-item" id="tab-mi" onclick="menuGoTab('mi')">🏠 Volver á miña quenda</button>
       <button class="menu-item" id="menuChangeCodeBtn" onclick="closeMenu();changePin()">🔑 Cambiar código</button>
       <button class="menu-item" id="menuLangBtn" onclick="closeMenu();toggleLang()">🌐 Cambiar a Castellano</button>
       <button class="menu-item" id="menuThemeBtn" onclick="closeMenu();toggleTheme()">🌙 Modo escuro</button>
@@ -235,13 +241,26 @@ setTimeout(function(){
 </div>
 
 <div id="view-todos" style="flex:1;min-height:0;overflow:hidden;flex-direction:column;display:none">
-  <div style="display:flex;justify-content:flex-end;padding:8px 12px 0;flex-shrink:0">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px 0;flex-shrink:0">
+    <span class="tab-hint" id="dueEditHint">✏️ Toca una casilla de tu fila para cambiar tu turno</span>
     <button id="comparePeopleBtn" onclick="openComparePeople()" style="padding:6px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.8rem;font-family:'DM Mono',monospace">👥 Comparar</button>
   </div>
   <div class="wrap" id="wrap">
     <table id="tbl" style="border-collapse:collapse;width:max-content">
       <thead id="thead"></thead>
       <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TCE VIEW (solo consulta) -->
+<div id="view-tce" style="flex:1;min-height:0;overflow:hidden;flex-direction:column;display:none">
+  <div style="padding:8px 12px 0;flex-shrink:0"><span class="tab-hint" id="tceHint">👁 Solo consulta</span></div>
+  <div class="unit-legend" id="tceLegend" style="flex-shrink:0"></div>
+  <div class="wrap" id="wrapTce">
+    <table id="tblTce" style="border-collapse:collapse;width:max-content">
+      <thead id="theadTce"></thead>
+      <tbody id="tbodyTce"></tbody>
     </table>
   </div>
 </div>
@@ -333,6 +352,38 @@ const PEOPLE_ENF = [
   {name:"Patricia R.",startRow:18},
 ];
 
+// --- Datos de TCE (solo consulta; copia de la app TCE: si allí cambia la rotación o un nombre, hay que cambiarlo aquí también) ---
+const ROTA_TCE = [
+  [["T","V"],["T","I"],["N","I"],["/",null],["L",null],["L",null],["M","I"]],
+  [["M","N2"],["M","N2"],["T","A"],["N","N2"],["/",null],["L",null],["L",null]],
+  [["L",null],["M","A"],["M","A"],["T","A"],["N","N2"],["/",null],["L",null]],
+  [["L",null],["L",null],["T","I"],["N","I"],["/",null],["L",null],["L",null]],
+  [["M","I"],["M","I"],["M","I"],["T","I"],["N","I"],["/",null],["L",null]],
+  [["L",null],["M","V"],["M","V"],["T","V"],["T","V"],["N","N2"],["/",null]],
+  [["L",null],["L",null],["M","N2"],["M","V"],["T","I"],["T","I"],["N","N2"]],
+  [["/",null],["L",null],["L",null],["M","N2"],["M","N2"],["T","V"],["T","V"]],
+  [["N","I"],["/",null],["L",null],["M","I"],["M","I"],["M","I"],["T","I"]],
+  [["T","I"],["N","I"],["/",null],["L",null],["L",null],["M","N2"],["M","N2"]],
+  [["M","A"],["T","A"],["N","N2"],["/",null],["L",null],["L",null],["L",null]],
+  [["M","V"],["T","V"],["T","V"],["L",null],["M","A"],["M","A"],["M","A"]],
+  [["L",null],["L",null],["L",null],["M","A"],["T","A"],["T","A"],["T","A"]],
+  [["N","N2"],["/",null],["L",null],["L",null],["M","V"],["M","V"],["M","V"]],
+  [["T","A"],["N","N2"],["/",null],["L",null],["L",null],["L",null],["L",null]],
+];
+const PEOPLE_TCE = [
+  {name:"Montse",startRow:1},{name:"Manuela",startRow:2},{name:"Ana",startRow:3},
+  {name:"Alberto",startRow:4},{name:"Cristina",startRow:5},{name:"Diana",startRow:6},
+  {name:"Lara",startRow:7},{name:"Loly",startRow:8},{name:"Pepa",startRow:9},
+  {name:"Ana Irib.",startRow:10},{name:"Vanesa F.",startRow:11},{name:"Manuel",startRow:12},
+  {name:"Isabel",startRow:13},{name:"Adrián",startRow:14},{name:"Susana",startRow:15},
+];
+const REF_MONDAY_TCE=new Date(2026,3,6); // 6 abril 2026
+const UNITS_TCE=[["I","🔴 Ictus"],["V","🟢 351-353"],["N2","⚫ 354/337-339"],["A","🔵 340-345"]];
+window.tceDateOverrides={};
+let tceChangeIcons={},tceDataError=null;
+function weekOffTce(mon){return Math.round((mon-REF_MONDAY_TCE)/(7*86400000));}
+function rowForTce(sr,mon){const o=weekOffTce(mon);return((sr-1+o)%15+15)%15;}
+
 const MONTHS_ES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DAYS_ES=["L","M","X","J","V","S","D"];
 const REF_MONDAY_ENF=new Date(2026,1,23); // Feb 23 2026
@@ -345,7 +396,7 @@ const I18N={
     codeLabel:"Introduce tu código (por defecto 0000):", enter:"Entrar", back:"← Volver",
     today:"📍 Hoy", unidadLegend:"Unidad →",
     bannerCode:"🔒 Código por defecto activo — solo puedes ver, no editar. Toca aquí para cambiarlo.",
-    tabMi:"👤 Mi turno", tabTodos:"📅 Todos", tabCambios:"🔄 Cambios", tabResumen:"📊 Resumen",
+    tabMi:"👤 Mi turno", tabTodos:"📅 Todos", tabDue:"👥 DUE", tabTce:"📋 TCE", dueEditHint:"✏️ Toca una casilla de tu fila para cambiar tu turno", tceHint:"👁 Solo consulta", tceDataErrorPrefix:"No se pudieron cargar los datos de TCE: ",newFeatTitle:"🆕 Novedades", newFeatHead:"Ahora hay 3 pestañas arriba", newFeatL1:"<b>👤 Mi turno</b>: tu calendario del mes", newFeatL2:"<b>👥 DUE</b>: el cuadrante de las enfermeras. Toca una casilla de <b>tu fila</b> para cambiar tu turno", newFeatL3:"<b>📋 TCE</b>: el cuadrante de las TCE (solo consulta)", newFeatFoot:"El resto de opciones (Cambios, código, idioma, vídeo…) siguen en el menú ⋮.", newFeatOk:"Entendido ✓",  tabCambios:"🔄 Cambios", tabResumen:"📊 Resumen",
     menuVolver:"🏠 Volver a Mi turno", menuChangeCode:"🔑 Cambiar código", menuLogout:"🚪 Cerrar sesión",
     menuLangTo:"🌐 Cambiar a Galego",
     menuThemeToDark:"🌙 Modo oscuro", menuThemeToLight:"☀️ Modo normal",
@@ -390,7 +441,7 @@ const I18N={
     codeLabel:"Introduce o teu código (por defecto 0000):", enter:"Entrar", back:"← Voltar",
     today:"📍 Hoxe", unidadLegend:"Unidade →",
     bannerCode:"🔒 Código por defecto activo — só podes ver, non editar. Toca aquí para cambialo.",
-    tabMi:"👤 A miña quenda", tabTodos:"📅 Todos", tabCambios:"🔄 Cambios", tabResumen:"📊 Resumo",
+    tabMi:"👤 A miña quenda", tabTodos:"📅 Todos", tabDue:"👥 DUE", tabTce:"📋 TCE", dueEditHint:"✏️ Toca unha casiña da túa fila para cambiar a túa quenda", tceHint:"👁 Só consulta", tceDataErrorPrefix:"Non se puideron cargar os datos de TCE: ",newFeatTitle:"🆕 Novidades", newFeatHead:"Agora hai 3 pestanas arriba", newFeatL1:"<b>👤 A miña quenda</b>: o teu calendario do mes", newFeatL2:"<b>👥 DUE</b>: o cadrante das enfermeiras. Toca unha casiña da <b>túa fila</b> para cambiar a túa quenda", newFeatL3:"<b>📋 TCE</b>: o cadrante das TCE (só consulta)", newFeatFoot:"O resto de opcións (Cambios, código, idioma, vídeo…) seguen no menú ⋮.", newFeatOk:"Entendido ✓",  tabCambios:"🔄 Cambios", tabResumen:"📊 Resumo",
     menuVolver:"🏠 Volver á miña quenda", menuChangeCode:"🔑 Cambiar código", menuLogout:"🚪 Pechar sesión",
     menuLangTo:"🌐 Cambiar a Castellano",
     menuThemeToDark:"🌙 Modo escuro", menuThemeToLight:"☀️ Modo normal",
@@ -548,6 +599,25 @@ function startDataListeners(){
       changeIcons=snap.val()||{};
       render();
     });
+    db.ref("rota_changes").on("value",snap=>{
+      const raw=snap.val()||{};
+      window.tceDateOverrides={};
+      Object.entries(raw).forEach(([k,v])=>{
+        if(v===null){window.tceDateOverrides[k]=null;}
+        else if(typeof v==="object"&&!Array.isArray(v)){window.tceDateOverrides[k]=Object.values(v);}
+        else{window.tceDateOverrides[k]=v;}
+      });
+      tceDataError=null;
+      if(currentTab==="tce")renderTce();
+    },err=>{
+      console.log("Error leyendo rota_changes:",err);
+      tceDataError=(err&&err.message)||String(err);
+      if(currentTab==="tce")renderTce();
+    });
+    db.ref("change_icons").on("value",snap=>{
+      tceChangeIcons=snap.val()||{};
+      if(currentTab==="tce")renderTce();
+    },err=>{console.log("Error leyendo change_icons:",err);});
     db.ref("enf_log").on("value",snap=>{
       changeLogData={};
       const logs=snap.val();
@@ -642,7 +712,8 @@ function render(){
       const cellBg=dc.isToday?"#81c784":dc.isSun?"#f3e5f5":bg;
       const iconData=changeIcons[pi]&&changeIcons[pi][dateStr]&&cell&&cell[0]!=="V"&&cell&&cell[0]!=="LD";
       const dot=iconData?`<span class="change-dot" style="position:absolute;top:-4px;right:-4px;width:13px;height:13px;background:#ffc107;border-radius:50%;border:1.5px solid #fff;font-size:.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2" onclick="showLog(event,${pi},'${dateStr}')">✎</span>`:"";
-      body+=`<td class="${dc.isToday?"today-col":dc.isSun?"sun":""}" style="background:${cellBg}!important">
+      const tapAttr=isMyRow?` onclick="tableCellTap(${pi},${dc.yr},${dc.mn},${dc.d})"`:"";
+      body+=`<td class="${dc.isToday?"today-col":dc.isSun?"sun":""}" style="background:${cellBg}!important${isMyRow?";cursor:pointer":""}"${tapAttr}>
         <div style="position:relative;display:inline-block">
           <div class="chip ${cls}" style="display:flex;align-items:center;justify-content:center;gap:2px">${lbl}${baseTurn?'<span class="chip '+baseTurnCls+'" style="font-size:.6rem;padding:0 3px;border-radius:3px;line-height:1.4">'+baseTurn+'</span>':""}</div>
           ${dot}
@@ -653,6 +724,99 @@ function render(){
   });
   document.getElementById("tbody").innerHTML=body;
   if(typeof renderMiTurno==="function")renderMiTurno();
+}
+
+function renderTce(){
+  const thead=document.getElementById("theadTce"),tbody=document.getElementById("tbodyTce");
+  if(!thead||!tbody)return;
+  const wrapT=document.getElementById("wrapTce");
+  let err=document.getElementById("tceErrBanner");
+  if(tceDataError){
+    if(!err){
+      err=document.createElement("div");
+      err.id="tceErrBanner";
+      err.style="background:#f8d7da;color:#721c24;padding:8px 14px;font-size:.78rem;text-align:center;flex-shrink:0";
+      wrapT.parentNode.insertBefore(err,wrapT);
+    }
+    err.textContent=t("tceDataErrorPrefix")+tceDataError;
+    err.style.display="block";
+  } else if(err){err.style.display="none";}
+  const leg=document.getElementById("tceLegend");
+  if(leg)leg.innerHTML=`<span>${t("unidadLegend")}</span>`+UNITS_TCE.map(([k,l])=>`<div class="lc ${k}">${l}</div>`).join("");
+  const today=new Date();
+  const dayCols=[];
+  for(let m=0;m<12;m++){
+    const last=new Date(currentYear,m+1,0).getDate();
+    for(let d=1;d<=last;d++){
+      const date=new Date(currentYear,m,d);
+      const dow=(date.getDay()+6)%7;
+      dayCols.push({yr:currentYear,mn:m,d,dow,isSun:dow===6,isWE:dow>=5,isToday:date.toDateString()===today.toDateString()});
+    }
+  }
+  let h1='<tr><th class="name-col" rowspan="2" style="position:sticky;left:0;top:0;z-index:5">Nombre</th>';
+  let prev=-1,span=0;
+  dayCols.forEach((dc,i)=>{
+    if(dc.mn!==prev){if(span>0)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS()[dayCols[i-span].mn]}</th>`;span=0;prev=dc.mn;}
+    span++;
+    if(i===dayCols.length-1)h1+=`<th class="month-hdr" colspan="${span}">${MONTHS()[dc.mn]}</th>`;
+  });
+  h1+='</tr>';
+  let h2='<tr>';
+  dayCols.forEach(dc=>{
+    const cls=(dc.isToday?"today-hdr ":"")+(dc.isSun?"sun ":dc.isWE?"we ":"");
+    h2+=`<th class="${cls}" style="min-width:40px;width:40px">${dc.d}<br><span style="font-size:.56rem">${DAYS_ES[dc.dow]}</span></th>`;
+  });
+  h2+='</tr>';
+  thead.innerHTML=h1+h2;
+  let body='';
+  PEOPLE_TCE.forEach((p,pi)=>{
+    const bg=isDark()?"#000":(pi%2===0?"#fff":"#f8f9fa");
+    body+=`<tr><td class="name-col" style="background:${bg};color:var(--tx)">${p.name}</td>`;
+    dayCols.forEach(dc=>{
+      const mon=mondayOf(new Date(dc.yr,dc.mn,dc.d));
+      const ri=rowForTce(p.startRow,mon);
+      const dateStr=dc.yr+String(dc.mn+1).padStart(2,"0")+String(dc.d).padStart(2,"0");
+      const ovKey=pi+"_"+dateStr;
+      const baseCell=ROTA_TCE[ri][dc.dow];
+      const cell=window.tceDateOverrides[ovKey]!==undefined?window.tceDateOverrides[ovKey]:baseCell;
+      const tt=cell?cell[0]:null,u=cell?cell[1]:null,u2=cell&&cell[2]?cell[2]:null;
+      const isCombined=(tt==="MT"||tt==="TN")&&u2;
+      const lbl1=tt==="MT"?"M":"T";
+      const lbl2=tt==="MT"?"T":"N";
+      const cls=isCombined?chipCls(lbl1,u):chipCls(tt,u);
+      const cls2=isCombined?chipCls(lbl2,u2):(u2?chipCls(tt,u2):null);
+      const baseTurn=tt==="V"&&baseCell?baseCell[0]:null;
+      const baseTurnCls=baseTurn?chipCls(baseTurn,baseCell?baseCell[1]:null):"";
+      const lbl=tt==="V"?"🏖":tt==="LD"?"📋":(tt||"·");
+      const cellBg=dc.isToday?"#81c784":dc.isSun?(isDark()?"#000":"#f3e5f5"):bg;
+      const iconData=tceChangeIcons[pi]&&tceChangeIcons[pi][dateStr]&&cell&&cell[0]!=="V"&&cell[0]!=="LD";
+      const dot=iconData?`<span class="change-dot" style="position:absolute;top:-4px;right:-4px;width:13px;height:13px;background:#ffc107;border-radius:50%;border:1.5px solid #fff;font-size:.5rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2" onclick="showLogTce(event,${pi},'${dateStr}')">✎</span>`:"";
+      const chipInner=isCombined
+        ?`<div style="display:flex;width:34px;height:34px;border-radius:6px;overflow:hidden;gap:1px">`
+          +`<span class="chip ${cls}" style="width:auto;height:auto;flex:1;min-width:0;padding:0;margin:0;border-radius:0;border:none;font-size:.62rem">${lbl1}</span>`
+          +`<span class="chip ${cls2||cls}" style="width:auto;height:auto;flex:1;min-width:0;padding:0;margin:0;border-radius:0;border:none;font-size:.62rem">${lbl2}</span>`
+          +`</div>`
+        :`<div class="chip ${cls}" style="display:flex;align-items:center;justify-content:center;gap:2px">${lbl}${baseTurn?'<span class="chip '+baseTurnCls+'" style="font-size:.6rem;padding:0 3px;border-radius:3px;line-height:1.4">'+baseTurn+'</span>':""}</div>`;
+      body+=`<td class="${dc.isToday?"today-col":dc.isSun?"sun":""}" style="background:${cellBg}!important">
+        <div style="position:relative;display:inline-block">
+          ${chipInner}
+          ${dot}
+        </div>
+      </td>`;
+    });
+    body+='</tr>';
+  });
+  tbody.innerHTML=body;
+}
+
+function showLogTce(e,pi_,dateStr){
+  e.stopPropagation();
+  const data=tceChangeIcons[pi_]&&tceChangeIcons[pi_][dateStr];
+  if(!data)return;
+  const popup=document.getElementById("logPopup");
+  popup.innerHTML=`✎ <b>${data.quien||"?"}</b> con <b>${data.con||"—"}</b><br>${data.cambio||""}`;
+  popup.style.display="block";
+  setTimeout(()=>popup.style.display="none",4000);
 }
 
 function showLog(e,pi_,dateStr){
@@ -703,7 +867,7 @@ function toggleLang(){
   const rv=document.getElementById("view-resumen");
   if(rv&&rv.style.display!=="none"&&typeof renderResumen==="function")renderResumen();
 }
-function tabTitles(){return {mi:t("tabMi"),todos:t("tabTodos"),props:t("tabCambios"),resumen:t("tabResumen")};}
+function tabTitles(){return {mi:t("tabMi"),todos:t("tabDue"),tce:t("tabTce"),props:t("tabCambios"),resumen:t("tabResumen")};}
 function applyLangStatic(){
   const set=(id,val,attr)=>{const el=document.getElementById(id);if(el){if(attr)el.setAttribute(attr,val);else el.textContent=val;}};
   set("askNameP",t("askName"));
@@ -717,7 +881,7 @@ function applyLangStatic(){
   set("pinLockBanner",t("bannerCode"));
   const title=document.getElementById("topbarTitle");
   if(title)title.textContent=tabTitles()[typeof currentTab!=="undefined"?currentTab:"mi"]||t("tabMi");
-  set("tab-mi",t("menuVolver"));
+  set("mtab-mi",t("tabMi"));set("mtab-todos",t("tabDue"));set("mtab-tce",t("tabTce"));set("dueEditHint",t("dueEditHint"));set("tceHint",t("tceHint"));
   set("menuChangeCodeBtn",t("menuChangeCode"));
   set("menuLogoutBtn",t("menuLogout"));
   set("menuLangBtn",t("menuLangTo"));
@@ -852,10 +1016,12 @@ function selectNonePeople(){
 function changeYear(d){currentYear+=d;render();}
 function goToToday(){
   currentYear=new Date().getFullYear();render();
+  if(currentTab==="tce")renderTce();
   setTimeout(()=>{
-    const wrap=document.getElementById("wrap");
-    const th=document.querySelector("th.today-hdr");
-    if(th)wrap.scrollLeft=th.offsetLeft-wrap.clientWidth/2+th.offsetWidth/2;
+    const isTce=currentTab==="tce";
+    const wrap=document.getElementById(isTce?"wrapTce":"wrap");
+    const th=document.querySelector(isTce?"#theadTce th.today-hdr":"#thead th.today-hdr");
+    if(wrap&&th)wrap.scrollLeft=th.offsetLeft-wrap.clientWidth/2+th.offsetWidth/2;
   },200);
 }
 
@@ -866,24 +1032,33 @@ function showTab(tab){
   document.getElementById("view-mi").style.display=tab==="mi"?"block":"none";
   document.getElementById("view-todos").style.display=tab==="todos"?"flex":"none";
   document.getElementById("view-resumen").style.display=tab==="resumen"?"block":"none";
+  const vt=document.getElementById("view-tce");
+  if(vt)vt.style.display=tab==="tce"?"flex":"none";
   const vp=document.getElementById("view-props");
   if(vp)vp.style.display=tab==="props"?"block":"none";
-  const title=document.getElementById("topbarTitle");
-  if(title)title.textContent=tabTitles()[tab]||tabTitles().mi;
+  ["mi","todos","tce"].forEach(k=>{const b=document.getElementById("mtab-"+k);if(b)b.classList.toggle("active",k===tab);});
+  if(tab==="tce"){
+    renderTce();
+    setTimeout(()=>{
+      const w=document.getElementById("wrapTce");
+      const th=document.querySelector("#theadTce th.today-hdr");
+      if(w&&th)w.scrollLeft=th.offsetLeft-w.clientWidth/2+th.offsetWidth/2;
+    },50);
+  }
   if(tab==="resumen")renderResumen();
   if(tab==="props")renderProposals();
   if(tab==="mi"){
-    const annKey="enf_ann_v1";
-    const shown=parseInt(localStorage.getItem(annKey)||"0");
-    if(shown<5){
-      localStorage.setItem(annKey,String(shown+1));
+    let annSeen=false;
+    try{annSeen=!!localStorage.getItem("enf_ann_tabs_v2");localStorage.setItem("enf_ann_tabs_v2","1");}catch(e){}
+    if(!annSeen){
+      fillNewFeature();
       setTimeout(()=>{const o=document.getElementById("overlayNewFeature");if(o)o.classList.add("open");},400);
     }
   }
   if(tab==="todos"){
     setTimeout(()=>{
       const wrap=document.getElementById("wrap");
-      const th=document.querySelector("th.today-hdr");
+      const th=document.querySelector("#thead th.today-hdr");
       if(th)wrap.scrollLeft=th.offsetLeft-wrap.clientWidth/2+th.offsetWidth/2;
     },50);
   }
@@ -1306,11 +1481,21 @@ function updatePropBadge(){
   if(mb)mb.style.display=n>0?"block":"none";
 }
 
-function openDayAction(day,ri,di,dk,turno){
-  dayActionCtx={day,ri,di,dk,turno};
-  const date=new Date(miYear,miMonth,day);
+function tableCellTap(pi,y,m,d){
+  if(pi!==userRow-1)return;
+  const date=new Date(y,m,d);
   const dow=(date.getDay()+6)%7;
-  document.getElementById("dayActionTitle").textContent=I18N[lang].days[dow]+" "+day+"/"+(miMonth+1)+"/"+miYear;
+  const ri=rowFor(PEOPLE_ENF[pi].startRow,mondayOf(date));
+  const dk=pi+"_"+y+String(m+1).padStart(2,"0")+String(d).padStart(2,"0");
+  const ov=window.dateOverrides[dk];
+  const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
+  openDayAction(d,ri,dow,dk,cell?cell[0]:null,date);
+}
+function openDayAction(day,ri,di,dk,turno,dateObj){
+  dayActionCtx={day,ri,di,dk,turno};
+  const date=dateObj||new Date(miYear,miMonth,day);
+  const dow=(date.getDay()+6)%7;
+  document.getElementById("dayActionTitle").textContent=I18N[lang].days[dow]+" "+date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear();
   document.getElementById("dayActionTurn").textContent=turno||t("libre");
   document.getElementById("overlayDayAction").classList.add("open");
 }
@@ -1489,6 +1674,16 @@ function renderProposals(){
   div.innerHTML=html;
 }
 
+function fillNewFeature(){
+  const set=(id,h)=>{const el=document.getElementById(id);if(el)el.innerHTML=h;};
+  set("newFeatTitle",t("newFeatTitle"));
+  set("newFeatBtn",t("newFeatOk"));
+  set("newFeatBody",`<p style="font-size:.82rem;font-weight:700;margin-bottom:10px">${t("newFeatHead")}</p>
+    <ul style="font-size:.78rem;color:var(--tx);margin:0 0 12px 18px;line-height:1.9">
+      <li>${t("newFeatL1")}</li><li>${t("newFeatL2")}</li><li>${t("newFeatL3")}</li>
+    </ul>
+    <p style="font-size:.76rem;color:var(--mu);line-height:1.6">${t("newFeatFoot")}</p>`);
+}
 function closeNewFeature(){
   document.getElementById("overlayNewFeature").classList.remove("open");
 }
@@ -1563,20 +1758,11 @@ if("serviceWorker" in navigator){
 <div class="overlay" id="overlayNewFeature" onclick="if(event.target.id==='overlayNewFeature')closeNewFeature()">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h2 style="font-family:Syne,sans-serif;font-size:.95rem;color:#2e7d32">🆕 Nova función</h2>
+      <h2 id="newFeatTitle" style="font-family:Syne,sans-serif;font-size:.95rem;color:#2e7d32">🆕 Novedades</h2>
       <span onclick="closeNewFeature()" style="cursor:pointer;font-size:1.2rem;color:var(--mu);padding:4px 8px">✕</span>
     </div>
-    <p style="font-size:.82rem;font-weight:700;margin-bottom:8px">Propostas de cambio de quenda</p>
-    <p style="font-size:.78rem;color:var(--mu);line-height:1.6;margin-bottom:10px">Agora podes propoñerlle un cambio a calquera compañeira/o directamente dende a app:</p>
-    <ol style="font-size:.78rem;color:var(--tx);margin:0 0 12px 18px;line-height:1.9">
-      <li>Vai á pestaña <b>👤 Mi turno</b></li>
-      <li>Toca calquera día traballado</li>
-      <li>Escolle <b>🔄 Propoñer cambio con compañeira/o</b></li>
-      <li>Selecciona a persoa e o día que queres</li>
-      <li>Engade un comentario e envía</li>
-    </ol>
-    <p style="font-size:.78rem;color:var(--mu);line-height:1.6">A outra persoa verá un aviso na pestaña <b>🔄 Cambios</b> e poderá aceptar ou rexeitar.</p>
-    <button onclick="closeNewFeature()" style="width:100%;margin-top:16px;padding:12px;border-radius:8px;background:var(--I);color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;font-size:.88rem">Entendido ✓</button>
+    <div id="newFeatBody"></div>
+    <button id="newFeatBtn" onclick="closeNewFeature()" style="width:100%;margin-top:16px;padding:12px;border-radius:8px;background:var(--I);color:#fff;border:none;cursor:pointer;font-weight:700;font-family:'DM Mono',monospace;font-size:.88rem">Entendido ✓</button>
   </div>
 </div>
 
