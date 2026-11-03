@@ -1050,6 +1050,8 @@ function selectNonePeople(){
 
 function changeYear(d){currentYear+=d;render();}
 function goToToday(){
+  const _n=new Date();miMonth=_n.getMonth();miYear=_n.getFullYear();
+  try{renderMiTurno();}catch(e){}
   currentYear=new Date().getFullYear();render();
   if(currentTab==="tce")renderTce();
   setTimeout(()=>{
