@@ -1,0 +1,12 @@
+{
+  "appId": "io.github.nurimaripuri.turnosenf",
+  "appName": "Enfermeras 3ºC",
+  "webDir": "www",
+  "server": {
+    "url": "https://nurimaripuri-dotcom.github.io/Turnos-enfermeras/",
+    "errorPath": "offline.html"
+  },
+  "android": {
+    "backgroundColor": "#1565c0"
+  }
+}
