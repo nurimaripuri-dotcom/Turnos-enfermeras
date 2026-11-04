@@ -256,7 +256,7 @@ setTimeout(function(){
 <!-- TCE VIEW (solo consulta) -->
 <div id="view-tce" style="flex:1;min-height:0;overflow:hidden;flex-direction:column;display:none">
   <div style="padding:8px 12px 0;flex-shrink:0"><span class="tab-hint" id="tceHint">👁 Solo consulta</span></div>
-  <div class="unit-legend" id="tceLegend" style="flex-shrink:0"></div>
+  <div class="unit-legend" id="tceLegend" style="display:none"></div>
   <div class="wrap" id="wrapTce">
     <table id="tblTce" style="border-collapse:collapse;width:max-content">
       <thead id="theadTce"></thead>
@@ -569,6 +569,36 @@ document.addEventListener("DOMContentLoaded",()=>{
   if(pi) pi.addEventListener("keydown",e=>{if(e.key==="Enter")checkPin();});
 });
 
+// --- Aviso de APK nuevo (solo dentro de la app Android) ---
+function checkApkUpdate(){
+  try{
+    const C=window.Capacitor;
+    if(!C||!C.isNativePlatform||!C.isNativePlatform()||window._updChecked)return;
+    window._updChecked=true;
+    const REPO="Turnos-enfermeras",APK="TurnosEnfermeras.apk",LS="enf_apk_latest";
+    let P=null;try{P=C.registerPlugin?C.registerPlugin("AppInfo"):(C.Plugins&&C.Plugins.AppInfo);}catch(e){}
+    const installed=P&&P.getVersion?P.getVersion().then(r=>+r.versionCode||0).catch(()=>0):Promise.resolve(0);
+    let cached=null;try{cached=JSON.parse(localStorage.getItem(LS)||"null");}catch(e){}
+    const latest=(cached&&Date.now()-cached.ts<6*3600e3)?Promise.resolve(cached.v):
+      fetch("https://api.github.com/repos/nurimaripuri-dotcom/"+REPO+"/releases/latest").then(r=>r.ok?r.json():null).then(j=>{
+        const m=j&&String(j.tag_name||"").match(/android-v(\d+)/);const v=m?+m[1]:0;
+        if(v)localStorage.setItem(LS,JSON.stringify({ts:Date.now(),v}));return v;}).catch(()=>0);
+    Promise.all([installed,latest]).then(([inst,lat])=>{
+      if(!lat||inst>=lat)return;
+      if(sessionStorage.getItem("enf_upd_later"))return;
+      const url="https://github.com/nurimaripuri-dotcom/"+REPO+"/releases/latest/download/"+APK;
+      const b=document.createElement("div");
+      b.id="apkUpdateBanner";
+      b.style.cssText="position:fixed;left:10px;right:10px;bottom:14px;z-index:9999;background:#1e8449;color:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.25);font-family:'DM Mono',monospace;font-size:.82rem;display:flex;align-items:center;gap:10px";
+      b.innerHTML='<div style="flex:1">📲 <b>Hay una versión nueva de la app</b><br><span style="opacity:.9;font-size:.75rem">Descárgala e instálala encima; no se pierde nada.</span></div>'+
+        '<a href="'+url+'" style="background:#fff;color:#1e8449;font-weight:700;padding:8px 12px;border-radius:8px;text-decoration:none;white-space:nowrap">Actualizar</a>'+
+        '<button style="background:transparent;border:none;color:#fff;font-size:1.1rem;cursor:pointer" aria-label="Luego">✕</button>';
+      b.querySelector("button").onclick=()=>{sessionStorage.setItem("enf_upd_later","1");b.remove();};
+      document.body.appendChild(b);
+    });
+  }catch(e){console.log("checkApkUpdate:",e);}
+}
+
 // --- Notificaciones push: solo dentro de la app Android (Capacitor). En el navegador no hace nada. ---
 function initPushNative(){
   try{
@@ -608,7 +638,7 @@ function initApp(){
     firebase.app("enfermeras").auth().onAuthStateChanged(user=>{
       if(!user)return; // esperamos a que signInAnonymously() complete
       startDataListeners();
-      setTimeout(initPushNative,1500);
+      setTimeout(initPushNative,1500);setTimeout(checkApkUpdate,4000);
     });
   }catch(e){render();}
 }
