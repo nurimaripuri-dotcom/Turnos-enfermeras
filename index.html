@@ -204,7 +204,7 @@ setTimeout(function(){
     <button class="hbtn primary" id="todayBtn" onclick="goToToday()">📍 Hoy</button>
   </div>
 </header>
-<div class="legend">
+<div class="legend" style="display:none">
   <span style="color:var(--mu)" id="unidadLegendLabel">Unidad →</span>
   <div class="lc I">🔴 Ictus</div>
   <div class="lc A">🔵 338/345</div>
@@ -1165,6 +1165,7 @@ function showTab(tab){
   if(tab==="resumen")renderResumen();
   if(tab==="props")renderProposals();
   if(tab==="mi"){
+    setTimeout(fitMiCalendar,30);
     let annSeen=false;
     try{annSeen=!!localStorage.getItem("enf_ann_tabs_v2");localStorage.setItem("enf_ann_tabs_v2","1");}catch(e){}
     if(!annSeen){
@@ -1228,6 +1229,47 @@ function miDayCellHTML(date,isCurrentMonth,me,today){
   </td>`;
 }
 
+// Factor con el que el sistema agranda el texto (1 = normal). En la app Android sigue el tamaño de letra del móvil.
+function textScaleFactor(){
+  try{
+    const d=document.createElement("div");
+    d.style.cssText="position:absolute;visibility:hidden;font-size:100px;line-height:1;top:-999px";
+    d.textContent="M";document.body.appendChild(d);
+    const f=parseFloat(getComputedStyle(d).fontSize)/100;
+    d.remove();
+    return (f>0.5&&f<3)?f:1;
+  }catch(e){return 1;}
+}
+// Ajusta el calendario de "Mi turno" al alto de la pantalla (como las apps de calendario nativas)
+function fitMiCalendar(){
+  try{
+    const view=document.getElementById("view-mi"), cont=document.getElementById("miTurnoContent");
+    if(!view||!cont||view.style.display==="none"||!view.clientHeight)return;
+    const tbl=cont.querySelector("table"); if(!tbl)return;
+    const rows=tbl.querySelectorAll("tbody tr"); if(!rows.length)return;
+    const thead=tbl.querySelector("thead");
+    const cs=getComputedStyle(view);
+    const padB=parseFloat(cs.paddingBottom)||0;
+    const top=tbl.getBoundingClientRect().top-view.getBoundingClientRect().top+view.scrollTop;
+    const avail=view.clientHeight-top-padB-(thead?thead.offsetHeight:0)-4;
+    const h=Math.max(38,Math.floor(avail/rows.length));
+    // Si el móvil agranda la letra (ajuste de tamaño de fuente de Android), se compensa solo dentro de las casillas
+    const fz=textScaleFactor();
+    const numPx=Math.max(12,Math.min(22,Math.round(h*0.24)))/fz;
+    const chipPx=Math.max(14,Math.min(34,Math.round(h*0.32)))/fz;
+    const padPx=Math.max(2,Math.round(h*0.09));
+    tbl.style.height="auto";
+    rows.forEach(tr=>tr.querySelectorAll("td").forEach(td=>{
+      td.style.height=h+"px"; td.style.minHeight="0"; td.style.padding="2px";
+      const num=td.firstElementChild&&td.firstElementChild.tagName==="DIV"?td.querySelector(":scope > div"):null;
+      if(num&&/^\d+$/.test(num.textContent.trim())){num.style.fontSize=numPx+"px";num.style.marginBottom=Math.round(h*0.04)+"px";}
+      td.querySelectorAll(".mi-chip").forEach(c=>{c.style.fontSize=chipPx+"px";c.style.paddingTop=c.style.paddingBottom=padPx+"px";});
+      td.querySelectorAll(".mi-chip .chip").forEach(c=>{c.style.fontSize=Math.round(chipPx*0.7)+"px";});
+    }));
+  }catch(e){console.log("fitMiCalendar:",e);}
+}
+window.addEventListener("resize",()=>{clearTimeout(window._fitT);window._fitT=setTimeout(fitMiCalendar,150);});
+
 function renderMiTurno(){
   if(userRow===0){document.getElementById("miTurnoContent").innerHTML='<p style="color:var(--mu);padding:20px">No se encontró tu fila.</p>';return;}
   const me=PEOPLE_ENF[userRow-1];
@@ -1247,13 +1289,13 @@ function renderMiTurno(){
     if(t==="D")cD++;else if(t==="M")cM++;else if(t==="N")cN++;
   }
 
-  let html=`<div style="display:flex;align-items:center;justify-content:center;margin-bottom:14px;gap:8px">
-    <span style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;text-align:center">${MONTHS()[miMonth]}<br><span style="font-size:.8rem;font-weight:600;color:var(--mu)">${miYear}</span></span>
-  </div>
-  <div style="display:flex;gap:6px;margin-bottom:12px;font-size:.73rem">
-    <span style="background:var(--Ab);color:var(--A);padding:3px 10px;border-radius:6px;font-weight:600">☀️ ${cD}D</span>
-    <span style="background:var(--Vb);color:var(--V);padding:3px 10px;border-radius:6px;font-weight:600">🌅 ${cM}M</span>
-    <span style="background:var(--Ib);color:var(--I);padding:3px 10px;border-radius:6px;font-weight:600">🌙 ${cN}N</span>
+  let html=`<div id="miHead" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+    <span style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800">${MONTHS()[miMonth]} <span style="font-size:.85rem;font-weight:600;color:var(--mu)">${miYear}</span></span>
+    <span style="display:flex;gap:5px;font-size:.73rem">
+      <span style="background:var(--Ab);color:var(--A);padding:3px 8px;border-radius:6px;font-weight:600">☀️ ${cD}D</span>
+      <span style="background:var(--Vb);color:var(--V);padding:3px 8px;border-radius:6px;font-weight:600">🌅 ${cM}M</span>
+      <span style="background:var(--Ib);color:var(--I);padding:3px 8px;border-radius:6px;font-weight:600">🌙 ${cN}N</span>
+    </span>
   </div>`;
 
   html+=`<table style="width:100%;border-collapse:collapse;table-layout:fixed"><thead><tr>`;
@@ -1292,6 +1334,7 @@ function renderMiTurno(){
   html+=`</tbody></table>`;
   html+=`<div class="video-promo-banner" onclick="openVideoHelp()" style="background:var(--I);color:#fff;border-radius:12px;padding:10px 14px;margin-top:12px;text-align:center;font-weight:700;font-size:.8rem;flex-shrink:0">${t("videoPromoBanner")}</div>`;
   document.getElementById("miTurnoContent").innerHTML=html;
+  setTimeout(fitMiCalendar,0);
   document.getElementById("miTurnoContent").onclick=function(e){
     const td=e.target.closest("td[data-ri]");
     if(!td)return;
@@ -1610,6 +1653,17 @@ function tableCellTap(pi,y,m,d){
   const cell=ov!==undefined?ov:ROTA_ENF[ri][dow];
   openDayAction(d,ri,dow,dk,cell?cell[0]:null,date);
 }
+// Unidad del día (en la ventana que se abre al tocar un día)
+const UNIT_NAMES_ENF={I:"🔴 Ictus",A:"🔵 338/345",V:"🟢 351-354/337",N2:"⚫ 354/337-339"};
+function dayUnitHTML(cell){
+  if(!cell||!cell[0])return "";
+  const t=cell[0];
+  const lbl={D:"☀️ Día",M:"🌅 Mañana",T:"🌤 Tarde",N:"🌙 Noche"};
+  if(!lbl[t]&&t!=="MT"&&t!=="TN")return "";
+  const units=[cell[1],cell[2]].filter(Boolean);
+  if(!units.length)return `<div style="font-size:.8rem;color:var(--mu);text-align:center">${lbl[t]||t}: sin unidad asignada</div>`;
+  return units.map(u=>`<div class="lc ${u}" style="display:block;border-radius:10px;padding:10px 12px;margin-bottom:6px;font-size:.85rem;text-align:left;font-weight:800">${UNIT_NAMES_ENF[u]||u} <span style="font-weight:600;opacity:.8">· ${lbl[t]||t}</span></div>`).join("");
+}
 function openDayAction(day,ri,di,dk,turno,dateObj){
   dayActionCtx={day,ri,di,dk,turno};
   const date=dateObj||new Date(miYear,miMonth,day);
@@ -1620,6 +1674,9 @@ function openDayAction(day,ri,di,dk,turno,dateObj){
    const fn=festivoNombre(fk);
    if(fe){fe.style.display=fn?"block":"none";fe.textContent=fn?(lang==="gl"?"🔺 Festivo: ":"🔺 Festivo: ")+fn:"";}}
   document.getElementById("dayActionTurn").textContent=turno||t("libre");
+  {const cd=document.getElementById("dayActionCard");
+   if(cd){let cell=null;try{const ov=dk&&window.dateOverrides?window.dateOverrides[dk]:undefined;cell=ov!==undefined?ov:ROTA_ENF[ri][di];}catch(e){}
+   cd.innerHTML=dayUnitHTML(cell);}}
   document.getElementById("overlayDayAction").classList.add("open");
 }
 function closeDayAction(){
@@ -1834,7 +1891,8 @@ if("serviceWorker" in navigator){
   <div class="modal">
     <h2 id="dayActionTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:8px"></h2>
     <div id="dayActionFest" style="display:none;background:#fde8e8;color:#c0392b;border-left:4px solid #d32f2f;border-radius:8px;padding:6px 10px;margin-bottom:8px;font-size:.82rem;font-weight:700"></div>
-    <div id="dayActionTurn" style="font-size:1.1rem;font-weight:700;margin-bottom:20px;text-align:center"></div>
+    <div id="dayActionTurn" style="font-size:1.1rem;font-weight:700;margin-bottom:8px;text-align:center"></div>
+    <div id="dayActionCard" style="margin-bottom:12px"></div>
     <button id="dayActionEditBtn" onclick="dayActionEdit()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;margin-bottom:10px;text-align:left">✏️ Anotar cambio de turno</button>
     <button id="dayActionProposeBtn" onclick="dayActionPropose()" style="width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer;font-size:.88rem;font-weight:600;font-family:'DM Mono',monospace;text-align:left">🔄 Propoñer cambio con compañeira/o</button>
     <button id="dayActionBackBtn" onclick="closeDayAction()" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:.82rem;margin-top:12px;font-family:'DM Mono',monospace">← Volver</button>
