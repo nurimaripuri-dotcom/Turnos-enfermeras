@@ -1865,6 +1865,7 @@ function openPropModal(dateKey,turno){
   if(ptd)ptd.innerHTML='<option value="">'+t("primeroSelecciona")+'</option>';
   const pc=document.getElementById("propComment");
   if(pc)pc.value="";
+  try{renderSuggestions();}catch(e){console.log("sugerencias:",e);}
   document.getElementById("overlayProp").classList.add("open");
 }
 function closePropModal(){
@@ -1895,6 +1896,71 @@ function loadPersonDays(){
   }
   sel.innerHTML='<option value="">'+t("seleccionaDia")+'</option>';
   opts.forEach(o=>sel.innerHTML+='<option value="'+o.dk+'" data-turn="'+o.t+'">'+o.label+'</option>');
+}
+
+
+// ===== Sugerencias de cambio (versión sencilla): a quién pedírselo =====
+// Quien libra tu día y trabaja, ±14 días, un día que tú libras. Noches solo por noches; nadie trabaja tras una noche.
+const SUG_DAYS=14;
+function sugEsc(x){return String(x==null?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function sugDs(d){return d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");}
+function sugDate(ds){return new Date(+ds.slice(0,4),+ds.slice(4,6)-1,+ds.slice(6,8),12);}
+function sugAdd(ds,n){const d=sugDate(ds);d.setDate(d.getDate()+n);return sugDs(d);}
+function sugT(pi0,ds){
+  const ov=window.dateOverrides?window.dateOverrides[pi0+"_"+ds]:undefined;
+  if(ov!==undefined){if(ov===null)return "L";return typeof ov==="string"?ov:(ov[0]||"L");}
+  const p=PEOPLE_ENF[pi0];if(!p)return "L";
+  const d=sugDate(ds);const c=ROTA_ENF[rowFor(p.startRow,mondayOf(d))][(d.getDay()+6)%7];
+  return c&&c[0]?c[0]:"L";
+}
+const SUG_WORK=new Set(["D","M","N"]);
+function sugCanWork(pi0,ds,nt){
+  if(sugT(pi0,sugAdd(ds,-1))==="N")return false;
+  if(nt==="N"&&SUG_WORK.has(sugT(pi0,sugAdd(ds,1))))return false;
+  return true;
+}
+function sugFmt(ds){return I18N[lang].days[(sugDate(ds).getDay()+6)%7]+" "+(+ds.slice(6,8))+"/"+(+ds.slice(4,6));}
+function computeSuggestions(myPi0,X,myT){
+  const out=[];const todayDs=sugDs(new Date());
+  if(!SUG_WORK.has(myT))return out;
+  PEOPLE_ENF.forEach((p,pi0)=>{
+    if(pi0===myPi0||!p||!p.name)return;
+    if(sugT(pi0,X)!=="L"||!sugCanWork(pi0,X,myT))return;
+    for(let i=-SUG_DAYS;i<=SUG_DAYS;i++){
+      if(!i)continue;const Y=sugAdd(X,i);if(Y<=todayDs)continue;
+      const herY=sugT(pi0,Y);if(!SUG_WORK.has(herY))continue;
+      if((myT==="N")!==(herY==="N"))continue;
+      if(sugT(myPi0,Y)!=="L"||!sugCanWork(myPi0,Y,herY))continue;
+      out.push({pi:pi0+1,Y,yT:herY,score:(herY===myT?2:0)-Math.abs(i)/SUG_DAYS});
+    }
+  });
+  const c={};
+  return out.sort((a,b)=>b.score-a.score||(a.Y<b.Y?-1:1)).filter(s=>(c[s.pi]=(c[s.pi]||0)+1)<=2).slice(0,8);
+}
+function renderSuggestions(){
+  const box=document.getElementById("propSuggest");if(!box)return;
+  box.innerHTML="";
+  if(!propFromDay)return;
+  const X=(propFromDay.dateKey||"").split("_")[1],myT=propFromDay.turno;
+  if(!X||!SUG_WORK.has(myT))return;
+  const s=computeSuggestions(userRow-1,X,myT);
+  window._sugList=s;
+  const gl=lang==="gl";
+  const h=s.length?s.map((sg,i)=>`<div onclick="pickSuggestion(${i})" style="cursor:pointer;padding:7px 9px;border:1px solid var(--bd);border-radius:8px;margin-bottom:5px;background:var(--s1)">
+      <div style="font-size:.8rem"><b>${sugEsc(PEOPLE_ENF[sg.pi-1].name)}</b></div>
+      <div style="font-size:.72rem;color:var(--mu)">${gl?"Fai o teu":"Hace tu"} ${myT} ${gl?"o":"el"} ${sugFmt(X)} · ${gl?"ti fas o seu":"tú haces su"} ${sg.yT} ${gl?"o":"el"} ${sugFmt(sg.Y)}</div></div>`).join("")
+    :`<div style="font-size:.72rem;color:var(--mu)">${gl?"Non atopo cambios que encaixen":"No encuentro cambios que encajen"} (±${SUG_DAYS} ${gl?"días":"días"}).</div>`;
+  box.innerHTML=`<details open style="margin-bottom:10px;border:1px solid var(--bd);border-radius:10px;padding:8px 10px;background:var(--s2)">
+    <summary style="font-size:.82rem;font-weight:700;cursor:pointer">💡 ${gl?"A quen llo pido?":"¿A quién se lo pido?"}</summary><div style="margin-top:6px">${h}</div>
+    <div style="font-size:.62rem;color:var(--mu);margin-top:6px">${gl?"Segundo as quendas da app. Compróbao antes de enviar.":"Según los turnos de la app. Compruébalo antes de enviar."}</div></details>`;
+}
+function pickSuggestion(i){
+  const sg=(window._sugList||[])[i];if(!sg)return;
+  const sel=document.getElementById("propPerson");sel.value=String(sg.pi);loadPersonDays();
+  const dk=(sg.pi-1)+"_"+sg.Y,ds=document.getElementById("propTheirDay");
+  if(![...ds.options].some(o=>o.value===dk)){const o=document.createElement("option");o.value=dk;o.dataset.turn=sg.yT;o.textContent=sg.Y.slice(6,8)+"/"+sg.Y.slice(4,6)+" ("+sg.yT+")";ds.appendChild(o);}
+  ds.value=dk;
+  sel.scrollIntoView({behavior:"smooth",block:"center"});
 }
 
 function sendProposal(){
@@ -2057,6 +2123,7 @@ if("serviceWorker" in navigator){
   <div class="modal">
     <h2 id="propModalTitle" style="font-family:Syne,sans-serif;font-size:.95rem;margin-bottom:4px">🔄 Propoñer cambio</h2>
     <p id="propMyDay" style="font-size:.78rem;color:var(--mu);margin-bottom:12px"></p>
+    <div id="propSuggest"></div>
     <div class="slabel" id="propPersonLabel">Compañeira/o:</div>
     <select id="propPerson" onchange="loadPersonDays()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);font-family:'DM Mono',monospace;font-size:.82rem;margin-top:4px">
       <option value="">Selecciona...</option>
