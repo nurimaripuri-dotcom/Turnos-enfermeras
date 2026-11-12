@@ -1151,7 +1151,20 @@ function selectNonePeople(){
   render();
 }
 
-function changeYear(d){currentYear+=d;render();}
+function changeYear(d){
+  currentYear+=d;
+  miYear=currentYear;
+  render();
+  try{renderMiTurno();}catch(e){}
+  if(currentTab==="tce")renderTce();
+}
+// Al pasar de año deslizando en Mi turno, el año de arriba y las tablas lo siguen
+function syncYearFromMi(){
+  if(miYear===currentYear)return;
+  currentYear=miYear;
+  render();
+  if(currentTab==="tce")renderTce();
+}
 function goToToday(){
   const _n=new Date();miMonth=_n.getMonth();miYear=_n.getFullYear();
   try{renderMiTurno();}catch(e){}
@@ -1383,6 +1396,7 @@ function renderMiTurno(){
       if(dx<0){miMonth++;if(miMonth>11){miMonth=0;miYear++;}}
       else{miMonth--;if(miMonth<0){miMonth=11;miYear--;}}
       renderMiTurno();
+      syncYearFromMi();
     }
   };}
 
