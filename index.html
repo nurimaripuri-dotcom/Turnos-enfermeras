@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
@@ -177,7 +177,7 @@ input[type=text]{width:100%;padding:8px 10px;border-radius:7px;border:1px solid 
 setTimeout(function(){
   var sp=document.getElementById("splashScreen");
   if(sp){ sp.classList.add("hide"); setTimeout(function(){ sp.remove(); }, 450); }
-}, 1700);
+}, 700);
 </script>
 
 <div id="nameScreen">
@@ -540,6 +540,20 @@ function getDefaultTab(){
   return localStorage.getItem("enf_default_todos")==="1" ? "todos" : "mi";
 }
 
+function escH(x){return String(x==null?"":x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function normName(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim().replace(/\s+/g," ");}
+// Lee una ruta esperando a que haya sesión anónima, con límite de tiempo
+function readWhenAuthed(path,ms){
+  const a=firebase.app("enfermeras").auth();
+  const ready=new Promise(res=>{if(a.currentUser)return res();const u=a.onAuthStateChanged(x=>{if(x){u();res();}});});
+  const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms||12000));
+  return Promise.race([ready.then(()=>db.ref(path).once("value")),to]);
+}
+function pinCheckFailed(){
+  const el=document.getElementById("pinError");
+  el.textContent=lang==="gl"?"⚠️ Non se puido comprobar o código. Revisa a conexión e téntao de novo.":"⚠️ No se pudo comprobar el código. Revisa la conexión e inténtalo de nuevo.";
+  el.style.display="block";
+}
 // Initialize Firebase early for PIN verification
 try{
   const _fc={
@@ -565,7 +579,7 @@ let miMonth=new Date().getMonth(),miYear=new Date().getFullYear();
 function saveName(){
   const n=document.getElementById("nameInput").value.trim();
   if(!n)return;
-  const nl=n.toLowerCase();
+  const nl=normName(n);
   if(nl===ADMIN_USER){
     userName="Berto"; userRow=0; isAdminLogin=true;
     localStorage.setItem("enf_user","Berto");
@@ -578,15 +592,15 @@ function saveName(){
     return;
   }
   isAdminLogin=false;
-  const idx=PEOPLE_ENF.findIndex(p=>p.name.toLowerCase()===nl);
+  const idx=PEOPLE_ENF.findIndex(p=>normName(p.name)===nl);
   if(idx<0){
     const names=PEOPLE_ENF.map(p=>p.name).join(", ");
     document.getElementById("nameError").textContent="❌ Nombre no encontrado. Válidos: "+names;
     document.getElementById("nameError").style.display="block";
     return;
   }
-  userName=n; userRow=idx+1;
-  localStorage.setItem("enf_user",n);
+  userName=PEOPLE_ENF[idx].name; userRow=idx+1;
+  localStorage.setItem("enf_user",userName);
   localStorage.setItem("enf_row",String(userRow));
   // Go to PIN step
   document.getElementById("stepName").style.display="none";
@@ -962,7 +976,7 @@ function showLogTce(e,pi_,dateStr){
   const data=tceChangeIcons[pi_]&&tceChangeIcons[pi_][dateStr];
   if(!data)return;
   const popup=document.getElementById("logPopup");
-  popup.innerHTML=`✎ <b>${data.quien||"?"}</b> con <b>${data.con||"—"}</b><br>${data.cambio||""}`;
+  popup.innerHTML=`✎ <b>${escH(data.quien)||"?"}</b> con <b>${escH(data.con)||"—"}</b><br>${escH(data.cambio)||""}`;
   popup.style.display="block";
   setTimeout(()=>popup.style.display="none",4000);
 }
@@ -972,7 +986,7 @@ function showLog(e,pi_,dateStr){
   const data=changeIcons[pi_]&&changeIcons[pi_][dateStr];
   if(!data)return;
   const popup=document.getElementById("logPopup");
-  popup.innerHTML=`✎ <b>${data.quien||"?"}</b> con <b>${data.con||"—"}</b><br>${data.cambio||""}`;
+  popup.innerHTML=`✎ <b>${escH(data.quien)||"?"}</b> con <b>${escH(data.con)||"—"}</b><br>${escH(data.cambio)||""}`;
   popup.style.display="block";
   setTimeout(()=>popup.style.display="none",4000);
 }
@@ -1454,7 +1468,7 @@ function showMiLog(e,day){
   if(pinLocked){
     popup.innerHTML=`🔒 Cambia tu PIN para ver este comentario`;
   } else {
-    popup.innerHTML=`👤 <b>${data.quien||"?"}</b> 🔄 Con: <b>${data.con||"—"}</b><br>${data.comentario?"💬 "+data.comentario+"<br>":""}📋 ${data.cambio||""}`;
+    popup.innerHTML=`👤 <b>${escH(data.quien)||"?"}</b> 🔄 Con: <b>${escH(data.con)||"—"}</b><br>${data.comentario?"💬 "+escH(data.comentario)+"<br>":""}📋 ${escH(data.cambio)||""}`;
   }
   popup.style.display="block";
   setTimeout(()=>popup.style.display="none",5000);
@@ -1755,13 +1769,12 @@ function checkPin(){
     document.getElementById("pinInput").value="";
   };
   if(db){
-    db.ref("enf_pins/"+userRow).once("value").then(snap=>{
+    readWhenAuthed("enf_pins/"+userRow).then(snap=>{
       const stored=snap.val()||"0000";
       if(pin===stored) onOk(); else onFail();
-    }).catch(()=>onOk());
+    }).catch(()=>pinCheckFailed());
   } else {
-    const stored=localStorage.getItem("enf_pin_"+userRow)||"0000";
-    if(pin===stored) onOk(); else onFail();
+    pinCheckFailed();
   }
 }
 
@@ -1826,7 +1839,7 @@ let proposals={}, currentPropKey=null, propFromDay=null, dayActionCtx=null;
 function initProposals(){
   if(!db){setTimeout(initProposals,1000);return;}
   db.ref("enf_proposals").on("value",snap=>{
-    proposals=snap.val()||{};
+    proposals=Object.fromEntries(Object.entries(snap.val()||{}).filter(([k])=>/^[A-Za-z0-9_-]+$/.test(k)));
     updatePropBadge();
     try{maybeAutoOpenIncoming();}catch(e){}
     const v=document.getElementById("view-props");
@@ -2143,7 +2156,7 @@ function respondShowResult(p,decision){
   const ok=decision==="accepted";
   document.getElementById("respondContent").innerHTML=
     `<div style="font-size:.95rem;font-weight:700;margin:6px 0 12px">${ok?(gl?"✅ Cambio aceptado e apuntado":"✅ Cambio aceptado y apuntado"):(gl?"❌ Proposta rexeitada":"❌ Propuesta rechazada")}</div>
-     <button onclick='waOpen(${JSON.stringify(waReplyText(p,decision))})' style="width:100%;padding:13px;border-radius:10px;border:none;background:#25D366;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer">📲 ${gl?"Avisar a":"Avisar a"} ${sugEscWA(waFirst(p.fromName))} ${gl?"por WhatsApp":"por WhatsApp"}</button>`;
+     <button onclick="waOpen(${escH(JSON.stringify(waReplyText(p,decision)))})" style="width:100%;padding:13px;border-radius:10px;border:none;background:#25D366;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer">📲 ${gl?"Avisar a":"Avisar a"} ${sugEscWA(waFirst(p.fromName))} ${gl?"por WhatsApp":"por WhatsApp"}</button>`;
   ["respondCommentLabel","respondComment","respondRejectBtn","respondAcceptBtn"].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display="none";});
   const b=document.getElementById("respondBackBtn");if(b)b.textContent=gl?"Pechar":"Cerrar";
 }
@@ -2183,11 +2196,11 @@ function openRespondModal(key){
   const fromDs=(p.fromDay||"").split("_")[1];
   const toDs=(p.toDay||"").split("_")[1];
   let html='<div class="prop-card pending" style="margin-bottom:12px">';
-  html+='<p style="font-size:.82rem"><b>'+p.fromName+'</b> '+t("tePropone")+'</p>';
+  html+='<p style="font-size:.82rem"><b>'+escH(p.fromName)+'</b> '+t("tePropone")+'</p>';
   html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">';
-  html+='🔄 '+t("teDaSu")+' <b>'+(p.fromTurn||"?")+'</b> '+t("delDia")+' <b>'+fmt(fromDs)+'</b><br>';
+  html+='🔄 '+t("teDaSu")+' <b>'+escH(p.fromTurn||"?")+'</b> '+t("delDia")+' <b>'+fmt(fromDs)+'</b><br>';
   html+=t("aCambioQuiere")+' <b>'+fmt(toDs)+'</b></p>';
-  if(p.commentFrom)html+='<p style="font-size:.75rem;font-style:italic;color:#555">💬 "'+p.commentFrom+'"</p>';
+  if(p.commentFrom)html+='<p style="font-size:.75rem;font-style:italic;color:#555">💬 "'+escH(p.commentFrom)+'"</p>';
   html+='</div>';
   document.getElementById("respondContent").innerHTML=html;
   document.getElementById("respondComment").value="";
@@ -2250,14 +2263,14 @@ function renderProposals(){
     const fromDs=(p.fromDay||"").split("_")[1];
     const toDs=(p.toDay||"").split("_")[1];
     html+='<div class="prop-card '+ccls+'" style="margin-bottom:12px">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:.75rem;font-weight:700">'+slabel+'</span><span style="font-size:.7rem;color:var(--mu)">'+(p.createdAt||"")+'</span></div>';
-    html+='<p style="font-size:.82rem">'+(isFrom?"📤 Proposta a <b>"+p.toName+"</b>":"📥 Proposta de <b>"+p.fromName+"</b>")+'</p>';
-    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">🔄 <b>'+p.fromName+'</b> da o seu <b>'+(p.fromTurn||"?")+'</b> do '+fmt(fromDs)+'<br>🔄 <b>'+p.toName+'</b> da o seu turno do '+fmt(toDs)+'</p>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:.75rem;font-weight:700">'+slabel+'</span><span style="font-size:.7rem;color:var(--mu)">'+escH(p.createdAt||"")+'</span></div>';
+    html+='<p style="font-size:.82rem">'+(isFrom?"📤 Proposta a <b>"+escH(p.toName)+"</b>":"📥 Proposta de <b>"+escH(p.fromName)+"</b>")+'</p>';
+    html+='<p style="font-size:.78rem;color:var(--mu);margin:6px 0">🔄 <b>'+escH(p.fromName)+'</b> da o seu <b>'+escH(p.fromTurn||"?")+'</b> do '+fmt(fromDs)+'<br>🔄 <b>'+escH(p.toName)+'</b> da o seu turno do '+fmt(toDs)+'</p>';
     if(pinLocked){
       html+='<p style="font-size:.75rem;color:#c0392b;margin-top:4px">🔒 Cambia o teu PIN para ver os comentarios</p>';
     } else {
-      if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555">💬 '+p.fromName+': "'+p.commentFrom+'"</p>';
-      if(p.commentTo)html+='<p style="font-size:.75rem;color:#555">💬 '+p.toName+': "'+p.commentTo+'"</p>';
+      if(p.commentFrom)html+='<p style="font-size:.75rem;color:#555">💬 '+escH(p.fromName)+': "'+escH(p.commentFrom)+'"</p>';
+      if(p.commentTo)html+='<p style="font-size:.75rem;color:#555">💬 '+escH(p.toName)+': "'+escH(p.commentTo)+'"</p>';
     }
     if(p.status==="pending"&&!isFrom&&!pinLocked)html+='<button onclick="openRespondModal(\'' + key + '\')">Ver e responder</button>';
     if(p.status==="pending"&&isFrom&&!pinLocked)html+='<button onclick="cancelProposal(\'' + key + '\')">Cancelar proposta</button>';
