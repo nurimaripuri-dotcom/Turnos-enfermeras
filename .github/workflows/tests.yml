@@ -1,0 +1,29 @@
+name: Pruebas del rotatorio
+
+# Las pruebas viven en el repo Turnos-tcae (tests/rotatorio.test.js) y comprueban las dos apps.
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', '.github/workflows/tests.yml']
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: nurimaripuri-dotcom/Turnos-tcae
+          path: Turnos-tcae
+          sparse-checkout: |
+            index.html
+            tests
+      - uses: actions/setup-node@v5
+        with: { node-version: 22 }
+      - name: Ejecutar pruebas
+        env:
+          TCE_HTML: Turnos-tcae/index.html
+          ENF_HTML: index.html
+        run: node --test Turnos-tcae/tests/rotatorio.test.js
