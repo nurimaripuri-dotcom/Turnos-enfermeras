@@ -552,7 +552,7 @@ try{
   else if(!firebase.apps.find(a=>a.name==="enfermeras")) firebase.initializeApp(_fc,"enfermeras");
   // App Check (Fraud Defense / reCAPTCHA Enterprise): solo deja usar la base de datos desde esta web/app.
   // Si falla (bloqueador, sin red), la app sigue funcionando: solo aplica cuando se active "Aplicar" en Firebase.
-  try{ firebase.app("enfermeras").appCheck().activate(new firebase.appCheck.ReCaptchaEnterpriseProvider("6LcLGTQuAAAAADve0URJhuYzgiBcaeQ-rTnFqAwI"), true); }
+  try{ firebase.app("enfermeras").appCheck().activate(new firebase.appCheck.ReCaptchaEnterpriseProvider("6LdNVzUuAAAAAM1XL_QcpJ_ip9LPbbaz36DOyvqj"), true); }
   catch(e){console.log("App Check:",e);}
   db=firebase.database(firebase.app("enfermeras"));
   firebase.app("enfermeras").auth().signInAnonymously().catch(e=>console.log("Auth anónima falló:",e));
